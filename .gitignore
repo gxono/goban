@@ -1,0 +1,6 @@
+tests/_build/
+kernel/target/
+dist/
+__pycache__/
+.claude/
+CLAUDE.md
