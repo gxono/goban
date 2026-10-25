@@ -1,0 +1,8 @@
+* text=auto eol=lf
+
+# Byte por byte: los SGF de los tests prueban codificaciones y finales de línea.
+*.sgf binary
+*.pdf binary
+*.png binary
+*.jpg binary
+*.wasm binary

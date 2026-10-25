@@ -354,7 +354,8 @@ dictionary adjusts it without turning it on: `fill: (on: true, color: red)`. A l
 ## Kernel
 
 Captures, territory, regions, score, reading SGF and the opacity and silhouettes of images are done by a
-WebAssembly plugin, `src/kernel.wasm`, compiled from the Rust code in the `kernel/` folder of the repository.
+WebAssembly plugin, `src/kernel.wasm`, compiled from the Rust code in the [`kernel/`](https://github.com/gxono/goban/tree/v0.1.0/kernel) folder of
+the repository.
 To change it you need Rust with the `wasm32-unknown-unknown` target:
 
 ```
@@ -362,7 +363,7 @@ python kernel/build.py          # builds and copies src/kernel.wasm
 cargo test --manifest-path kernel/Cargo.toml
 ```
 
-The tests are in `tests/`:
+The tests are in [`tests/`](https://github.com/gxono/goban/tree/v0.1.0/tests):
 
 ```
 python tests/run.py
