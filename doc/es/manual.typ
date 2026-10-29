@@ -1,14 +1,14 @@
-// El manual de goban, en español. Se compila desde la raíz del repositorio:
+// El manual de gobanist, en español. Se compila desde la raíz del repositorio:
 //   typst compile --root . doc/es/manual.typ
 
 #import "../estilo.typ": *
 #import "/lib.typ": *
 
-#set document(title: "goban: manual")
+#set document(title: "gobanist: manual")
 #show: manual.with(lang: "es")
 
 #page(numbering: none, footer: none, align(center + horizon, {
-  text(font: titulos, size: 4em, weight: "bold")[goban]
+  text(font: titulos, size: 4em, weight: "bold")[gobanist]
   v(2em)
   goban(profile: "pgfgosmooth", partial: "B2:E3", scale: 2.5, stones(black: "C2, D2, E3", white: "B2, C3, D3"),
     marks(custom: "B2", content: [36], player: "white"), marks(custom: "E2", content: [a]),

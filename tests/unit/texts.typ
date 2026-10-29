@@ -45,7 +45,7 @@
 #[
   #set text(lang: "nl")
   #context assert.eq(word(current(), "problem"), "Problem")
-  #goban-set(texts: (nl: (problem: "Probleem")))
+  #gobanist-set(texts: (nl: (problem: "Probleem")))
   #context assert.eq((word(current(), "problem"), word(current(), "diagram")), ("Probleem", "Diagram"))
 ]
 

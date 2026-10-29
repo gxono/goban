@@ -3,7 +3,7 @@
 
 = Catálogo de perfiles <catalogo>
 
-Los perfiles que trae goban, cada uno con una muestra y con su definición, tal como está en `src/profiles.typ`. Se usan con `profile: "nombre"` (#pag(<perfiles>)). En las definiciones, `xmix(a, p, b)` mezcla `p` de `a` con el resto de `b`, como `a!p!b` de xcolor; `pgf-gray` es `luma(50%)`; y `picture("board.jpg")` es la imagen `images/pgfgo-board.jpg` del paquete.
+Los perfiles que trae gobanist, cada uno con una muestra y con su definición, tal como está en `src/profiles.typ`. Se usan con `profile: "nombre"` (#pag(<perfiles>)). En las definiciones, `xmix(a, p, b)` mezcla `p` de `a` con el resto de `b`, como `a!p!b` de xcolor; `pgf-gray` es `luma(50%)`; y `picture("board.jpg")` es la imagen `images/pgfgo-board.jpg` del paquete.
 
 #let fuente = read("/src/profiles.typ")
 

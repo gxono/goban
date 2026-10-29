@@ -13,12 +13,12 @@
 // El enunciado (A16:F19) y las cuatro variantes, con sus comentarios.
 #sgf-problem(problema)
 
-// title, variation-title y caption; sin comentarios ni notas; los textos de quién juega (goban-set vale hasta
+// title, variation-title y caption; sin comentarios ni notas; los textos de quién juega (gobanist-set vale hasta
 // que se cambia: después se deja como estaba).
-#goban-set(texts: (es: (black-to-play: "Juegan negras")))
+#gobanist-set(texts: (es: (black-to-play: "Juegan negras")))
 #sgf-problem(problema, title: [Problema 1], variation-title: n => [Variante #n],
   caption: (text: (style: "italic")), comments: false, notes: false)
-#goban-set(texts: (es: (black-to-play: "Juegan Negras")))
+#gobanist-set(texts: (es: (black-to-play: "Juegan Negras")))
 
 // Solo el enunciado, todo el tablero; las opciones de goban.
 #sgf-problem(problema, solutions: false, partial: none, goban: (scale: 0.4))
@@ -54,6 +54,6 @@
 
 // La vista de sgf no llega a los problemas: con view: false, partial: auto.
 #[
-  #goban-set(sgf: (view: 5))
+  #gobanist-set(sgf: (view: 5))
   #sgf-problem(views, solutions: false, view: false)
 ]

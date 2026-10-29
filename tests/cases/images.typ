@@ -21,10 +21,10 @@
 #goban(size: 5, partial: "B2:D4", stones(black: "C2, D3", shine: (on: true, color: red, image: (file: img("shadow"), width: 6pt, silhouette: true))),
   stones(white: "B4", image: img("yunzi-white-1"), shine: (on: true, opacity: 0.5, image: (file: img("shadow"), width: 5pt))))
 // La imagen se quita con none.
-#goban-set(stone: (image: img("yunzi-black")))
+#gobanist-set(stone: (image: img("yunzi-black")))
 #goban(size: 3, stones(black: "A1", white: "B2"), stones(white: "C3", image: none))
 
-#goban-set(stone: (image: none))
+#gobanist-set(stone: (image: none))
 
 // El fondo con imagen: cover (la parte que toca con partial, recortada por las esquinas), stretch, tile y
 // rotate. Las marcas sobre puntos vacíos muestran la imagen de debajo, y también dim.

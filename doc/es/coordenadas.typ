@@ -14,7 +14,7 @@ Las intersecciones se escriben como en el go: una letra para la columna, desde l
 La misma sintaxis sirve para `moves` (sin el `;`), para los vértices de `territory` y para `hoshi.at`. Las flechas y las líneas, y `partial`, reciben intersecciones sueltas.
 
 ```ejemplo-abajo
-#goban-set(profile: "pgfgosmooth")
+#gobanist-set(profile: "pgfgosmooth")
 
 #goban(size: 17, partial: "A1:R5", label: (at: (top, left)),
   stones(black: "*; B, D, H, M, R2, Q, F2:4, K2 r L5, O[1:2, 4]; B3"))
@@ -31,7 +31,7 @@ Estas formas van solas: no se encadenan con los operadores de la #pag(<caminos>)
 `*` son todas las intersecciones *visibles* del tablero: con `partial`, las de la parte que se ve.
 
 ```ejemplo
-#goban-set(size: 5, partial: "B2:D4")
+#gobanist-set(size: 5, partial: "B2:D4")
 
 #goban(label: (at: (bottom, left)),
   stones(black: "*"))
@@ -42,7 +42,7 @@ Estas formas van solas: no se encadenan con los operadores de la #pag(<caminos>)
 Una letra y un número, juntos: `"C2"`.
 
 ```ejemplo
-#goban-set(size: 5, partial: "B2:D4")
+#gobanist-set(size: 5, partial: "B2:D4")
 
 #goban(label: (at: (bottom, left)),
   stones(black: "C2, D3", white: "B4"))
@@ -53,7 +53,7 @@ Una letra y un número, juntos: `"C2"`.
 Una letra sola es una columna entera: `D` es la columna D. Un número solo es una fila entera: `4` es la fila 4.
 
 ```ejemplo
-#goban-set(size: 5, partial: "B2:D4")
+#gobanist-set(size: 5, partial: "B2:D4")
 
 #goban(stones(black: "B2, B3, B4"),
   stones("D", fill: (color: red)))
@@ -200,7 +200,7 @@ Puede dividirse en partes, o pensarse como un rectángulo completo al que se le 
 #align(center, goban(stones(black: "A1:E6"), marks(cross: "C6 |- E3, A1:2", line: (color: white))))
 
 ```ejemplo
-#goban-set(label: (at: (top, bottom, left, right)),
+#gobanist-set(label: (at: (top, bottom, left, right)),
   partial: "A1:E6")
 
 #goban(stones(black: "A1:E6"))
@@ -211,7 +211,7 @@ Puede dividirse en partes, o pensarse como un rectángulo completo al que se le 
 Primero, el rectángulo `A1:E6`; después se quita el tramo `A1:2`, y por último el camino `C6 |- E3`. Los grupos se alternan con cada `;`:
 
 ```ejemplo
-#goban-set(label: (at: (top, bottom, left, right)),
+#gobanist-set(label: (at: (top, bottom, left, right)),
   partial: "A1:E6")
 
 #goban(stones(black: "A1:E6"))

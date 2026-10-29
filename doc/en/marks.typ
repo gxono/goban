@@ -9,7 +9,7 @@ Marks go on an intersection, with or without a stone: shapes (circle, triangle, 
   Places marks on the intersections, written with the coordinate syntax (#pag(<coordenadas>)). The shape is the key: `marks(triangle: "C3", circle: "E5")`. Without a shape, a cross: `marks("C3")`. The same `marks` can hold several shapes, and its options hold for all of them.
 
   ```ejemplo
-  #goban-set(size: 5, partial: "B2:D4")
+  #gobanist-set(size: 5, partial: "B2:D4")
   #let b = board(stones(black: "C2, D3", white: "B4"))
 
   #goban(b, marks("C3"))
@@ -83,7 +83,7 @@ The shapes of the package are `circle`, `triangle`, `square`, `cross`, `filled-s
   In `marks`, what `custom` draws. It is required with `custom`. Its size is adjusted to the number of characters, except with `label.size`.
 
   ```ejemplo
-  #goban-set(size: 5, partial: "B2:D4")
+  #gobanist-set(size: 5, partial: "B2:D4")
   #let b = board(stones(black: "C2, D3", white: "B4"))
 
   #goban(b, marks(custom: "C3",
@@ -96,7 +96,7 @@ The shapes of the package are `circle`, `triangle`, `square`, `cross`, `filled-s
 
 == The options of the marks
 
-The style of the marks is that of their player: `goban-set(mark: ...)` is `goban-set(players: (all: (mark: ...)))`, and the options of each `marks` go on top.
+The style of the marks is that of their player: `gobanist-set(mark: ...)` is `gobanist-set(players: (all: (mark: ...)))`, and the options of each `marks` go on top.
 
 #opcion("player", valor: [`auto`, `"black"`, `"white"` or `"neutral"`], inicial: `auto`)[
   The player of the marks, whose style they take. With `auto`, that of the stone on the point, or neutral if there is none.
@@ -230,7 +230,7 @@ The style of the marks is that of their player: `goban-set(mark: ...)` is `goban
   On an empty point, a shape of your own covers the grid like the others.
 
   ```ejemplo
-  #goban-set(shapes: (
+  #gobanist-set(shapes: (
     diamond: m => polygon(fill: m.fill,
       stroke: m.stroke,
       (0pt, -0.7 * m.radius),
@@ -286,7 +286,7 @@ Arrows and lines join two intersections. They are drawn on top of the stones, wi
   ```
 ]
 
-The style of every arrow is set with `goban-set(arrow: ...)`, and that of every line, with `goban-set(line: ...)`.
+The style of every arrow is set with `gobanist-set(arrow: ...)`, and that of every line, with `gobanist-set(line: ...)`.
 
 #opcion("arrow.color", valor: [a color], inicial: `black`)[The color of the arrow.]
 #opcion("arrow.width", valor: [a length], inicial: `1.2pt`)[The width of the arrow. The tip grows with it.]

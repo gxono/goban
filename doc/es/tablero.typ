@@ -6,7 +6,7 @@
 El tablero es lo que dibuja `goban`: la cuadrícula, el fondo, las coordenadas y todo lo que va encima.
 
 #funcion("goban(..opciones, ..elementos)")[
-  Dibuja un tablero. Los elementos son lo que va en él, en orden: piedras (`stones`, `prisoners`), jugadas (`moves`), marcas (`marks`), flechas y líneas (`arrows`, `lines`), territorio (`territory`) y partidas (`sgf-read`, `sgf`). Primero puede ir un tablero hecho con `board`: es ese tablero, con sus opciones y lo que tiene, y las opciones y los elementos del `goban` se le agregan. Las opciones van con nombre, y son las de `goban-set` (#pag(<configuracion>)): valen solo para este tablero. Por defecto, el tablero es de 9×9, con un borde visible, fondo blanco y sin coordenadas.
+  Dibuja un tablero. Los elementos son lo que va en él, en orden: piedras (`stones`, `prisoners`), jugadas (`moves`), marcas (`marks`), flechas y líneas (`arrows`, `lines`), territorio (`territory`) y partidas (`sgf-read`, `sgf`). Primero puede ir un tablero hecho con `board`: es ese tablero, con sus opciones y lo que tiene, y las opciones y los elementos del `goban` se le agregan. Las opciones van con nombre, y son las de `gobanist-set` (#pag(<configuracion>)): valen solo para este tablero. Por defecto, el tablero es de 9×9, con un borde visible, fondo blanco y sin coordenadas.
 
   ```ejemplo
   #goban()
@@ -52,7 +52,7 @@ El tablero es lo que dibuja `goban`: la cuadrícula, el fondo, las coordenadas y
   Usa la letra I en las coordenadas y en las etiquetas. Sin ella, como es costumbre en el go, las columnas pasan de la H a la J, y una I en las coordenadas es la J.
 
   ```ejemplo
-  #goban-set(size: 13, label: (at: top))
+  #gobanist-set(size: 13, label: (at: top))
 
   #goban(use-i: true, partial: "H1:M3",
     label: (at: (top, left)),
@@ -120,7 +120,7 @@ El tablero es lo que dibuja `goban`: la cuadrícula, el fondo, las coordenadas y
   El grosor de las líneas.
 
   ```ejemplo
-  #goban-set(size: 5, partial: "B2:D4")
+  #gobanist-set(size: 5, partial: "B2:D4")
   #let b = board(stones(black: "C2, D3", white: "B4"))
 
   #goban(b, grid: (line: (color: blue)))
@@ -129,7 +129,7 @@ El tablero es lo que dibuja `goban`: la cuadrícula, el fondo, las coordenadas y
   ```
 ]
 
-#opcion("grid.sep", valor: [una longitud o `(x: ..., y: ...)`], inicial: `(x: 1.25em, y: 1.25em)`)[
+#opcion("grid.sep", valor: [una longitud o `(x: ..., y: ...)`], inicial: `(x: 12.5pt, y: 12.5pt)`)[
   La distancia entre las líneas: `x`, entre las verticales, e `y`, entre las horizontales. Una longitud sola va a las dos.
 
   ```ejemplo
@@ -254,7 +254,7 @@ El fondo del tablero es el rectángulo que va debajo de la cuadrícula, con su r
   El fondo: el relleno y el borde. Con `false`, sin fondo.
 
   ```ejemplo
-  #goban-set(size: 5, partial: "B2:D4")
+  #gobanist-set(size: 5, partial: "B2:D4")
   #let b = board(stones(black: "C2, D3", white: "B4"))
 
   #goban(b)
@@ -271,7 +271,7 @@ El fondo del tablero es el rectángulo que va debajo de la cuadrícula, con su r
   La opacidad del relleno, también la de su imagen.
 
   ```ejemplo
-  #goban-set(size: 5, partial: "B2:D4")
+  #gobanist-set(size: 5, partial: "B2:D4")
   #let b = board(stones(black: "C2, D3", white: "B4"))
 
   #goban(b, background: (fill: false))
@@ -383,7 +383,7 @@ El fondo del tablero es el rectángulo que va debajo de la cuadrícula, con su r
   El grosor del borde.
 
   ```ejemplo
-  #goban-set(size: 5, partial: "B2:D4")
+  #gobanist-set(size: 5, partial: "B2:D4")
   #let b = board(stones(black: "C2, D3", white: "B4"))
 
   #goban(b, background: (line: false))
@@ -398,7 +398,7 @@ El fondo del tablero es el rectángulo que va debajo de la cuadrícula, con su r
   El radio de las esquinas del fondo: `outer`, el de las esquinas del tablero, e `inner`, el de las que se ven en un tablero parcial. Una longitud sola va a las dos.
 
   ```ejemplo
-  #goban-set(size: 5, partial: "A1:C3")
+  #gobanist-set(size: 5, partial: "A1:C3")
   #let b = board(stones(black: "B1, C2", white: "A3"))
 
   #goban(b, background: (
@@ -408,11 +408,11 @@ El fondo del tablero es el rectángulo que va debajo de la cuadrícula, con su r
   ```
 ]
 
-#opcion("background.sep", valor: [una longitud], inicial: `0.825em`)[
+#opcion("background.sep", valor: [una longitud], inicial: `8.25pt`)[
   La distancia entre la cuadrícula y el borde.
 
   ```ejemplo
-  #goban-set(size: 5, partial: "B2:D4")
+  #gobanist-set(size: 5, partial: "B2:D4")
   #let b = board(stones(black: "C2, D3", white: "B4"))
 
   #goban(b, background: (sep: 0.625em))
@@ -424,7 +424,7 @@ El fondo del tablero es el rectángulo que va debajo de la cuadrícula, con su r
   Una sombra debajo del tablero.
 
   ```ejemplo
-  #goban-set(size: 5, partial: "B2:D4")
+  #gobanist-set(size: 5, partial: "B2:D4")
   #let b = board(stones(black: "C2, D3", white: "B4"))
 
   #goban(b, background: (shadow: true))
@@ -484,11 +484,11 @@ Las etiquetas son las coordenadas que se escriben a los lados del tablero.
   ```
 ]
 
-#opcion("label.text", valor: [un diccionario], inicial: `(:)`)[
+#opcion("label.text", valor: [un diccionario], inicial: `(size: 10pt)`)[
   Las opciones de `text` de las etiquetas: la fuente, el tamaño, el color.
 
   ```ejemplo
-  #goban-set(size: 5)
+  #gobanist-set(size: 5)
 
   #goban(label: (at: (bottom, left),
     text: (size: 6pt)))

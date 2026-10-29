@@ -19,13 +19,13 @@ Stones are placed with `stones`; moves, with `moves`, and prisoners, with `priso
 
 Stones, marks and labels that fall outside the visible part of a partial board are not drawn. A coordinate that does not exist on the board (`"E9"` on a 5×5 board) is an error. A stone on a point where there already is one covers it.
 
-The style of the stones of the three players is changed with `goban-set(stone: ...)`, which is `goban-set(players: (all: (stone: ...)))`; that of one, with `goban-set(players: (black: (stone: ...)))`. The options of the `stone` branch are:
+The style of the stones of the three players is changed with `gobanist-set(stone: ...)`, which is `gobanist-set(players: (all: (stone: ...)))`; that of one, with `gobanist-set(players: (black: (stone: ...)))`. The options of the `stone` branch are:
 
 #opcion("stone.fill", valor: [`true`, `false` or a dictionary])[
   The fill of the stone. With `false`, no fill: the rest remains (the border, the shadow, the shine).
 
   ```ejemplo
-  #goban-set(profile: "pgfgosmooth", size: 5,
+  #gobanist-set(profile: "pgfgosmooth", size: 5,
     partial: "B2:D4")
 
   #goban(stones(black: "C2, D3", white: "B4"))
@@ -75,7 +75,7 @@ The style of the stones of the three players is changed with `goban-set(stone: .
   The border of the stone.
 
   ```ejemplo
-  #goban-set(profile: "pgfgosmooth", size: 5,
+  #gobanist-set(profile: "pgfgosmooth", size: 5,
     partial: "B2:D4")
 
   #goban(stones(black: "C2, D3", white: "B4"))
@@ -137,7 +137,7 @@ The style of the stones of the three players is changed with `goban-set(stone: .
   The opacity of the shadow (also that of the shadow with an image).
 
   ```ejemplo
-  #goban-set(profile: "pgfgosmooth", size: 3)
+  #gobanist-set(profile: "pgfgosmooth", size: 3)
   #let b = board(stones(black: "B1, C2", white: "A3"))
 
   #goban(b, players: (white: (stone: (
@@ -210,7 +210,7 @@ The style of the stones of the three players is changed with `goban-set(stone: .
   The color of the drawn shine.
 
   ```ejemplo
-  #goban-set(profile: "pgfgosmooth", size: 3)
+  #gobanist-set(profile: "pgfgosmooth", size: 3)
   #let b = board(stones(black: "B1, C2", white: "A3"))
 
   #goban(b, players: (black: (stone: (
@@ -271,7 +271,7 @@ The style of the stones of the three players is changed with `goban-set(stone: .
   For all the stones of a player, the image goes in their options:
 
   ```ejemplo
-  #goban-set(players: (
+  #gobanist-set(players: (
     black: (stone: (image:
       path("img/pgfgo-yunzi-black.png"))),
     white: (stone: (image:
@@ -342,7 +342,7 @@ The style of the stones of the three players is changed with `goban-set(stone: .
   `resume` does not bring these stones (#pag(<memoria>)). `goban-view` draws them only with `forgotten`. It is an option of `stones`, `prisoners` and `moves` (where it can also be `"number"`, #pag(<jugadas>)), of `marks`, `arrows`, `lines` and `territory`.
 
   ```ejemplo
-  #goban-set(size: 5, partial: "B2:D4")
+  #gobanist-set(size: 5, partial: "B2:D4")
 
   #let a = board(stones(black: "C2, D3"),
     stones(white: "B4", forget: true))
@@ -373,7 +373,7 @@ The options of the stones serve, for example, to mark the last move:
   moves("B3", numbers: false, mark: "circle"))
 ```
 
-The style of the moves of the three players is changed with `goban-set(move: ...)`, which is `goban-set(players: (all: (move: ...)))`.
+The style of the moves of the three players is changed with `gobanist-set(move: ...)`, which is `gobanist-set(players: (all: (move: ...)))`.
 
 #opcion("from", valor: [a number])[
   The number of the first move of this `moves`. The following ones carry on from there.
@@ -386,7 +386,7 @@ The style of the moves of the three players is changed with `goban-set(move: ...
 ]
 
 #opcion("move.numbers", valor: [`true` or `false`], inicial: `true`)[
-  Whether the moves carry their number. Without numbers, the moves still count: the next one carries on the numbering and the turn. In `moves(numbers: false)`, it holds for those moves; with `goban-set(move: (numbers: false))` or `goban(move: (numbers: false))`, for all those that follow.
+  Whether the moves carry their number. Without numbers, the moves still count: the next one carries on the numbering and the turn. In `moves(numbers: false)`, it holds for those moves; with `gobanist-set(move: (numbers: false))` or `goban(move: (numbers: false))`, for all those that follow.
 
   ```ejemplo
   #goban(size: 5, partial: "B2:D4",
@@ -434,7 +434,7 @@ The style of the moves of the three players is changed with `goban-set(move: ...
   ```ejemplo
   #goban(size: 5, partial: "B2:D4",
     moves("C2, B4", from: 7),
-    moves("D3", label: (size: 0.5em)))
+    moves("D3", label: (size: 5pt)))
   ```
 ]
 
@@ -452,7 +452,7 @@ The style of the moves of the three players is changed with `goban-set(move: ...
   In `moves`: with `true`, `resume` does not bring these moves, neither the stone nor the number, and the numbering carries on from the last move it brings. With `"number"`, the move comes without its number even if `numbers` is asked for (#pag(<memoria>)); with `goban-view`, the number is seen only with `forgotten`.
 
   ```ejemplo
-  #goban-set(size: 5, partial: "B2:D4")
+  #gobanist-set(size: 5, partial: "B2:D4")
 
   #let a = board(moves("C2"),
     moves("B4", forget: "number"),
@@ -477,10 +477,10 @@ Prisoners are captured stones that are still on the board: by default, transluce
 ]
 
 #opcion("prisoner", valor: [stone options], inicial: `(fill: (opacity: 0.5))`)[
-  The style of the prisoners: options of the `stone` branch, which are put on top of those of the stone of the player. With `goban-set(prisoner: ...)`, for the three players; with `goban-set(players: (white: (prisoner: ...)))`, for one. It holds for those of `prisoners` and for the stones captured with `captures: "fade"` (#pag(<capturas>)). The other stones of the player do not change.
+  The style of the prisoners: options of the `stone` branch, which are put on top of those of the stone of the player. With `gobanist-set(prisoner: ...)`, for the three players; with `gobanist-set(players: (white: (prisoner: ...)))`, for one. It holds for those of `prisoners` and for the stones captured with `captures: "fade"` (#pag(<capturas>)). The other stones of the player do not change.
 
   ```ejemplo
-  #goban-set(size: 5, partial: "B2:D4")
+  #gobanist-set(size: 5, partial: "B2:D4")
 
   #goban(prisoner: (fill: (opacity: 0.2),
       line: (color: red)),

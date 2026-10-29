@@ -3,7 +3,7 @@
 
 // Formas propias: una función (con el trazo, el relleno y el radio de la marca; lo que devuelve tiene su origen
 // en el punto), un contenido y una imagen (centrados).
-#goban-set(shapes: (
+#gobanist-set(shapes: (
   rombo: m => polygon(fill: m.fill, stroke: m.stroke,
     (0pt, -0.7 * m.radius), (0.7 * m.radius, 0pt), (0pt, 0.7 * m.radius), (-0.7 * m.radius, 0pt)),
   barra: m => line(start: (-0.5 * m.radius, 0.5 * m.radius), end: (0.5 * m.radius, -0.5 * m.radius), stroke: m.stroke),

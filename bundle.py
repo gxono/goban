@@ -1,8 +1,8 @@
-"""Arma la carpeta del paquete para typst/packages: lo que se commitea en packages/preview/goban/<versión>.
+"""Arma la carpeta del paquete para typst/packages: lo que se commitea en packages/preview/gobanist/<versión>.
 
     python bundle.py [destino]
 
-Sin destino, la deja en dist/goban/<versión>. Copia el código, las imágenes, el README, la licencia y lo que
+Sin destino, la deja en dist/gobanist/<versión>. Copia el código, las imágenes, el README, la licencia y lo que
 enlaza el README (los manuales en PDF y sus imágenes, excluidos del paquete en typst.toml); no copia los tests,
 el kernel en Rust ni las fuentes del manual.
 """
@@ -20,7 +20,7 @@ FOLDERS = ["src", "images"]
 
 def main():
     version = tomllib.loads((ROOT / "typst.toml").read_text(encoding="utf-8"))["package"]["version"]
-    dest = Path(sys.argv[1]) if len(sys.argv) > 1 else ROOT / "dist" / "goban" / version
+    dest = Path(sys.argv[1]) if len(sys.argv) > 1 else ROOT / "dist" / "gobanist" / version
     if dest.exists():
         shutil.rmtree(dest)
     for name in FILES:

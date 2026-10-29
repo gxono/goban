@@ -11,7 +11,7 @@ Un `goban` puede seguir las reglas del juego: retirar las piedras capturadas, an
   Las capturas. Cuando una jugada deja sin libertades a un grupo rival, ese grupo se retira del tablero; si deja sin libertades a su propio grupo (un suicidio), se retira ese grupo. Las piedras de `stones` también cuentan; las neutrales y los prisioneros, no. Una jugada fuera de un tablero parcial también captura. Una jugada en un punto ocupado es un error, porque en una partida no es posible (salvo en `sgf-diagrams` y `sgf-problem`, #pag(<diagramas>)). Con `none`, no hay capturas: las jugadas se dibujan unas sobre otras.
 
   ```ejemplo
-  #goban-set(size: 5, partial: "A1:C3")
+  #gobanist-set(size: 5, partial: "A1:C3")
 
   #goban(moves("B1, A1, A2"))
   // 3 captura a 2.
@@ -34,7 +34,7 @@ Un `goban` puede seguir las reglas del juego: retirar las piedras capturadas, an
   Qué pasa con las marcas que están sobre una piedra cuando la capturan. Con `"keep"`, quedan sobre el punto vacío. Con `"remove"`, se van con la piedra, también con `captures: "fade"`; las secuencias conservan su numeración. Las marcas sobre puntos vacíos no cambian.
 
   ```ejemplo
-  #goban-set(size: 5, partial: "A1:C3",
+  #gobanist-set(size: 5, partial: "A1:C3",
     captures: "remove")
 
   #goban(
@@ -166,7 +166,7 @@ Al final de la partida, el territorio puede marcarse a mano con `marks` (#pag(<m
     territory(auto, draw: "region"))
   ```
 
-  Es una opción de `territory`, y con `goban-set(territory: (draw: ...))`, de todos.
+  Es una opción de `territory`, y con `gobanist-set(territory: (draw: ...))`, de todos.
 ]
 
 #opcion("territory.dame", valor: [`true` o `false`], inicial: `false`)[Con `auto`, marca también los puntos neutrales.]
@@ -284,7 +284,7 @@ Las demás opciones de `territory` (`mark`, `fill`, `line` y `vertices`) cambian
   ```
 ]
 
-#opcion("score.komi", valor: [un número], inicial: `0`)[El komi que `goban-score` le suma a las blancas: `goban-set(score: (komi: 6.5))`.]
+#opcion("score.komi", valor: [un número], inicial: `0`)[El komi que `goban-score` le suma a las blancas: `gobanist-set(score: (komi: 6.5))`.]
 
 #funcion("goban-region(player, property, n: none)")[
   Una propiedad de la región (`draw: "region"`) del jugador (`"black"` o `"white"`) en el último `goban`, como texto. Las propiedades son del contorno completo, aunque el tablero sea parcial. Sin región, los números son 0. Las propiedades son:

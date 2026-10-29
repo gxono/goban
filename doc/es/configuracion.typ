@@ -6,13 +6,13 @@
 
 == Las opciones
 
-Las opciones de goban forman un árbol de diccionarios: cada objeto (el fondo, la cuadrícula, las piedras de cada jugador, los diagramas de una partida…) es una rama, y sus opciones son sus claves. Las de un tablero van en el `goban`, con nombre, junto a lo que se dibuja; las de todo el documento, en `goban-set`.
+Las opciones de gobanist forman un árbol de diccionarios: cada objeto (el fondo, la cuadrícula, las piedras de cada jugador, los diagramas de una partida…) es una rama, y sus opciones son sus claves. Las de un tablero van en el `goban`, con nombre, junto a lo que se dibuja; las de todo el documento, en `gobanist-set`.
 
-#funcion("goban-set(..opciones)")[
-  Fija opciones para todo lo que sigue en el documento: los tableros, las vistas, los diagramas y los problemas. Recibe las mismas opciones que `goban`, y además las ramas de las partidas (`sgf`, `diagrams`, `problems`), la disposición (`layout`), las vistas (`view`), los textos (`texts`) y las formas de marca (`shapes`). Cada `goban-set` se suma a los anteriores. Como `set` de Typst, vale desde donde está hasta el final del bloque que lo contiene.
+#funcion("gobanist-set(..opciones)")[
+  Fija opciones para todo lo que sigue en el documento: los tableros, las vistas, los diagramas y los problemas. Recibe las mismas opciones que `goban`, y además las ramas de las partidas (`sgf`, `diagrams`, `problems`), la disposición (`layout`), las vistas (`view`), los textos (`texts`) y las formas de marca (`shapes`). Cada `gobanist-set` se suma a los anteriores. Como `set` de Typst, vale desde donde está hasta el final del bloque que lo contiene.
 
   ```ejemplo
-  #goban-set(
+  #gobanist-set(
     background: (
       fill: (color: rgb("#dcb35c")),
       line: false),
@@ -34,9 +34,9 @@ Las opciones de goban forman un árbol de diccionarios: cada objeto (el fondo, l
   ```
 ]
 
-Los `goban` que siguen heredan estas opciones, y cada uno puede cambiarlas con las suyas: `goban(size: 9, stone: (radius: 4pt), mark: (line: (color: red)), ...)`. Las opciones se resuelven al dibujar el tablero, con las de `goban-set` que hay en ese lugar del documento.
+Los `goban` que siguen heredan estas opciones, y cada uno puede cambiarlas con las suyas: `goban(size: 9, stone: (radius: 4pt), mark: (line: (color: red)), ...)`. Las opciones se resuelven al dibujar el tablero, con las de `gobanist-set` que hay en ese lugar del documento.
 
-Las opciones se mezclan rama por rama: un diccionario cambia solo las claves que da, y las demás quedan como estaban. `goban-set(background: (fill: (color: red)))` cambia el color del relleno, y el borde, la opacidad y la imagen siguen igual. Una clave que no existe es un error. Una longitud sobre una rama de longitudes (`grid.sep`, `background.rounded-corners`) va a todas sus claves: `grid: (sep: 1em)` es `grid: (sep: (x: 1em, y: 1em))`.
+Las opciones se mezclan rama por rama: un diccionario cambia solo las claves que da, y las demás quedan como estaban. `gobanist-set(background: (fill: (color: red)))` cambia el color del relleno, y el borde, la opacidad y la imagen siguen igual. Una clave que no existe es un error. Una longitud sobre una rama de longitudes (`grid.sep`, `background.rounded-corners`) va a todas sus claves: `grid: (sep: 1em)` es `grid: (sep: (x: 1em, y: 1em))`.
 
 === Prender y apagar <prender>
 
@@ -46,7 +46,7 @@ Muchas ramas prenden o apagan algo: la cuadrícula, el fondo, el borde y el rell
 - `false` la apaga: `shine: false`;
 - un diccionario cambia sus opciones sin prenderla: `shine: (angle: 45deg)` cambia el ángulo, pero el brillo sigue como estaba. Para prenderlo y cambiarlo a la vez, `shine: (on: true, angle: 45deg)`.
 
-Así, `goban-set(stone: (shadow: (opacity: 0.3)))` fija la opacidad de las sombras de todo el documento sin prenderlas, y cada tablero que las quiera las prende con `stone: (shadow: true)`.
+Así, `gobanist-set(stone: (shadow: (opacity: 0.3)))` fija la opacidad de las sombras de todo el documento sin prenderlas, y cada tablero que las quiera las prende con `stone: (shadow: true)`.
 
 Las ramas de imagen (`stone.image`, `background.fill.image`, …) no tienen `on`: las prende el archivo. En ellas, lo que no es un diccionario es el archivo: `stone: (image: path("piedra.png"))` es `stone: (image: (file: path("piedra.png")))`, y `image: none` la quita.
 
@@ -64,7 +64,7 @@ Las demás ramas del primer nivel están en el capítulo de cada objeto: el tabl
 
 == El kernel <kernel>
 
-goban separa el cálculo del dibujo. Las coordenadas, la numeración de las jugadas y el dibujo están escritos en Typst. Lo que necesita jugar la partida lo hace un _kernel_: un plugin de WebAssembly, `src/kernel.wasm`, compilado del código Rust de la carpeta `kernel/` del repositorio. El kernel:
+gobanist separa el cálculo del dibujo. Las coordenadas, la numeración de las jugadas y el dibujo están escritos en Typst. Lo que necesita jugar la partida lo hace un _kernel_: un plugin de WebAssembly, `src/kernel.wasm`, compilado del código Rust de la carpeta `kernel/` del repositorio. El kernel:
 
 - juega las jugadas y retira las piedras capturadas (`captures`, #pag(<capturas>));
 - busca el territorio (`territory(auto)`), arma las regiones (`draw: "region"`) y cuenta el puntaje (#pag(<territorio>));
@@ -83,7 +83,7 @@ Los textos están en el idioma del texto, `text.lang`, y lo siguen si cambia den
   Los textos de cada idioma: `texts: (es: (diagram: "Figura"))`. Un idioma nuevo toma del inglés lo que no tiene. Los textos que tienen partes variables son funciones: `n` es el número de una jugada, `w` el nombre del ganador y `p` la diferencia de puntos.
 
   ```ejemplo
-  #goban-set(texts: (
+  #gobanist-set(texts: (
     es: (at: "sobre"),
     la: (pass: "transit"),
   ))

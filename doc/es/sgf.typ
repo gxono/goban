@@ -3,7 +3,7 @@
 
 = Partidas en SGF <sgf>
 
-SGF es el formato que usan casi todos los programas y servidores de go para guardar partidas. goban las lee con el kernel (#pag(<kernel>)): una partida en un tablero, sus datos y comentarios, la partida entera en diagramas y los problemas con sus soluciones.
+SGF es el formato que usan casi todos los programas y servidores de go para guardar partidas. gobanist las lee con el kernel (#pag(<kernel>)): una partida en un tablero, sus datos y comentarios, la partida entera en diagramas y los problemas con sus soluciones.
 
 En los ejemplos, `partida` es `partida.sgf`, una partida corta de 9×9:
 
@@ -52,7 +52,7 @@ Una partida en un tablero dibuja las piedras iniciales (`AB` y `AW`), como con `
 ```
 
 #funcion("sgf(partida, ..opciones)")[
-  La misma partida con otras opciones, las de la rama `sgf`, que se suman a las que ya tenía: `sgf(partida, to: 7)`. Además, `forget` (#pag(<memoria>)). Con `goban-set(sgf: ...)`, las opciones valen para todas las partidas.
+  La misma partida con otras opciones, las de la rama `sgf`, que se suman a las que ya tenía: `sgf(partida, to: 7)`. Además, `forget` (#pag(<memoria>)). Con `gobanist-set(sgf: ...)`, las opciones valen para todas las partidas.
 ]
 
 #opcion("sgf.from", valor: [un número], inicial: `1`)[
@@ -223,7 +223,7 @@ Una partida en un tablero dibuja las piedras iniciales (`AB` y `AW`), como con `
 #funcion("sgf-diagrams(partida, ..opciones)")[
   Dibuja la partida como en los libros: un diagrama cada `step` jugadas (1–50, 51–100, …). Cada diagrama parte de la posición real, con las jugadas anteriores sin número y sus capturas; las piedras que capturan las jugadas del diagrama no se quitan (se quitan en el siguiente). Debajo de cada uno van su epígrafe y sus notas «N en M» (#pag(<notas>)), y debajo del último, el resultado. Una jugada en un punto ocupado quita la piedra que había, sin prisioneros, para dibujar partidas que no son legales. Va fuera de `goban`.
 
-  Las opciones son las de la rama `diagrams`; con `goban-set(diagrams: ...)`, valen para todo el documento. Las de `sgf(partida, ...)` valen en cada tablero, salvo las que fija cada diagrama (`from`, `to`, `variation`, `numbers`, `marks`, `last-mark`, `step`, `restart` y `view`), que son un error.
+  Las opciones son las de la rama `diagrams`; con `gobanist-set(diagrams: ...)`, valen para todo el documento. Las de `sgf(partida, ...)` valen en cada tablero, salvo las que fija cada diagrama (`from`, `to`, `variation`, `numbers`, `marks`, `last-mark`, `step`, `restart` y `view`), que son un error.
 
   ```ejemplo-abajo
   #sgf-diagrams(partida, step: 5)
@@ -370,7 +370,7 @@ Una partida en un tablero dibuja las piedras iniciales (`AB` y `AW`), como con `
 
   Con varias partidas (`sgf-problem(p1, p2, p3)`), van primero todos los enunciados, cada uno con su número (el de la partida en su archivo), y después las soluciones de los que las tienen. Así se arma una hoja de problemas.
 
-  Las opciones son las de la rama `problems`; con `goban-set(problems: ...)`, valen para todo el documento. Las de `sgf(problema, ...)` valen en cada tablero, salvo las que fija el diagrama (`from`, `to`, `variation`, `numbers`, `last-mark`, `step`, `restart` y `view`). En los ejemplos, `problema` es `problema.sgf`, un problema de vida y muerte: la jugada correcta y dos equivocadas, con sus comentarios.
+  Las opciones son las de la rama `problems`; con `gobanist-set(problems: ...)`, valen para todo el documento. Las de `sgf(problema, ...)` valen en cada tablero, salvo las que fija el diagrama (`from`, `to`, `variation`, `numbers`, `last-mark`, `step`, `restart` y `view`). En los ejemplos, `problema` es `problema.sgf`, un problema de vida y muerte: la jugada correcta y dos equivocadas, con sus comentarios.
 
   ```ejemplo-abajo
   #sgf-problem(problema, title: "Problema 1")

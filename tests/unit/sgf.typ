@@ -75,9 +75,9 @@
 #context assert.eq(moves-of(sgf(variantes, variation: (1, 2))).len(), 4)
 
 // Las opciones globales de sgf.
-#goban-set(sgf: (numbers: false))
+#gobanist-set(sgf: (numbers: false))
 #context assert.eq(moves-of(variantes).map(m => m.at(2)), (none,) * 5)
-#goban-set(sgf: (numbers: auto))
+#gobanist-set(sgf: (numbers: auto))
 
 // Los pases cuentan para la numeración y se anotan; el que termina la línea, no.
 #goban(notes: true, sgf-read("(;SZ[5];B[cc];W[];B[dd];W[cc];B[])"))
@@ -86,7 +86,7 @@
 #[
   #set text(lang: "es")
   #context assert.eq(word(current(), "pass"), "pasa")
-  #goban-set(texts: (es: (pass: "pase"), xx: (at: "@")))
+  #gobanist-set(texts: (es: (pass: "pase"), xx: (at: "@")))
   #context assert.eq(word(current(), "pass"), "pase")
   #set text(lang: "xx")
   #context assert.eq((word(current(), "at"), word(current(), "pass")), ("@", "pass"))
@@ -145,6 +145,6 @@
   assert.eq(partial(partial: "A1:C3", sgf(vistas, view: 5)), "A1:C3")
 }
 #[
-  #goban-set(sgf: (view: 5))
+  #gobanist-set(sgf: (view: 5))
   #context assert.eq(resolve(board(vistas), current()).tree.partial, "F1:J4")
 ]

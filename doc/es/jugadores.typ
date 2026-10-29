@@ -11,7 +11,7 @@ Cada piedra, jugada y marca pertenece a uno de tres jugadores: el primero (`blac
   Las opciones de los jugadores: `neutral`, `black` y `white`, y `all`, que va a los tres.
 
   ```ejemplo
-  #goban-set(players: (
+  #gobanist-set(players: (
     all: (stone: (line: (color: red))),
     neutral: (stone: (fill: (color: yellow))),
     black: (stone: (fill: (
@@ -39,7 +39,7 @@ Cada jugador tiene el mismo árbol de opciones. Cada rama se documenta con el ob
 Copiar un jugador en otro es copiar su rama: el árbol es un valor.
 
 ```ejemplo
-#goban-set(players: (neutral: (stone: (
+#gobanist-set(players: (neutral: (stone: (
   fill: (color: white)))))
 
 // Neutral, pero con el aspecto de las blancas.
@@ -49,15 +49,15 @@ Copiar un jugador en otro es copiar su rama: el árbol es un valor.
 
 == Perfiles <perfiles>
 
-Un perfil es un estilo completo, para el tablero y los jugadores, guardado como un diccionario de opciones: las mismas de `goban-set`. Los perfiles del paquete se nombran con una cadena (#pag(<catalogo>)); uno propio es un diccionario.
+Un perfil es un estilo completo, para el tablero y los jugadores, guardado como un diccionario de opciones: las mismas de `gobanist-set`. Los perfiles del paquete se nombran con una cadena (#pag(<catalogo>)); uno propio es un diccionario.
 
 #opcion("profile", valor: [el nombre de un perfil o un diccionario])[
-  Aplica un perfil: `profile: "wain"` usa uno del paquete, y `profile: (background: ..., players: ...)`, uno propio. Va en `goban-set`, en las opciones de un tablero y en `view.goban`.
+  Aplica un perfil: `profile: "wain"` usa uno del paquete, y `profile: (background: ..., players: ...)`, uno propio. Va en `gobanist-set`, en las opciones de un tablero y en `view.goban`.
 
   Antes de aplicarlo, el tablero y los jugadores vuelven al estilo inicial (el del perfil `default`): así un perfil no hereda lo que no define, y una sombra o una imagen puesta antes se pierde. Lo que no es estilo queda como estaba: `size`, `use-i`, `partial`, `partial-margin`, `scale`, `scale-line-width`, `label.at`, `label.columns`, `label.rows` y sus direcciones, `hoshi.at`, `move.numbers`, las flechas, las líneas, el juego y las ramas de las partidas, los diagramas y las vistas. Lo que va después del perfil se suma a él.
 
   ```ejemplo
-  #goban-set(stone: (shadow: (on: true,
+  #gobanist-set(stone: (shadow: (on: true,
     angle: -45deg, offset: 2pt)))
 
   #goban(size: 3,
@@ -82,7 +82,7 @@ Un perfil es un estilo completo, para el tablero y los jugadores, guardado como 
   #let ejemplo2 = (profile: ejemplo,
     background: (rounded-corners: 4pt))
 
-  #goban-set(profile: ejemplo2)
+  #gobanist-set(profile: ejemplo2)
 
   #goban(partial: "A1:C3",
     moves("A1:3", numbers: false),

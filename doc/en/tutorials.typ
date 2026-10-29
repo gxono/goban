@@ -5,7 +5,7 @@
 
 == The first game <tut-primera>
 
-Kāru is writing an article for their students and decides to try goban. The first thing they want to show is a short game played in class. It is saved in an SGF file, `game.sgf`: the format in which almost every Go program and server saves games.
+Kāru is writing an article for their students and decides to try gobanist. The first thing they want to show is a short game played in class. It is saved in an SGF file, `game.sgf`: the format in which almost every Go program and server saves games.
 
 #align(center, goban(captures: "remove", label: (at: (top, left)), games.game))
 
@@ -17,7 +17,7 @@ Kāru is writing an article for their students and decides to try goban. The fir
 #goban(game)
 ```
 
-The moves are numbered, as in books. But with move 7 Black captured the white stone 2, which is still on the board: goban draws what it is asked to, without applying the rules. With the option `captures`, the `goban` removes the captured stones (#pag(<capturas>)). The options of the board are named, next to what is drawn.
+The moves are numbered, as in books. But with move 7 Black captured the white stone 2, which is still on the board: gobanist draws what it is asked to, without applying the rules. With the option `captures`, the `goban` removes the captured stones (#pag(<capturas>)). The options of the board are named, next to what is drawn.
 
 ```ejemplo
 #goban(captures: "remove", game)
@@ -53,7 +53,7 @@ The board is 9×9, just what is needed, but the coordinates on the borders are m
 #goban(label: (at: (top, left)))
 ```
 
-The columns go from H to J: as is customary in Go, goban skips the I, both in the coordinates and in the labels. If it is ever needed, the option `use-i` (#pag(<use-i>)) brings it back.
+The columns go from H to J: as is customary in Go, gobanist skips the I, both in the coordinates and in the labels. If it is ever needed, the option `use-i` (#pag(<use-i>)) brings it back.
 
 Now, the stones. `stones` takes the intersections, such as `"D8"`, and the player is the key: `black` or `white`. Without a player, the stone is neutral.
 
@@ -73,10 +73,10 @@ A single string holds all the stones of a player, separated by commas, and the s
       H6, B5, J5, B4, E4, J4, J3, H2"))
 ```
 
-The style is missing. In the catalog (#pag(<catalogo>)), Kāru finds one they like: the `pgfgo` profile. They apply it with `goban-set(profile: "pgfgo")` (#pag(<perfiles>)), and from there on it holds for every board that follows.
+The style is missing. In the catalog (#pag(<catalogo>)), Kāru finds one they like: the `pgfgo` profile. They apply it with `gobanist-set(profile: "pgfgo")` (#pag(<perfiles>)), and from there on it holds for every board that follows.
 
 ```ejemplo
-#goban-set(profile: "pgfgo")
+#gobanist-set(profile: "pgfgo")
 
 #goban(label: (at: (top, left)),
   stones(
@@ -263,14 +263,14 @@ The black stone #goban-view(fight, "E4") is cut off from its friends. If it play
 The view has the style of the board, but `view.goban` can change it: Kāru prefers to remove the background in every view of the article.
 
 ```codigo
-#goban-set(view: (goban: (background: false)))
+#gobanist-set(view: (goban: (background: false)))
 
 The black stone #goban-view(fight, "E4") is cut off from its friends.
 If it plays at A, it connects: #goban-view(fight, "C3:E5").
 ```
 
 #aislado[
-  #goban-set(view: (goban: (background: false)))
+  #gobanist-set(view: (goban: (background: false)))
   The black stone #goban-view(fight, "E4") is cut off from its friends. If it plays at A, it connects: #goban-view(fight, "C3:E5").
 ]
 
@@ -278,7 +278,7 @@ Since the board is a value, the view can go before the diagram that draws it: `f
 
 == A ko: captures and notes <tut-ko>
 
-In the first tutorial, `captures` removed a captured stone from a game in SGF. To explain a ko, Kāru needs the same with moves written by hand: to place them in order and have goban remove the captured stones.
+In the first tutorial, `captures` removed a captured stone from a game in SGF. To explain a ko, Kāru needs the same with moves written by hand: to place them in order and have gobanist remove the captured stones.
 
 #align(center, {
   goban(size: 7, captures: "remove", notes: true, stones(black: "B3, C2, C4", white: "C3, D2, D4, E3"),
@@ -332,7 +332,7 @@ The ko goes on: Black threatens (5), White answers (6) and Black takes back at D
 
 == A whole game <tut-partida>
 
-The article also comments on a long game: the first one between Lee Sedol and AlphaGo, from 2016, saved in `lee.sgf`. As in the first tutorial (#pag(<tut-primera>)), there is no need to write its 186 moves: goban reads them from the file (#pag(<sgf>)).
+The article also comments on a long game: the first one between Lee Sedol and AlphaGo, from 2016, saved in `lee.sgf`. As in the first tutorial (#pag(<tut-primera>)), there is no need to write its 186 moves: gobanist reads them from the file (#pag(<sgf>)).
 
 The first thing is the data of the game, which `sgf-info` takes from the root of the file.
 
@@ -383,7 +383,7 @@ The caption and the result are in English because the document is in English (`t
 In the comments, Kāru often shows what would have happened with another move. Copying the position in each diagram is tedious and error-prone: if a stone changes, it has to be changed in all of them. In the fight, Kāru saved a board as a value, with `board`. With `resume`, another board starts with that one, as it was left: the numbering and the turn carry on from there (#pag(<memoria>)).
 
 ```ejemplo
-#goban-set(size: 5, partial: "A1:E4")
+#gobanist-set(size: 5, partial: "A1:E4")
 
 #let base = board(
   stones(black: "B2, C3, D2",
@@ -397,7 +397,7 @@ In the comments, Kāru often shows what would have happened with another move. C
 A variation can also be a value, and one can go on from it: a `board` with `resume` has what it brought plus its own. By default, `resume` brings only the stones; `numbers: true` also brings the numbers.
 
 ```ejemplo
-#goban-set(size: 5, partial: "A1:E4")
+#gobanist-set(size: 5, partial: "A1:E4")
 
 #let base = board(
   stones(black: "B2, C3, D2",
@@ -439,7 +439,7 @@ A saved board also serves to compare styles. Before choosing the profile of thei
 To finish the article, Kāru wants to show how a game is counted. They start from the final position. Since it has many stones and they will draw it several times, they save it with `board`, like the variations of the previous tutorial, and the boards that follow take it first, without repeating the coordinates.
 
 ```ejemplo
-#goban-set(profile: "pgfgo")
+#gobanist-set(profile: "pgfgo")
 
 #let final = board(stones(
   black: "A5, A6, B1, B2, B3, B4, B5, C1, C4,
@@ -455,7 +455,7 @@ To finish the article, Kāru wants to show how a game is counted. They start fro
 Next come the prisoners: the dead stones, which are removed when counting. They are drawn with `prisoners`, which takes the same as `stones` (#pag(<prisioneros>)). Kāru also saves this board, with another name.
 
 ```ejemplo
-#goban-set(profile: "pgfgo")
+#gobanist-set(profile: "pgfgo")
 
 #let final2 = board(final,
   prisoners(black: "H1, J1, J2",
@@ -470,7 +470,7 @@ Next come the prisoners: the dead stones, which are removed when counting. They 
 Now, the territory. One way is to mark each point with `t-square` or `t-circle`. These marks take as their fill that of the stones of their player, and as their border, that of the grid. On an empty point, a mark is neutral unless it says its player, with `player`.
 
 ```ejemplo
-#goban-set(profile: "pgfgo")
+#gobanist-set(profile: "pgfgo")
 
 #goban(final2, label: (at: (top, left)),
   marks(player: "black",
@@ -485,7 +485,7 @@ Now, the territory. One way is to mark each point with `t-square` or `t-circle`.
 Another way is `territory` (#pag(<territorio>)). With a polygon, it marks the points of that region that have no living stone; with `auto`, it finds the territory of each player by itself. `goban-score` writes the score.
 
 ```ejemplo
-#goban-set(profile: "pgfgo")
+#gobanist-set(profile: "pgfgo")
 
 #goban(final2, label: (at: (top, left)),
   territory(auto, dame: true))
@@ -497,7 +497,7 @@ White: #goban-score("white", komi: 6.5).
 For the article, Kāru prefers the territory to look like a patch of color and not point by point. With `draw: "region"`, the territory of each color is a single polygon, whose sides run along the lines of the board.
 
 ```ejemplo
-#goban-set(profile: "pgfgo")
+#gobanist-set(profile: "pgfgo")
 
 #goban(final2, label: (at: (top, left)),
   territory(auto, draw: "region"))
@@ -559,7 +559,7 @@ For the cover of the book, Kāru wants a board that looks like a real one, since
 They start from the first board of the article. The wood goes in the background of the board, with `background.fill.image` (#pag(<tablero>)). An image is a file: a `path`, relative to the document that names it (or its `bytes`). By default, the image covers the whole board, cropped if needed; with `fit`, it can be stretched or repeated in tiles.
 
 ```ejemplo
-#goban-set(background: (fill: (
+#gobanist-set(background: (fill: (
   image: path("img/pgfgo-board.jpg"))))
 
 #goban(label: (at: (top, left)),
@@ -573,7 +573,7 @@ They start from the first board of the article. The wood goes in the background 
 The stones of a player are drawn with an image through `stone.image` (#pag(<piedras-imagen>)), in the options of that player. The image takes the place of the circle: neither the fill nor the border are drawn. In an image branch, what is not a dictionary is the file.
 
 ```ejemplo
-#goban-set(
+#gobanist-set(
   background: (fill: (
     image: path("img/pgfgo-board.jpg"))),
   players: (
@@ -596,7 +596,7 @@ The black stones look good, but the white ones are all the same, and on a real b
 #let shells = range(1, 6).map(n => path(
   "img/pgfgo-shell-white-" + str(n) + ".png"))
 
-#goban-set(
+#gobanist-set(
   background: (fill: (
     image: path("img/pgfgo-board.jpg"))),
   players: (
@@ -615,7 +615,7 @@ The black stones look good, but the white ones are all the same, and on a real b
 For the stones to look as if they rest on the wood, a shadow is missing. `shadow` draws it with the shape of the image (if the image has transparency, like these PNGs). Since it is the same for the three players, it goes in `stone`, at the first level: it is `players: (all: (stone: ...))`.
 
 ```ejemplo
-#goban-set(
+#gobanist-set(
   background: (fill: (
     image: path("img/pgfgo-board.jpg"))),
   stone: (shadow: (on: true, offset: 0.75pt,
@@ -636,7 +636,7 @@ For the stones to look as if they rest on the wood, a shadow is missing. `shadow
 With five images, a repeated one can still be seen. `rotate` turns each stone by a different angle, also chosen by its place. These stones have the light at the top left, so Kāru turns them only a little, between −15 and 15 degrees; the shadow turns with the image, but it still falls to the same side.
 
 ```ejemplo
-#goban-set(
+#gobanist-set(
   background: (fill: (
     image: path("img/pgfgo-board.jpg"))),
   stone: (shadow: (on: true, offset: 0.75pt,
@@ -655,7 +655,7 @@ With five images, a repeated one can still be seen. `rotate` turns each stone by
       H6, B5, J5, B4, E4, J4, J3, H2"))
 ```
 
-Kāru is going to use this style in the whole book, and perhaps in other documents. Instead of repeating the `goban-set`, they save it as a profile (#pag(<perfiles>)): a profile is a dictionary of options, like those of `goban-set`, and it is used with the option `profile`. They put it in a file of its own, `wood.typ`, to import it from any document.
+Kāru is going to use this style in the whole book, and perhaps in other documents. Instead of repeating the `gobanist-set`, they save it as a profile (#pag(<perfiles>)): a profile is a dictionary of options, like those of `gobanist-set`, and it is used with the option `profile`. They put it in a file of its own, `wood.typ`, to import it from any document.
 
 ```codigo
 // wood.typ
@@ -671,21 +671,21 @@ Kāru is going to use this style in the whole book, and perhaps in other documen
 
 // The book:
 #import "wood.typ": wood
-#goban-set(profile: wood)
+#gobanist-set(profile: wood)
 ```
 
-Before setting its own, `profile` brings the style back to the initial one, so the profile looks the same in any document. An almost identical profile, with a soft shadow and without the border of the board, comes with goban: `shell` (#pag(<catalogo>)); with `profile: "shell"` there is nothing to copy. There is also `yunzi`, with matte stones.
+Before setting its own, `profile` brings the style back to the initial one, so the profile looks the same in any document. An almost identical profile, with a soft shadow and without the border of the board, comes with gobanist: `shell` (#pag(<catalogo>)); with `profile: "shell"` there is nothing to copy. There is also `yunzi`, with matte stones.
 
-A profile holds for everything goban draws, also for the diagrams of an SGF file. This is the game between Lee Sedol and AlphaGo on wood, with a diagram every 50 moves and the numbering restarted in each one.
+A profile holds for everything gobanist draws, also for the diagrams of an SGF file. This is the game between Lee Sedol and AlphaGo on wood, with a diagram every 50 moves and the numbering restarted in each one.
 
 ```codigo
-#goban-set(profile: wood)
+#gobanist-set(profile: wood)
 
 #sgf-diagrams(lee, step: 50, restart: true, layout: (columns: 2, fit: true))
 ```
 
 #aislado[
-  #goban-set(profile: wood-tutorial)
+  #gobanist-set(profile: wood-tutorial)
   #sgf-diagrams(lee, step: 50, restart: true, layout: (columns: 2, fit: true))
 ]
 
@@ -696,7 +696,7 @@ Kāru also teaches with slides. Typst does not make animated PDFs, but a `goban`
 ```codigo
 #import "@preview/touying:0.6.1": *
 #import themes.simple: *
-#import "@preview/goban:0.1.0": *
+#import "@preview/gobanist:0.1.0": *
 
 #show: simple-theme
 #let game = sgf-read(path("game.sgf"))
@@ -719,7 +719,7 @@ The slides are another document, but Kāru does not want to copy the boards of t
 
 ```codigo
 // boards.typ
-#import "@preview/goban:0.1.0": *
+#import "@preview/gobanist:0.1.0": *
 #let fight = board(stones(black: "C3, D3, E4, C5", white: "D4, D5, E5, F3"),
   marks(triangle: "D5"), marks(custom: "E3", content: [A]))
 
@@ -754,7 +754,7 @@ The first diagram is the chosen line, to the end. The moves of each variation ar
 
 == Other languages <tut-idiomas>
 
-A colleague of Kāru's wants to translate the book into French. The texts written by goban (the captions, the result, the "N at M" notes and the annotations of the comments) follow the language of the text, `text.lang`, also if it changes inside the document: with `set text(lang: "fr")` they translate themselves (#pag(<idiomas>)).
+A colleague of Kāru's wants to translate the book into French. The texts written by gobanist (the captions, the result, the "N at M" notes and the annotations of the comments) follow the language of the text, `text.lang`, also if it changes inside the document: with `set text(lang: "fr")` they translate themselves (#pag(<idiomas>)).
 
 ```ejemplo-abajo
 #set text(lang: "fr")
@@ -767,16 +767,16 @@ A colleague of Kāru's wants to translate the book into French. The texts writte
 The comment of the problem, "Black to kill.", is not translated: it is written that way in the file. Each text of the package can also be changed with its own option, in any language: for example, the word in the caption of the diagrams, with `diagrams.title`; or the texts of a language, with `texts`.
 
 ```codigo
-#goban-set(diagrams: (title: "Figure"))
-#goban-set(texts: (en: (diagram: "Figure")))
+#gobanist-set(diagrams: (title: "Figure"))
+#gobanist-set(texts: (en: (diagram: "Figure")))
 ```
 
 == Writing less: the coordinate syntax <tut-abreviar>
 
-In all the tutorials, Kāru wrote the stones one by one. When there are many, goban lets you abbreviate the lists of `stones`, `marks` and `prisoners` (#pag(<coordenadas>)). The most useful forms are the stretches of a row or of a column: `C:G5` is row 5, from C to G, and `J3:5` is column J, from 3 to 5. With them, the first board of the article becomes:
+In all the tutorials, Kāru wrote the stones one by one. When there are many, gobanist lets you abbreviate the lists of `stones`, `marks` and `prisoners` (#pag(<coordenadas>)). The most useful forms are the stretches of a row or of a column: `C:G5` is row 5, from C to G, and `J3:5` is column J, from 3 to 5. With them, the first board of the article becomes:
 
 ```ejemplo
-#goban-set(profile: "pgfgo")
+#gobanist-set(profile: "pgfgo")
 
 #goban(label: (at: (top, left)),
   stones(
@@ -789,7 +789,7 @@ In all the tutorials, Kāru wrote the stones one by one. When there are many, go
 For larger groups, there are paths that turn at right angles. `A6 |- B5` goes from A6 down to row 5 and then right to B5: these are the stones A6, A5 and B5. `E9 -| F4` goes right first and then down. `D5 -- D7` is a straight line. Paths can be chained, and with them the final position of the territory tutorial (#pag(<tut-territorio>)) fits in two lines:
 
 ```ejemplo
-#goban-set(profile: "pgfgo")
+#gobanist-set(profile: "pgfgo")
 
 #goban(label: (at: (top, left)),
   stones(

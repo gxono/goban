@@ -14,7 +14,7 @@ Intersections are written as in Go: a letter for the column, from the left, and 
 The same syntax serves for `moves` (without the `;`), for the vertices of `territory` and for `hoshi.at`. The arrows and the lines, and `partial`, take single intersections.
 
 ```ejemplo-abajo
-#goban-set(profile: "pgfgosmooth")
+#gobanist-set(profile: "pgfgosmooth")
 
 #goban(size: 17, partial: "A1:R5", label: (at: (top, left)),
   stones(black: "*; B, D, H, M, R2, Q, F2:4, K2 r L5, O[1:2, 4]; B3"))
@@ -31,7 +31,7 @@ These forms go alone: they are not chained with the operators on #pag(<caminos>)
 `*` is every *visible* intersection of the board: with `partial`, those of the visible part.
 
 ```ejemplo
-#goban-set(size: 5, partial: "B2:D4")
+#gobanist-set(size: 5, partial: "B2:D4")
 
 #goban(label: (at: (bottom, left)),
   stones(black: "*"))
@@ -42,7 +42,7 @@ These forms go alone: they are not chained with the operators on #pag(<caminos>)
 A letter and a number, together: `"C2"`.
 
 ```ejemplo
-#goban-set(size: 5, partial: "B2:D4")
+#gobanist-set(size: 5, partial: "B2:D4")
 
 #goban(label: (at: (bottom, left)),
   stones(black: "C2, D3", white: "B4"))
@@ -53,7 +53,7 @@ A letter and a number, together: `"C2"`.
 A letter alone is a whole column: `D` is column D. A number alone is a whole row: `4` is row 4.
 
 ```ejemplo
-#goban-set(size: 5, partial: "B2:D4")
+#gobanist-set(size: 5, partial: "B2:D4")
 
 #goban(stones(black: "B2, B3, B4"),
   stones("D", fill: (color: red)))
@@ -200,7 +200,7 @@ It can be split into parts, or thought of as a full rectangle from which the mar
 #align(center, goban(stones(black: "A1:E6"), marks(cross: "C6 |- E3, A1:2", line: (color: white))))
 
 ```ejemplo
-#goban-set(label: (at: (top, bottom, left, right)),
+#gobanist-set(label: (at: (top, bottom, left, right)),
   partial: "A1:E6")
 
 #goban(stones(black: "A1:E6"))
@@ -211,7 +211,7 @@ It can be split into parts, or thought of as a full rectangle from which the mar
 First, the rectangle `A1:E6`; then the stretch `A1:2` is removed, and finally the path `C6 |- E3`. The groups alternate with each `;`:
 
 ```ejemplo
-#goban-set(label: (at: (top, bottom, left, right)),
+#gobanist-set(label: (at: (top, bottom, left, right)),
   partial: "A1:E6")
 
 #goban(stones(black: "A1:E6"))

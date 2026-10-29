@@ -2,9 +2,14 @@
 
 ## 0.1.0 (sin publicar)
 
+- El paquete se llama `gobanist` (`@preview/gobanist`); las funciones siguen siendo `goban`, `goban-layout`, etc., salvo `goban-set`, que pasa a `gobanist-set`.
+- El tablero no depende del tamaño de la fuente: la grilla (`grid.sep`, 12.5pt), el fondo (`background.sep`,
+  8.25pt), los números de las jugadas, el texto de las marcas y las etiquetas (`label.text`, 10pt) tienen
+  medidas absolutas, las de pgf-go con 10pt; antes estaban en `em`, y con otra fuente las piedras se separaban o
+  se pisaban.
 - Prototipo del núcleo: tablero, piedras, prisioneros, jugadas numeradas, `partial`, marcas y la sintaxis
   de coordenadas de pgf-go.
-- Opciones como árbol de diccionarios, con `goban-set` para las globales.
+- Opciones como árbol de diccionarios, con `gobanist-set` para las globales.
 - `board` y `resume`: un tablero como valor; `forget`.
 - Sombra y brillo de las piedras, sombra del tablero y `scale-line-width`.
 - Etiquetas con letras, números o kanji, en las dos direcciones, y `label.style`.

@@ -11,7 +11,7 @@ Each stone, move and mark belongs to one of three players: the first one (`black
   The options of the players: `neutral`, `black` and `white`, and `all`, which goes to the three.
 
   ```ejemplo
-  #goban-set(players: (
+  #gobanist-set(players: (
     all: (stone: (line: (color: red))),
     neutral: (stone: (fill: (color: yellow))),
     black: (stone: (fill: (
@@ -39,7 +39,7 @@ Each player has the same tree of options. Each branch is documented with the obj
 Copying a player into another is copying their branch: the tree is a value.
 
 ```ejemplo
-#goban-set(players: (neutral: (stone: (
+#gobanist-set(players: (neutral: (stone: (
   fill: (color: white)))))
 
 // Neutral, but with the look of White.
@@ -49,15 +49,15 @@ Copying a player into another is copying their branch: the tree is a value.
 
 == Profiles <perfiles>
 
-A profile is a complete style, for the board and the players, saved as a dictionary of options: the same as those of `goban-set`. The profiles of the package are named with a string (#pag(<catalogo>)); one of your own is a dictionary.
+A profile is a complete style, for the board and the players, saved as a dictionary of options: the same as those of `gobanist-set`. The profiles of the package are named with a string (#pag(<catalogo>)); one of your own is a dictionary.
 
 #opcion("profile", valor: [the name of a profile or a dictionary])[
-  Applies a profile: `profile: "wain"` uses one of the package, and `profile: (background: ..., players: ...)`, one of your own. It goes in `goban-set`, in the options of a board and in `view.goban`.
+  Applies a profile: `profile: "wain"` uses one of the package, and `profile: (background: ..., players: ...)`, one of your own. It goes in `gobanist-set`, in the options of a board and in `view.goban`.
 
   Before applying it, the board and the players go back to the initial style (that of the `default` profile): that way a profile does not inherit what it does not define, and a shadow or an image set before is lost. What is not style stays as it was: `size`, `use-i`, `partial`, `partial-margin`, `scale`, `scale-line-width`, `label.at`, `label.columns`, `label.rows` and their directions, `hoshi.at`, `move.numbers`, the arrows, the lines, the game and the branches of the games, the diagrams and the views. What goes after the profile is added to it.
 
   ```ejemplo
-  #goban-set(stone: (shadow: (on: true,
+  #gobanist-set(stone: (shadow: (on: true,
     angle: -45deg, offset: 2pt)))
 
   #goban(size: 3,
@@ -82,7 +82,7 @@ A profile is a complete style, for the board and the players, saved as a diction
   #let example2 = (profile: example,
     background: (rounded-corners: 4pt))
 
-  #goban-set(profile: example2)
+  #gobanist-set(profile: example2)
 
   #goban(partial: "A1:C3",
     moves("A1:3", numbers: false),

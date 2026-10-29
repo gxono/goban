@@ -33,7 +33,7 @@ Así quedó el ko: #goban-view(tablero1, "B2:E4").
 Texto #goban-view(tablero2, "C3", raise: 0pt) texto #goban-view(tablero2, "C3") texto
 #goban-view(tablero2, "C3", raise: 0.7em).
 
-#goban-set(view: (goban: (background: false, scale: 1)))
+#gobanist-set(view: (goban: (background: false, scale: 1)))
 Sin fondo y más grande: #goban-view(tablero2, "C3").
 
 // Una partida, y un tablero con resume.

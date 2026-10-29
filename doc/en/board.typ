@@ -6,7 +6,7 @@
 The board is what `goban` draws: the grid, the background, the coordinates and everything on top.
 
 #funcion("goban(..options, ..elements)")[
-  Draws a board. The elements are what goes on it, in order: stones (`stones`, `prisoners`), moves (`moves`), marks (`marks`), arrows and lines (`arrows`, `lines`), territory (`territory`) and games (`sgf-read`, `sgf`). A board made with `board` can go first: it is that board, with its options and what it has, and the options and the elements of the `goban` are added to it. The options are named, and they are those of `goban-set` (#pag(<configuracion>)): they hold only for this board. By default, the board is 9×9, with a visible border, a white background and no coordinates.
+  Draws a board. The elements are what goes on it, in order: stones (`stones`, `prisoners`), moves (`moves`), marks (`marks`), arrows and lines (`arrows`, `lines`), territory (`territory`) and games (`sgf-read`, `sgf`). A board made with `board` can go first: it is that board, with its options and what it has, and the options and the elements of the `goban` are added to it. The options are named, and they are those of `gobanist-set` (#pag(<configuracion>)): they hold only for this board. By default, the board is 9×9, with a visible border, a white background and no coordinates.
 
   ```ejemplo
   #goban()
@@ -52,7 +52,7 @@ The board is what `goban` draws: the grid, the background, the coordinates and e
   Uses the letter I in the coordinates and in the labels. Without it, as is customary in Go, the columns go from H to J, and an I in the coordinates is the J.
 
   ```ejemplo
-  #goban-set(size: 13, label: (at: top))
+  #gobanist-set(size: 13, label: (at: top))
 
   #goban(use-i: true, partial: "H1:M3",
     label: (at: (top, left)),
@@ -120,7 +120,7 @@ The board is what `goban` draws: the grid, the background, the coordinates and e
   The width of the lines.
 
   ```ejemplo
-  #goban-set(size: 5, partial: "B2:D4")
+  #gobanist-set(size: 5, partial: "B2:D4")
   #let b = board(stones(black: "C2, D3", white: "B4"))
 
   #goban(b, grid: (line: (color: blue)))
@@ -129,7 +129,7 @@ The board is what `goban` draws: the grid, the background, the coordinates and e
   ```
 ]
 
-#opcion("grid.sep", valor: [a length or `(x: ..., y: ...)`], inicial: `(x: 1.25em, y: 1.25em)`)[
+#opcion("grid.sep", valor: [a length or `(x: ..., y: ...)`], inicial: `(x: 12.5pt, y: 12.5pt)`)[
   The distance between the lines: `x`, between the vertical ones, and `y`, between the horizontal ones. A single length goes to both.
 
   ```ejemplo
@@ -255,7 +255,7 @@ The background of the board is the rectangle under the grid, with its fill and i
   The background: the fill and the border. With `false`, no background.
 
   ```ejemplo
-  #goban-set(size: 5, partial: "B2:D4")
+  #gobanist-set(size: 5, partial: "B2:D4")
   #let b = board(stones(black: "C2, D3", white: "B4"))
 
   #goban(b)
@@ -272,7 +272,7 @@ The background of the board is the rectangle under the grid, with its fill and i
   The opacity of the fill, also that of its image.
 
   ```ejemplo
-  #goban-set(size: 5, partial: "B2:D4")
+  #gobanist-set(size: 5, partial: "B2:D4")
   #let b = board(stones(black: "C2, D3", white: "B4"))
 
   #goban(b, background: (fill: false))
@@ -384,7 +384,7 @@ The background of the board is the rectangle under the grid, with its fill and i
   The width of the border.
 
   ```ejemplo
-  #goban-set(size: 5, partial: "B2:D4")
+  #gobanist-set(size: 5, partial: "B2:D4")
   #let b = board(stones(black: "C2, D3", white: "B4"))
 
   #goban(b, background: (line: false))
@@ -399,7 +399,7 @@ The background of the board is the rectangle under the grid, with its fill and i
   The radius of the corners of the background: `outer`, that of the corners of the board, and `inner`, that of the ones seen on a partial board. A single length goes to both.
 
   ```ejemplo
-  #goban-set(size: 5, partial: "A1:C3")
+  #gobanist-set(size: 5, partial: "A1:C3")
   #let b = board(stones(black: "B1, C2", white: "A3"))
 
   #goban(b, background: (
@@ -409,11 +409,11 @@ The background of the board is the rectangle under the grid, with its fill and i
   ```
 ]
 
-#opcion("background.sep", valor: [a length], inicial: `0.825em`)[
+#opcion("background.sep", valor: [a length], inicial: `8.25pt`)[
   The distance between the grid and the border.
 
   ```ejemplo
-  #goban-set(size: 5, partial: "B2:D4")
+  #gobanist-set(size: 5, partial: "B2:D4")
   #let b = board(stones(black: "C2, D3", white: "B4"))
 
   #goban(b, background: (sep: 0.625em))
@@ -425,7 +425,7 @@ The background of the board is the rectangle under the grid, with its fill and i
   A shadow under the board.
 
   ```ejemplo
-  #goban-set(size: 5, partial: "B2:D4")
+  #gobanist-set(size: 5, partial: "B2:D4")
   #let b = board(stones(black: "C2, D3", white: "B4"))
 
   #goban(b, background: (shadow: true))
@@ -485,11 +485,11 @@ The labels are the coordinates written on the sides of the board.
   ```
 ]
 
-#opcion("label.text", valor: [a dictionary], inicial: `(:)`)[
+#opcion("label.text", valor: [a dictionary], inicial: `(size: 10pt)`)[
   The `text` options of the labels: the font, the size, the color.
 
   ```ejemplo
-  #goban-set(size: 5)
+  #gobanist-set(size: 5)
 
   #goban(label: (at: (bottom, left),
     text: (size: 6pt)))

@@ -89,7 +89,7 @@ Con: #sgf-comment(partida, 7) #h(1em) Sin: #sgf-comment(partida, 7, annotations:
 
 // La vista de sgf no llega a los diagramas: eligen la suya (con view: false, todo el tablero).
 #[
-  #goban-set(sgf: (view: 5))
+  #gobanist-set(sgf: (view: 5))
   #sgf-diagrams(vistas, step: 2, view: false, goban: (scale: 0.4))
 ]
 

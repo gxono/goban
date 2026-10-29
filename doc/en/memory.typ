@@ -13,7 +13,7 @@ A board can be a value: `board` (#pag(<tablero>)) takes the same as `goban` and 
 `goban-view` shows a part in the middle of the text (#pag(<vistas>)).
 
 ```ejemplo
-#goban-set(size: 5, partial: "B2:D4")
+#gobanist-set(size: 5, partial: "B2:D4")
 
 #let board1 = board(stones(black: "C2, D3"),
   moves(white: "B4"))
@@ -28,12 +28,12 @@ A board can be a value: `board` (#pag(<tablero>)) takes the same as `goban` and 
 #opcion("resume", valor: [a board or `(board: ..., numbers: ..., marks: ..., territory: ...)`])[
   Starts the board with the board `board`, as it was at the end: with the captures resolved (if that board had `captures`, this one does too, unless it gives its own). The numbering and the turn carry on from there. A board alone, `resume: base`, brings only the stones, without numbers, marks or territory; in a dictionary, `numbers`, `marks` and `territory` ask for the rest.
 
-  The size is that of the `resume` board, unless this one gives its own (`size`, or a game); one set with `goban-set` does not count. The other options of that board (`partial`, the coordinates, the style) do not come: they are given on each board.
+  The size is that of the `resume` board, unless this one gives its own (`size`, or a game); one set with `gobanist-set` does not count. The other options of that board (`partial`, the coordinates, the style) do not come: they are given on each board.
 
   A `board` with `resume` has what it brought, as it was drawn, plus its own, and the `resume` board does not change: that is how variations are built.
 
   ```ejemplo
-  #goban-set(size: 5, partial: "B2:D4")
+  #gobanist-set(size: 5, partial: "B2:D4")
 
   #let base = board(stones(black: "C2, D3",
     white: "C3"))
@@ -55,7 +55,7 @@ A board can be a value: `board` (#pag(<tablero>)) takes the same as `goban` and 
   Also brings the territory.
 
   ```ejemplo
-  #goban-set(size: 5, partial: "B2:D4")
+  #gobanist-set(size: 5, partial: "B2:D4")
 
   #let saved = board(stones(black: "C2:4"),
     moves(white: "D3"), marks(triangle: "B3"),
@@ -108,7 +108,7 @@ Since a board is a value, it can be saved in a module and imported in another do
   ```
 ]
 
-#opcion("view", valor: [a dictionary])[The options of the views: in `goban-view`, for that view, and with `goban-set(view: ...)`, for all of them.]
+#opcion("view", valor: [a dictionary])[The options of the views: in `goban-view`, for that view, and with `gobanist-set(view: ...)`, for all of them.]
 #opcion("view.marks", valor: [`true` or `false`], inicial: `true`)[With `false`, without the marks.]
 #opcion("view.arrows", valor: [`true` or `false`], inicial: `true`)[With `false`, without the arrows.]
 #opcion("view.lines", valor: [`true` or `false`], inicial: `true`)[

@@ -3,7 +3,7 @@
 
 = Games in SGF <sgf>
 
-SGF is the format used by almost every Go program and server to save games. goban reads them with the kernel (#pag(<kernel>)): a game on a board, its data and comments, the whole game in diagrams and problems with their solutions.
+SGF is the format used by almost every Go program and server to save games. gobanist reads them with the kernel (#pag(<kernel>)): a game on a board, its data and comments, the whole game in diagrams and problems with their solutions.
 
 In the examples, `game` is `game.sgf`, a short 9×9 game:
 
@@ -52,7 +52,7 @@ A game on a board draws the initial stones (`AB` and `AW`), as with `stones`, an
 ```
 
 #funcion("sgf(game, ..options)")[
-  The same game with other options, those of the `sgf` branch, which are added to those it already had: `sgf(game, to: 7)`. Also, `forget` (#pag(<memoria>)). With `goban-set(sgf: ...)`, the options hold for every game.
+  The same game with other options, those of the `sgf` branch, which are added to those it already had: `sgf(game, to: 7)`. Also, `forget` (#pag(<memoria>)). With `gobanist-set(sgf: ...)`, the options hold for every game.
 ]
 
 #opcion("sgf.from", valor: [a number], inicial: `1`)[
@@ -223,7 +223,7 @@ A game on a board draws the initial stones (`AB` and `AW`), as with `stones`, an
 #funcion("sgf-diagrams(game, ..options)")[
   Draws the game as in books: a diagram every `step` moves (1–50, 51–100, …). Each diagram starts from the real position, with the previous moves without numbers and their captures; the stones captured by the moves of the diagram are not removed (they are removed in the next one). Below each one go its caption and its "N at M" notes (#pag(<notas>)), and below the last one, the result. A move on an occupied point removes the stone that was there, without prisoners, to draw games that are not legal. It goes outside `goban`.
 
-  The options are those of the `diagrams` branch; with `goban-set(diagrams: ...)`, they hold for the whole document. Those of `sgf(game, ...)` hold on each board, except those set by each diagram (`from`, `to`, `variation`, `numbers`, `marks`, `last-mark`, `step`, `restart` and `view`), which are an error.
+  The options are those of the `diagrams` branch; with `gobanist-set(diagrams: ...)`, they hold for the whole document. Those of `sgf(game, ...)` hold on each board, except those set by each diagram (`from`, `to`, `variation`, `numbers`, `marks`, `last-mark`, `step`, `restart` and `view`), which are an error.
 
   ```ejemplo-abajo
   #sgf-diagrams(game, step: 5)
@@ -370,7 +370,7 @@ A game on a board draws the initial stones (`AB` and `AW`), as with `stones`, an
 
   With several games (`sgf-problem(p1, p2, p3)`), all the statements go first, each one with its number (that of the game in its file), and then the solutions of those that have them. That is how a problem sheet is made.
 
-  The options are those of the `problems` branch; with `goban-set(problems: ...)`, they hold for the whole document. Those of `sgf(problem, ...)` hold on each board, except those set by the diagram (`from`, `to`, `variation`, `numbers`, `last-mark`, `step`, `restart` and `view`). In the examples, `problem` is `problem.sgf`, a life-and-death problem: the right move and two wrong ones, with their comments.
+  The options are those of the `problems` branch; with `gobanist-set(problems: ...)`, they hold for the whole document. Those of `sgf(problem, ...)` hold on each board, except those set by the diagram (`from`, `to`, `variation`, `numbers`, `last-mark`, `step`, `restart` and `view`). In the examples, `problem` is `problem.sgf`, a life-and-death problem: the right move and two wrong ones, with their comments.
 
   ```ejemplo-abajo
   #sgf-problem(problem, title: "Problem 1")

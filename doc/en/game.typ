@@ -11,7 +11,7 @@ A `goban` can follow the rules of the game: remove the captured stones, note the
   The captures. When a move leaves an opposing group without liberties, that group is removed from the board; if it leaves its own group without liberties (a suicide), that group is removed. The stones of `stones` count too; neutral stones and prisoners do not. A move outside a partial board also captures. A move on an occupied point is an error, because it is not possible in a game (except in `sgf-diagrams` and `sgf-problem`, #pag(<diagramas>)). With `none`, there are no captures: the moves are drawn on top of one another.
 
   ```ejemplo
-  #goban-set(size: 5, partial: "A1:C3")
+  #gobanist-set(size: 5, partial: "A1:C3")
 
   #goban(moves("B1, A1, A2"))
   // 3 captures 2.
@@ -34,7 +34,7 @@ A `goban` can follow the rules of the game: remove the captured stones, note the
   What happens to the marks on a stone when it is captured. With `"keep"`, they stay on the empty point. With `"remove"`, they go away with the stone, also with `captures: "fade"`; sequences keep their numbering. The marks on empty points do not change.
 
   ```ejemplo
-  #goban-set(size: 5, partial: "A1:C3",
+  #gobanist-set(size: 5, partial: "A1:C3",
     captures: "remove")
 
   #goban(
@@ -166,7 +166,7 @@ At the end of the game, the territory can be marked by hand with `marks` (#pag(<
     territory(auto, draw: "region"))
   ```
 
-  It is an option of `territory`, and with `goban-set(territory: (draw: ...))`, of all of them.
+  It is an option of `territory`, and with `gobanist-set(territory: (draw: ...))`, of all of them.
 ]
 
 #opcion("territory.dame", valor: [`true` or `false`], inicial: `false`)[With `auto`, also marks the neutral points.]
@@ -284,7 +284,7 @@ The other options of `territory` (`mark`, `fill`, `line` and `vertices`) change 
   ```
 ]
 
-#opcion("score.komi", valor: [a number], inicial: `0`)[The komi that `goban-score` adds to White: `goban-set(score: (komi: 6.5))`.]
+#opcion("score.komi", valor: [a number], inicial: `0`)[The komi that `goban-score` adds to White: `gobanist-set(score: (komi: 6.5))`.]
 
 #funcion("goban-region(player, property, n: none)")[
   A property of the region (`draw: "region"`) of the player (`"black"` or `"white"`) in the last `goban`, as text. The properties are those of the whole outline, even if the board is partial. Without a region, the numbers are 0. The properties are:

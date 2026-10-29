@@ -3,9 +3,9 @@
 
 = Presentación <presentacion>
 
-== Qué es goban
+== Qué es gobanist
 
-goban es un paquete de Typst para dibujar tableros, posiciones, partidas y problemas de go. Es un port de pgf-go, un paquete de LaTeX publicado hace dos años por el mismo autor, con sus mismas ideas y casi todas sus opciones, escritas con los valores de Typst:
+gobanist es un paquete de Typst para dibujar tableros, posiciones, partidas y problemas de go. Es un port de pgf-go, un paquete de LaTeX publicado hace dos años por el mismo autor, con sus mismas ideas y casi todas sus opciones, escritas con los valores de Typst:
 
 - Partidas en SGF: una partida en un tablero, series de diagramas como en los libros y problemas con sus soluciones.
 - Las reglas del juego, en un kernel de WebAssembly: capturas, notas «N en M» para los kos, territorio y puntaje.
@@ -20,15 +20,15 @@ El dibujo, las coordenadas y las opciones están escritos en Typst. Lo que neces
 
 == Primeros pasos <primeros-pasos>
 
-goban se importa como cualquier paquete. Necesita Typst 0.15 o posterior.
+gobanist se importa como cualquier paquete. Necesita Typst 0.15 o posterior.
 
 ```codigo
-#import "@preview/goban:0.1.0": *
+#import "@preview/gobanist:0.1.0": *
 
 #goban(stones(black: "C3, D4", white: "E5"))
 ```
 
-Todo lo que se dibuja va en un `goban`: las piedras, las jugadas, las marcas, las flechas, el territorio o una partida leída de un archivo. Las opciones del tablero van en el mismo `goban`, con nombre (`size: 13`), y las de todo el documento, en `goban-set` (#pag(<configuracion>)).
+Todo lo que se dibuja va en un `goban`: las piedras, las jugadas, las marcas, las flechas, el territorio o una partida leída de un archivo. Las opciones del tablero van en el mismo `goban`, con nombre (`size: 13`), y las de todo el documento, en `gobanist-set` (#pag(<configuracion>)).
 
 ```ejemplo
 #goban(size: 5, stones(black: "C3, D4", white: "B2"))
@@ -52,7 +52,7 @@ Conviene leer primero los tutoriales, de corrido, para tener un pantallazo de to
 - *Josekis de un diccionario en SGF*: el tutorial de la #pag(<tut-josekis>), y `variation` y `variations` en la #pag(<sgf>).
 - *Problemas (tsumego) con sus soluciones*: el tutorial de la #pag(<tut-problemas>), y `sgf-problem` en la #pag(<problemas>).
 - *Acomodar varios diagramas en una grilla*: los tutoriales de las páginas #context counter(page).at(<tut-partida>).first() y #context counter(page).at(<tut-problemas>).first(), y `layout` y `goban-layout` en la #pag(<disposicion>).
-- *Cambiar el estilo de todos los tableros*: el final del tutorial de la #pag(<tut-posicion>) y el catálogo (#pag(<catalogo>)). Para cambiar un detalle, `goban-set` (#pag(<configuracion>)) y las opciones de cada objeto; para guardar un estilo propio, los perfiles (#pag(<perfiles>)).
+- *Cambiar el estilo de todos los tableros*: el final del tutorial de la #pag(<tut-posicion>) y el catálogo (#pag(<catalogo>)). Para cambiar un detalle, `gobanist-set` (#pag(<configuracion>)) y las opciones de cada objeto; para guardar un estilo propio, los perfiles (#pag(<perfiles>)).
 - *Usar imágenes en el tablero y en las piedras*: el tutorial de la #pag(<tut-madera>); el fondo y la cuadrícula en la #pag(<tablero>), y las piedras en la #pag(<piedras-imagen>).
 - *Diapositivas*: el tutorial de la #pag(<tut-diapositivas>).
 - *Escribir en otro idioma*: el tutorial de la #pag(<tut-idiomas>), y la referencia en la #pag(<idiomas>).
@@ -61,14 +61,14 @@ Una regla general: las ramas que prenden o apagan algo (la cuadrícula, el fondo
 
 == Para quien viene de pgf-go <desde-pgf-go>
 
-Las opciones de goban son las de pgf-go, con la sintaxis de Typst: un árbol de diccionarios en lugar de un árbol de _keys_, y valores de Typst en lugar de los de TikZ. Los cambios más visibles:
+Las opciones de gobanist son las de pgf-go, con la sintaxis de Typst: un árbol de diccionarios en lugar de un árbol de _keys_, y valores de Typst en lugar de los de TikZ. Los cambios más visibles:
 
 #table(columns: (1fr, 1fr), stroke: none, inset: (x: 4pt, y: 3pt),
   table.hline(),
-  table.header([*pgf-go*], [*goban*]),
+  table.header([*pgf-go*], [*gobanist*]),
   table.hline(stroke: 0.5pt),
   [`\begin{goban}[13] ... \end{goban}`], [`#goban(size: 13, ...)`],
-  [`\pgfgoset{goban = {...}}`], [`#goban-set(...)`],
+  [`\pgfgoset{goban = {...}}`], [`#gobanist-set(...)`],
   [`\stones[b]{C3, D4}`], [`stones(black: "C3, D4")`],
   [`\stone{C3}`, `\stones{C3}`], [`stones("C3")`],
   [`\moves[w]{D2, B3}`], [`moves(white: "D2, B3")`],
@@ -95,7 +95,7 @@ Algunas cosas cambian de comportamiento:
 
 - Una marca sin jugador sobre una piedra toma el jugador de la piedra (en pgf-go era neutral).
 - Typst no tiene avisos: lo que en pgf-go avisaba (una coordenada que no se entiende o que está fuera del tablero, una partida de otro tamaño) es un error. Una jugada en un punto ocupado, con capturas, también es error, salvo en `sgf-diagrams` y `sgf-problem`.
-- Los grises son los de xcolor: el gris de goban es `luma(50%)`, no el `gray` de Typst.
+- Los grises son los de xcolor: el gris de gobanist es `luma(50%)`, no el `gray` de Typst.
 - El tablero tiene al menos 2×2 líneas y a lo sumo 25 columnas.
 - Las imágenes son `path` o `bytes`, no nombres de archivo.
 

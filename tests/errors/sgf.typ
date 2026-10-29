@@ -103,5 +103,5 @@
 #sgf-comment(sgf-read("(;SZ[5];B[cc])"), 1, variation: (2,))
 
 // error: opción desconocida: sgf.forget
-#goban-set(sgf: (forget: true))
+#gobanist-set(sgf: (forget: true))
 #goban()

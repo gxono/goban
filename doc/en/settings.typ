@@ -6,13 +6,13 @@
 
 == The options
 
-The options of goban form a tree of dictionaries: each object (the background, the grid, the stones of each player, the diagrams of a game, …) is a branch, and its options are its keys. Those of a board go in the `goban`, named, next to what is drawn; those of the whole document, in `goban-set`.
+The options of gobanist form a tree of dictionaries: each object (the background, the grid, the stones of each player, the diagrams of a game, …) is a branch, and its options are its keys. Those of a board go in the `goban`, named, next to what is drawn; those of the whole document, in `gobanist-set`.
 
-#funcion("goban-set(..options)")[
-  Sets options for everything that follows in the document: the boards, the views, the diagrams and the problems. It takes the same options as `goban`, and also the branches of the games (`sgf`, `diagrams`, `problems`), the layout (`layout`), the views (`view`), the texts (`texts`) and the mark shapes (`shapes`). Each `goban-set` is added to the previous ones. Like Typst's `set`, it holds from where it is to the end of the block that contains it.
+#funcion("gobanist-set(..options)")[
+  Sets options for everything that follows in the document: the boards, the views, the diagrams and the problems. It takes the same options as `goban`, and also the branches of the games (`sgf`, `diagrams`, `problems`), the layout (`layout`), the views (`view`), the texts (`texts`) and the mark shapes (`shapes`). Each `gobanist-set` is added to the previous ones. Like Typst's `set`, it holds from where it is to the end of the block that contains it.
 
   ```ejemplo
-  #goban-set(
+  #gobanist-set(
     background: (
       fill: (color: rgb("#dcb35c")),
       line: false),
@@ -34,9 +34,9 @@ The options of goban form a tree of dictionaries: each object (the background, t
   ```
 ]
 
-The `goban`s that follow inherit these options, and each one can change them with its own: `goban(size: 9, stone: (radius: 4pt), mark: (line: (color: red)), ...)`. The options are resolved when the board is drawn, with the `goban-set`s in effect at that place of the document.
+The `goban`s that follow inherit these options, and each one can change them with its own: `goban(size: 9, stone: (radius: 4pt), mark: (line: (color: red)), ...)`. The options are resolved when the board is drawn, with the `gobanist-set`s in effect at that place of the document.
 
-The options are merged branch by branch: a dictionary changes only the keys it gives, and the others stay as they were. `goban-set(background: (fill: (color: red)))` changes the color of the fill, and the border, the opacity and the image stay the same. A key that does not exist is an error. A length on a branch of lengths (`grid.sep`, `background.rounded-corners`) goes to all of its keys: `grid: (sep: 1em)` is `grid: (sep: (x: 1em, y: 1em))`.
+The options are merged branch by branch: a dictionary changes only the keys it gives, and the others stay as they were. `gobanist-set(background: (fill: (color: red)))` changes the color of the fill, and the border, the opacity and the image stay the same. A key that does not exist is an error. A length on a branch of lengths (`grid.sep`, `background.rounded-corners`) goes to all of its keys: `grid: (sep: 1em)` is `grid: (sep: (x: 1em, y: 1em))`.
 
 === Turning on and off <prender>
 
@@ -46,7 +46,7 @@ Many branches turn something on or off: the grid, the background, the border and
 - `false` turns it off: `shine: false`;
 - a dictionary changes its options without turning it on: `shine: (angle: 45deg)` changes the angle, but the shine stays as it was. To turn it on and change it at once, `shine: (on: true, angle: 45deg)`.
 
-So `goban-set(stone: (shadow: (opacity: 0.3)))` sets the opacity of the shadows of the whole document without turning them on, and each board that wants them turns them on with `stone: (shadow: true)`.
+So `gobanist-set(stone: (shadow: (opacity: 0.3)))` sets the opacity of the shadows of the whole document without turning them on, and each board that wants them turns them on with `stone: (shadow: true)`.
 
 The image branches (`stone.image`, `background.fill.image`, …) have no `on`: the file turns them on. In them, what is not a dictionary is the file: `stone: (image: path("stone.png"))` is `stone: (image: (file: path("stone.png")))`, and `image: none` removes it.
 
@@ -64,7 +64,7 @@ The other first-level branches are in the chapter of each object: the board (`si
 
 == The kernel <kernel>
 
-goban separates the computations from the drawing. The coordinates, the numbering of the moves and the drawing are written in Typst. What playing the game needs is done by a _kernel_: a WebAssembly plugin, `src/kernel.wasm`, compiled from the Rust code in the `kernel/` folder of the repository. The kernel:
+gobanist separates the computations from the drawing. The coordinates, the numbering of the moves and the drawing are written in Typst. What playing the game needs is done by a _kernel_: a WebAssembly plugin, `src/kernel.wasm`, compiled from the Rust code in the `kernel/` folder of the repository. The kernel:
 
 - plays the moves and removes the captured stones (`captures`, #pag(<capturas>));
 - finds the territory (`territory(auto)`), builds the regions (`draw: "region"`) and counts the score (#pag(<territorio>));
@@ -83,7 +83,7 @@ The texts are in the language of the text, `text.lang`, and they follow it if it
   The texts of each language: `texts: (en: (diagram: "Figure"))`. A new language takes from English what it lacks. The texts with variable parts are functions: `n` is the number of a move, `w` the name of the winner and `p` the difference in points.
 
   ```ejemplo
-  #goban-set(texts: (
+  #gobanist-set(texts: (
     en: (at: "on"),
     la: (pass: "transit"),
   ))

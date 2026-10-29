@@ -9,7 +9,7 @@ Las marcas van sobre una intersección, con o sin piedra: formas (círculo, tri�
   Pone marcas en las intersecciones, escritas con la sintaxis de coordenadas (#pag(<coordenadas>)). La forma es la clave: `marks(triangle: "C3", circle: "E5")`. Sin forma, una cruz: `marks("C3")`. Un mismo `marks` puede llevar varias formas, y sus opciones valen para todas.
 
   ```ejemplo
-  #goban-set(size: 5, partial: "B2:D4")
+  #gobanist-set(size: 5, partial: "B2:D4")
   #let b = board(stones(black: "C2, D3", white: "B4"))
 
   #goban(b, marks("C3"))
@@ -83,7 +83,7 @@ Las formas del paquete son `circle`, `triangle`, `square`, `cross`, `filled-squa
   En `marks`, lo que dibuja `custom`. Es obligatorio con `custom`. Su tamaño se ajusta a la cantidad de caracteres, salvo con `label.size`.
 
   ```ejemplo
-  #goban-set(size: 5, partial: "B2:D4")
+  #gobanist-set(size: 5, partial: "B2:D4")
   #let b = board(stones(black: "C2, D3", white: "B4"))
 
   #goban(b, marks(custom: "C3",
@@ -96,7 +96,7 @@ Las formas del paquete son `circle`, `triangle`, `square`, `cross`, `filled-squa
 
 == Las opciones de las marcas
 
-El estilo de las marcas es el de su jugador: `goban-set(mark: ...)` es `goban-set(players: (all: (mark: ...)))`, y las opciones de cada `marks` van encima.
+El estilo de las marcas es el de su jugador: `gobanist-set(mark: ...)` es `gobanist-set(players: (all: (mark: ...)))`, y las opciones de cada `marks` van encima.
 
 #opcion("player", valor: [`auto`, `"black"`, `"white"` o `"neutral"`], inicial: `auto`)[
   El jugador de las marcas, cuyo estilo toman. Con `auto`, el de la piedra que hay en el punto, o neutral si no hay ninguna.
@@ -230,7 +230,7 @@ El estilo de las marcas es el de su jugador: `goban-set(mark: ...)` es `goban-se
   Sobre un punto vacío, una forma propia tapa la cuadrícula como las demás.
 
   ```ejemplo
-  #goban-set(shapes: (
+  #gobanist-set(shapes: (
     rombo: m => polygon(fill: m.fill,
       stroke: m.stroke,
       (0pt, -0.7 * m.radius),
@@ -286,7 +286,7 @@ Las flechas y las líneas unen dos intersecciones. Se dibujan encima de las pied
   ```
 ]
 
-El estilo de todas las flechas se fija con `goban-set(arrow: ...)`, y el de todas las líneas, con `goban-set(line: ...)`.
+El estilo de todas las flechas se fija con `gobanist-set(arrow: ...)`, y el de todas las líneas, con `gobanist-set(line: ...)`.
 
 #opcion("arrow.color", valor: [un color], inicial: `black`)[El color de la flecha.]
 #opcion("arrow.width", valor: [una longitud], inicial: `1.2pt`)[El grosor de la flecha. La punta crece con él.]

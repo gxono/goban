@@ -31,5 +31,5 @@
 #goban-view(board(size: 5), "C3", goban: (captures: "remove"))
 
 // error: view.goban no puede cambiar size: es del tablero que se ve
-#goban-set(view: (goban: (size: 9)))
+#gobanist-set(view: (goban: (size: 9)))
 #goban-view(board(size: 5), "C3")

@@ -10,11 +10,11 @@
 #goban(size: 5, grid: (line: "thick"))
 
 // error: opción desconocida: players.black.mark.triangle
-#goban-set(players: (black: (mark: (triangle: true))))
+#gobanist-set(players: (black: (mark: (triangle: true))))
 #goban()
 
 // error: opción desconocida: players.white.mark.custom
-#goban-set(players: (white: (mark: (custom: [?]))))
+#gobanist-set(players: (white: (mark: (custom: [?]))))
 #goban()
 
 // error: jugador desconocido: red (son neutral, black, white y all)
@@ -23,11 +23,11 @@
 // error: la opción players espera un diccionario
 #goban(players: "wain")
 
-// error: goban-set solo recibe opciones con nombre
-#goban-set("wain")
+// error: gobanist-set solo recibe opciones con nombre
+#gobanist-set("wain")
 
 // error: perfil desconocido: does-not-exist
-#goban-set(profile: "does-not-exist")
+#gobanist-set(profile: "does-not-exist")
 #goban()
 
 // error: profile espera el nombre de un perfil o un diccionario de opciones

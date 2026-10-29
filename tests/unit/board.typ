@@ -23,3 +23,13 @@
 #assert.eq(resolve(board(base, partial: none), defaults).tree.partial, none)
 #goban(base)
 #goban(base, moves("D3"))
+
+// El tamaño de la fuente no cambia el tablero: la grilla, el fondo, los números, las marcas y las etiquetas.
+#let medido = goban(size: 5, label: (at: (bottom, left)), moves("B2, C3, D4"),
+  marks(triangle: "B4", sequence: "A5, B5"), marks(custom: "D2", content: [ab]),
+  moves("E5", label: (format: "1")))
+#context {
+  let chico = measure({ set text(size: 6pt); medido })
+  let grande = measure({ set text(size: 20pt); medido })
+  assert.eq(chico, grande)
+}

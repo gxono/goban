@@ -21,7 +21,7 @@ Los diagramas de `sgf-diagrams` y `sgf-problem` se disponen según la rama `layo
   layout: (columns: 3, fit: true))
 ```
 
-#opcion("layout", valor: [un diccionario])[Las opciones de la disposición: con `goban-set(layout: ...)`, para todo el documento; en `goban-layout`, para esa disposición; con `diagrams.layout` y `problems.layout`, para los de `sgf-diagrams` y `sgf-problem`, encima de las de `layout`.]
+#opcion("layout", valor: [un diccionario])[Las opciones de la disposición: con `gobanist-set(layout: ...)`, para todo el documento; en `goban-layout`, para esa disposición; con `diagrams.layout` y `problems.layout`, para los de `sgf-diagrams` y `sgf-problem`, encima de las de `layout`.]
 
 #opcion("layout.columns", valor: [`auto` o un número], inicial: `auto`)[La cantidad de columnas de la grilla. Con `auto`, los diagramas van en el párrafo, sin grilla.]
 

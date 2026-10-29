@@ -21,7 +21,7 @@ The diagrams of `sgf-diagrams` and `sgf-problem` are laid out according to the `
   layout: (columns: 3, fit: true))
 ```
 
-#opcion("layout", valor: [a dictionary])[The options of the layout: with `goban-set(layout: ...)`, for the whole document; in `goban-layout`, for that layout; with `diagrams.layout` and `problems.layout`, for those of `sgf-diagrams` and `sgf-problem`, on top of those of `layout`.]
+#opcion("layout", valor: [a dictionary])[The options of the layout: with `gobanist-set(layout: ...)`, for the whole document; in `goban-layout`, for that layout; with `diagrams.layout` and `problems.layout`, for those of `sgf-diagrams` and `sgf-problem`, on top of those of `layout`.]
 
 #opcion("layout.columns", valor: [`auto` or a number], inicial: `auto`)[The number of columns of the grid. With `auto`, the diagrams go in the paragraph, without a grid.]
 

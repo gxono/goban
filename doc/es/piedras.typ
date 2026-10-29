@@ -19,13 +19,13 @@ Las piedras se ponen con `stones`; las jugadas, con `moves`, y los prisioneros, 
 
 Las piedras, marcas y etiquetas que caen fuera de la parte visible de un tablero parcial no se dibujan. Una coordenada que no existe en el tablero (`"E9"` en un tablero de 5×5) es un error. Una piedra en un punto donde ya hay otra la tapa.
 
-El estilo de las piedras de los tres jugadores se cambia con `goban-set(stone: ...)`, que es `goban-set(players: (all: (stone: ...)))`; el de uno, con `goban-set(players: (black: (stone: ...)))`. Las opciones de la rama `stone` son:
+El estilo de las piedras de los tres jugadores se cambia con `gobanist-set(stone: ...)`, que es `gobanist-set(players: (all: (stone: ...)))`; el de uno, con `gobanist-set(players: (black: (stone: ...)))`. Las opciones de la rama `stone` son:
 
 #opcion("stone.fill", valor: [`true`, `false` o un diccionario])[
   El relleno de la piedra. Con `false`, sin relleno: queda lo demás (el borde, la sombra, el brillo).
 
   ```ejemplo
-  #goban-set(profile: "pgfgosmooth", size: 5,
+  #gobanist-set(profile: "pgfgosmooth", size: 5,
     partial: "B2:D4")
 
   #goban(stones(black: "C2, D3", white: "B4"))
@@ -75,7 +75,7 @@ El estilo de las piedras de los tres jugadores se cambia con `goban-set(stone: .
   El borde de la piedra.
 
   ```ejemplo
-  #goban-set(profile: "pgfgosmooth", size: 5,
+  #gobanist-set(profile: "pgfgosmooth", size: 5,
     partial: "B2:D4")
 
   #goban(stones(black: "C2, D3", white: "B4"))
@@ -137,7 +137,7 @@ El estilo de las piedras de los tres jugadores se cambia con `goban-set(stone: .
   La opacidad de la sombra (también la de la sombra con imagen).
 
   ```ejemplo
-  #goban-set(profile: "pgfgosmooth", size: 3)
+  #gobanist-set(profile: "pgfgosmooth", size: 3)
   #let b = board(stones(black: "B1, C2", white: "A3"))
 
   #goban(b, players: (white: (stone: (
@@ -210,7 +210,7 @@ El estilo de las piedras de los tres jugadores se cambia con `goban-set(stone: .
   El color del brillo dibujado.
 
   ```ejemplo
-  #goban-set(profile: "pgfgosmooth", size: 3)
+  #gobanist-set(profile: "pgfgosmooth", size: 3)
   #let b = board(stones(black: "B1, C2", white: "A3"))
 
   #goban(b, players: (black: (stone: (
@@ -271,7 +271,7 @@ El estilo de las piedras de los tres jugadores se cambia con `goban-set(stone: .
   Para todas las piedras de un jugador, la imagen va en sus opciones:
 
   ```ejemplo
-  #goban-set(players: (
+  #gobanist-set(players: (
     black: (stone: (image:
       path("img/pgfgo-yunzi-black.png"))),
     white: (stone: (image:
@@ -342,7 +342,7 @@ El estilo de las piedras de los tres jugadores se cambia con `goban-set(stone: .
   `resume` no trae estas piedras (#pag(<memoria>)). `goban-view` las dibuja solo con `forgotten`. Es una opción de `stones`, `prisoners` y `moves` (donde también puede ser `"number"`, #pag(<jugadas>)), de `marks`, `arrows`, `lines` y `territory`.
 
   ```ejemplo
-  #goban-set(size: 5, partial: "B2:D4")
+  #gobanist-set(size: 5, partial: "B2:D4")
 
   #let a = board(stones(black: "C2, D3"),
     stones(white: "B4", forget: true))
@@ -373,7 +373,7 @@ Las opciones de las piedras sirven, por ejemplo, para marcar la última jugada:
   moves("B3", numbers: false, mark: "circle"))
 ```
 
-El estilo de las jugadas de los tres jugadores se cambia con `goban-set(move: ...)`, que es `goban-set(players: (all: (move: ...)))`.
+El estilo de las jugadas de los tres jugadores se cambia con `gobanist-set(move: ...)`, que es `gobanist-set(players: (all: (move: ...)))`.
 
 #opcion("from", valor: [un número])[
   El número de la primera jugada de este `moves`. Las siguientes siguen desde ahí.
@@ -386,7 +386,7 @@ El estilo de las jugadas de los tres jugadores se cambia con `goban-set(move: ..
 ]
 
 #opcion("move.numbers", valor: [`true` o `false`], inicial: `true`)[
-  Si las jugadas llevan su número. Sin números, las jugadas igual cuentan: la siguiente sigue la numeración y el turno. En `moves(numbers: false)`, vale para esas jugadas; con `goban-set(move: (numbers: false))` o `goban(move: (numbers: false))`, para todas las que siguen.
+  Si las jugadas llevan su número. Sin números, las jugadas igual cuentan: la siguiente sigue la numeración y el turno. En `moves(numbers: false)`, vale para esas jugadas; con `gobanist-set(move: (numbers: false))` o `goban(move: (numbers: false))`, para todas las que siguen.
 
   ```ejemplo
   #goban(size: 5, partial: "B2:D4",
@@ -434,7 +434,7 @@ El estilo de las jugadas de los tres jugadores se cambia con `goban-set(move: ..
   ```ejemplo
   #goban(size: 5, partial: "B2:D4",
     moves("C2, B4", from: 7),
-    moves("D3", label: (size: 0.5em)))
+    moves("D3", label: (size: 5pt)))
   ```
 ]
 
@@ -452,7 +452,7 @@ El estilo de las jugadas de los tres jugadores se cambia con `goban-set(move: ..
   En `moves`: con `true`, `resume` no trae estas jugadas, ni la piedra ni el número, y la numeración sigue desde la última jugada que trae. Con `"number"`, la jugada viene sin su número aunque se pida `numbers` (#pag(<memoria>)); con `goban-view`, el número solo se ve con `forgotten`.
 
   ```ejemplo
-  #goban-set(size: 5, partial: "B2:D4")
+  #gobanist-set(size: 5, partial: "B2:D4")
 
   #let a = board(moves("C2"),
     moves("B4", forget: "number"),
@@ -477,10 +477,10 @@ Los prisioneros son piedras capturadas que siguen en el tablero: por defecto, tr
 ]
 
 #opcion("prisoner", valor: [opciones de piedra], inicial: `(fill: (opacity: 0.5))`)[
-  El estilo de los prisioneros: opciones de la rama `stone`, que se ponen encima de las de la piedra del jugador. Con `goban-set(prisoner: ...)`, para los tres jugadores; con `goban-set(players: (white: (prisoner: ...)))`, para uno. Vale para los de `prisoners` y para las piedras capturadas con `captures: "fade"` (#pag(<capturas>)). Las demás piedras del jugador no cambian.
+  El estilo de los prisioneros: opciones de la rama `stone`, que se ponen encima de las de la piedra del jugador. Con `gobanist-set(prisoner: ...)`, para los tres jugadores; con `gobanist-set(players: (white: (prisoner: ...)))`, para uno. Vale para los de `prisoners` y para las piedras capturadas con `captures: "fade"` (#pag(<capturas>)). Las demás piedras del jugador no cambian.
 
   ```ejemplo
-  #goban-set(size: 5, partial: "B2:D4")
+  #gobanist-set(size: 5, partial: "B2:D4")
 
   #goban(prisoner: (fill: (opacity: 0.2),
       line: (color: red)),

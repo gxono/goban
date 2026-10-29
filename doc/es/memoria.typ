@@ -13,7 +13,7 @@ Un tablero puede ser un valor: `board` (#pag(<tablero>)) recibe lo mismo que `go
 `goban-view` muestra una parte en medio del texto (#pag(<vistas>)).
 
 ```ejemplo
-#goban-set(size: 5, partial: "B2:D4")
+#gobanist-set(size: 5, partial: "B2:D4")
 
 #let tablero1 = board(stones(black: "C2, D3"),
   moves(white: "B4"))
@@ -28,12 +28,12 @@ Un tablero puede ser un valor: `board` (#pag(<tablero>)) recibe lo mismo que `go
 #opcion("resume", valor: [un tablero o `(board: ..., numbers: ..., marks: ..., territory: ...)`])[
   Empieza el tablero con el tablero `board`, como quedó al terminar: con las capturas resueltas (si ese tablero tenía `captures`, este también, salvo que dé las suyas). La numeración y el turno siguen desde ahí. Un tablero solo, `resume: base`, trae solo las piedras, sin números, marcas ni territorio; en un diccionario, `numbers`, `marks` y `territory` piden el resto.
 
-  El tamaño es el del tablero de `resume`, salvo que este dé el suyo (`size`, o una partida); uno puesto con `goban-set` no cuenta. Las demás opciones de ese tablero (`partial`, las coordenadas, el estilo) no vienen: se dan en cada tablero.
+  El tamaño es el del tablero de `resume`, salvo que este dé el suyo (`size`, o una partida); uno puesto con `gobanist-set` no cuenta. Las demás opciones de ese tablero (`partial`, las coordenadas, el estilo) no vienen: se dan en cada tablero.
 
   Un `board` con `resume` tiene lo que trajo, tal como se dibujó, más lo suyo, y el tablero de `resume` no cambia: así se arman variantes.
 
   ```ejemplo
-  #goban-set(size: 5, partial: "B2:D4")
+  #gobanist-set(size: 5, partial: "B2:D4")
 
   #let base = board(stones(black: "C2, D3",
     white: "C3"))
@@ -55,7 +55,7 @@ Un tablero puede ser un valor: `board` (#pag(<tablero>)) recibe lo mismo que `go
   Trae también el territorio.
 
   ```ejemplo
-  #goban-set(size: 5, partial: "B2:D4")
+  #gobanist-set(size: 5, partial: "B2:D4")
 
   #let guardado = board(stones(black: "C2:4"),
     moves(white: "D3"), marks(triangle: "B3"),
@@ -108,7 +108,7 @@ Como un tablero es un valor, puede guardarse en un módulo e importarse en otro 
   ```
 ]
 
-#opcion("view", valor: [un diccionario])[Las opciones de las vistas: en `goban-view`, para esa vista, y con `goban-set(view: ...)`, para todas.]
+#opcion("view", valor: [un diccionario])[Las opciones de las vistas: en `goban-view`, para esa vista, y con `gobanist-set(view: ...)`, para todas.]
 #opcion("view.marks", valor: [`true` o `false`], inicial: `true`)[Con `false`, sin las marcas.]
 #opcion("view.arrows", valor: [`true` o `false`], inicial: `true`)[Con `false`, sin las flechas.]
 #opcion("view.lines", valor: [`true` o `false`], inicial: `true`)[

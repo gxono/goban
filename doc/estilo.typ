@@ -49,7 +49,7 @@
 // Les da valores a los ejemplos que siguen: #definir(final: final).
 #let definir(..valores) = definidos.update(d => d + valores.named())
 
-// Lo que fija goban-set en el cuerpo no pasa a lo que sigue: antes va una marca en la lista de opciones
+// Lo que fija gobanist-set en el cuerpo no pasa a lo que sigue: antes va una marca en la lista de opciones
 // globales (un diccionario vacío, que no cambia nada), y después se quita todo desde la marca.
 #let aislado(cuerpo) = {
   global.update(l => l + ((:),))
@@ -146,7 +146,7 @@
       let antes = query(selector(heading.where(level: 1)).before(here()))
       if antes.len() > 0 and not aqui and counter(page).get().first() > 1 {
         set text(font: titulos, size: 0.8em, fill: luma(45%))
-        [goban #h(1fr) #antes.last().body]
+        [gobanist #h(1fr) #antes.last().body]
         v(-0.5em)
         line(length: 100%, stroke: 0.5pt + madera)
       }

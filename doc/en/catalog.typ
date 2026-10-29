@@ -3,7 +3,7 @@
 
 = Catalog of profiles <catalogo>
 
-The profiles that come with goban, each one with a sample and with its definition, as it is in `src/profiles.typ`. They are used with `profile: "name"` (#pag(<perfiles>)). In the definitions, `xmix(a, p, b)` mixes `p` of `a` with the rest of `b`, like xcolor's `a!p!b`; `pgf-gray` is `luma(50%)`; and `picture("board.jpg")` is the image `images/pgfgo-board.jpg` of the package.
+The profiles that come with gobanist, each one with a sample and with its definition, as it is in `src/profiles.typ`. They are used with `profile: "name"` (#pag(<perfiles>)). In the definitions, `xmix(a, p, b)` mixes `p` of `a` with the rest of `b`, like xcolor's `a!p!b`; `pgf-gray` is `luma(50%)`; and `picture("board.jpg")` is the image `images/pgfgo-board.jpg` of the package.
 
 #let fuente = read("/src/profiles.typ")
 
