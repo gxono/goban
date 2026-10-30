@@ -21,13 +21,15 @@
   if d.statement not in (true, false, "alone") {
     panic("problems.statement es true, false o \"alone\": " + repr(d.statement))
   }
-  for key in ("solutions", "verdict", "view") {
+  for key in ("solutions", "verdict", "links", "view") {
     if type(d.at(key)) != bool { panic("problems." + key + " es true o false: " + repr(d.at(key))) }
   }
   if d.to-play not in (auto, "black", "white", none) {
     panic("problems.to-play es auto, \"black\", \"white\" o none: " + repr(d.to-play))
   }
-  if d.partial not in (none, auto) { panic("problems.partial es none o auto: " + repr(d.partial)) }
+  if d.partial not in (none, auto) and type(d.partial) != str {
+    panic("problems.partial es none, auto o dos esquinas, \"A1:E5\": " + repr(d.partial))
+  }
   if d.variation-title != auto and type(d.variation-title) != function {
     panic("problems.variation-title es auto o una función del número: n => ...")
   }
@@ -62,6 +64,13 @@
   if position != none { position } else if move != none { move } else if right { "correct" }
 }
 
+// Con links, el destino de los enlaces de un problema: su enunciado ("statement") o su primera solución ("1"),
+// por la partida y un hash del archivo, así se encuentra también desde otro sgf-problem.
+#let anchor(game, part) = label("gobanist-problem-" + query(game, (kind: "hash")) + "-" + str(game.game) + "-" + part)
+
+// body con un enlace a target, si está una sola vez en el documento; si no, solo. Necesita context.
+#let linked(target, body) = if std.query(target).len() == 1 { link(target, body) } else { body }
+
 // Los diagramas de los problemas games con las opciones de problems options, para arrange: (style, layout,
 // items), las opciones comprobadas, la disposición y los diagramas. Necesita context.
 #let problem-group(games, options) = {
@@ -82,8 +91,8 @@
     let shape = query(game, (kind: "shape"))
     let r = query(game, (kind: "read", path: (numbers: ()), chat: d.chat))
     let head = if not several { title } else if title == none { str(game.game) } else [#title~#str(game.game)]
-    let rect = if d.view { view-between(r, 0, 0) }
-    let window = if rect != none {
+    let rect = if d.view and type(d.partial) != str { view-between(r, 0, 0) }
+    let window = if type(d.partial) == str { (partial: d.partial) } else if rect != none {
       let (x1, y1, x2, y2) = rect
       (partial: point-name((x1, y1), tree.use-i) + ":" + point-name((x2, y2), tree.use-i))
     } else if d.partial == auto { (partial: auto) } else { (:) }
@@ -97,7 +106,7 @@
   let diagram(p, path, to) = {
     let g = sgf(p.game, from: 1, to: to, variation: path, restart: false, numbers: true, last-mark: none,
       view: false) + (keep: true)
-    let resolved = resolve(board(captures: "remove", notes: true, ..p.window, ..d.goban, g), global, replace: true)
+    let resolved = resolve(board(board(captures: "remove", notes: true, ..p.window), ..d.goban, g), global, replace: true)
     if p.extent != none { resolved.extent = p.extent }
     (g, resolved)
   }
@@ -109,8 +118,10 @@
       let says = if p.player != none { word(tree, p.player + "-to-play") }
       let caption = if p.head == none { says } else if says == none { p.head } else [#p.head: #says]
       let root = comment-body(tree, p.root.steps.at(0), d.annotations)
+      let first = p.paths.position(path => query(p.game, (kind: "read", path: (numbers: path), chat: false)).moves > 0)
+      if d.links and caption != none and first != none { caption = linked(anchor(p.game, "1"), caption) }
       items.push((resolved: resolved, caption: caption, comments: if c.on and root != none { (root,) } else { () },
-        extra: none, alone: d.statement == "alone"))
+        extra: none, alone: d.statement == "alone", anchor: if d.links { anchor(p.game, "statement") }))
     }
   }
   if d.solutions {
@@ -123,6 +134,7 @@
         let said = if d.verdict { verdict(line, p.player) }
         let caption = [#(if several and p.head != none [#p.head: ])#variation-title(i + 1)#(
           if said != none [ (#word(tree, said))])]
+        if d.links { caption = linked(anchor(p.game, "statement"), caption) }
         let parts = ()
         if c.on {
           for k in range(1, line.moves + 1) {
@@ -130,7 +142,10 @@
             if body != none { parts.push((c.number)(numbers.at(k - 1)) + body) }
           }
         }
-        items.push((resolved: resolved, caption: caption, comments: parts, extra: none, alone: false))
+        let first = d.links and p.paths.slice(0, i).all(path =>
+          query(p.game, (kind: "read", path: (numbers: path), chat: false)).moves == 0)
+        items.push((resolved: resolved, caption: caption, comments: parts, extra: none, alone: false,
+          anchor: if first { anchor(p.game, "1") }))
       }
     }
   }
@@ -152,7 +167,7 @@
     }
   }
   let options = args.named()
-  [#metadata((kind: "problem", games: games, options: options))<goban-cells>#layout(size => {
+  [#metadata((kind: "problem", games: games, options: options))<goban-cells>#layout(size => context {
     let group = problem-group(games, options)
     arrange(group.layout, size.width, (group,))
   })]

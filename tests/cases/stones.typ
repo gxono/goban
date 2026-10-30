@@ -9,3 +9,16 @@
   stone: (fill: false), stones(black: "B2", white: "C3"), stones(black: "D4", fill: true))
 #goban(size: 5, stones(black: "B2", radius: 4pt), stones(white: "C3", scale: 1.3), stones(black: "D4", scale: 0.7, mark: "circle"))
 #goban(size: 5, prisoner: (line: (color: red)), prisoners(white: "C3"), stones(white: "B3"))
+
+// shift: (columnas, filas) corre las coordenadas de stones, prisoners, moves y marks; cada forma se escribe una
+// vez, desde A1.
+#let salto = "A1, A3"
+#let caballo = "A1, B3"
+#let bambu = "A1:2, C1:2"
+#let tigre = "A2, B1, C2"
+#goban(size: (15, 9), label: (at: bottom),
+  stones(black: salto, shift: (1, 5)), stones(black: caballo, shift: (4, 5)),
+  stones(black: bambu, shift: (7, 5)), stones(black: tigre, shift: (11, 5)),
+  stones(white: salto, shift: (1, 1)), stones(white: caballo, shift: (4, 1)),
+  stones(white: bambu, shift: (7, 1)), stones(white: tigre, shift: (11, 1)),
+  moves("A1, B1", shift: (0, 8)), marks(triangle: "A1", shift: (14, 0)), prisoners(black: "A1", shift: (14, 8)))

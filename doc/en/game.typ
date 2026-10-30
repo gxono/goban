@@ -80,6 +80,7 @@ In numbered diagrams, when a move falls on a point where there was already a mov
 
 #opcion("notes.at", valor: [`auto` or a text], inicial: `auto`)[The text between the two numbers. With `auto`, that of the language (`at` in `texts`, #pag(<idiomas>)).]
 #opcion("notes.separator", valor: [a text or content], inicial: `", "`)[The text between the notes.]
+#opcion("notes.text", valor: [a dictionary], inicial: `(:)`)[The `text` options of the notes, in `goban-notes` and below the diagrams of `sgf-diagrams` and `sgf-problem` (on top of those of the caption).]
 
 #funcion("goban-notes(at: auto, separator: auto)")[
   The notes of the last `goban`, separated by `separator`. Without notes, nothing. With `auto`, `at` and `separator` are those of the `notes` branch.

@@ -15,7 +15,7 @@ y `variantes` es `variantes.sgf`, una partida de 7×7 con dos bifurcaciones, mar
 
 == Leer una partida <sgf-leer>
 
-#funcion("sgf-read(source, game: 1, charset: auto)")[
+#funcion("sgf-read(source, game: 1, charset: auto, origin: top + left, transpose: false, syntax: auto)")[
   Lee una partida SGF. `source` es un archivo (`path("partida.sgf")`, relativo al documento que lo nombra), su contenido (`bytes`) o el texto SGF (una cadena). Devuelve la partida como un valor, que se guarda con `let` y se usa en todas partes: en un tablero, en `sgf-info`, `sgf-comment`, `sgf-diagrams`, `sgf-problem`, `goban-layout` y `goban-view`.
 
   En un tablero, la partida es un elemento, como `stones` o `moves`: dibuja la línea principal, y el tablero toma el tamaño de su `SZ` (otro `size` es un error).
@@ -40,6 +40,57 @@ y `variantes` es `variantes.sgf`, una partida de 7×7 con dos bifurcaciones, mar
 
   Muchos archivos de servidores asiáticos no dicen su codificación: `sgf-read(path("qipu.sgf"), charset: "GBK")`. Para escribir sus comentarios hace falta una fuente con esos caracteres.
 ]
+
+#opcion("origin", valor: [una esquina], inicial: `top + left`)[
+  En `sgf-read`: la esquina del tablero donde va el punto `aa` del archivo (`top + left`, `top + right`, `bottom + left` o `bottom + right`). Todo lo que se lee del archivo la sigue, también `partial: auto`; las coordenadas que se escriben en las opciones (`variation: "Q4, R6"`) son las del tablero.
+]
+
+#opcion("transpose", valor: [`true` o `false`], inicial: `false`)[
+  En `sgf-read`: la primera letra de cada punto del archivo es la fila, y el tamaño se gira. Con `origin`, las ocho simetrías del tablero.
+
+  ```ejemplo
+  #let archivo = path("josekis.sgf")
+  #gobanist-set(partial: auto)
+  #goban-layout(columns: 4, fit: true,
+    sgf-read(archivo, origin: top + right),
+    sgf-read(archivo, origin: bottom + right,
+      transpose: true),
+    sgf-read(archivo, transpose: true),
+    sgf-read(archivo, origin: bottom + left))
+  ```
+]
+
+#opcion("syntax", valor: [`auto`, `"sgf"` o `"sensei"`], inicial: `auto`)[
+  En `sgf-read`: la sintaxis del archivo. `"sensei"` son los diagramas de Sensei's Library (#pag(<sgf-sensei>)); con `auto`, los que se leen así son los archivos sin nodos SGF (`(;`) que tienen líneas que empiezan con `$$`. Todas las sintaxis se leen como una partida SGF: todas las funciones andan igual con cualquiera.
+]
+
+== Diagramas de Sensei's Library <sgf-sensei>
+
+Sensei's Library y los foros como L19 escriben los diagramas como texto, con líneas que empiezan con `$$`. Un archivo así se lee como una colección: cada bloque de líneas `$$` seguidas es una partida (`game: 2` es el segundo diagrama), y lo que hay entre los bloques no se lee. Las etiquetas `[go]` y `[/go]` de L19 se pueden dejar.
+
+```ejemplo
+#let nadare = sgf-read("$$Bc Nadare
+$$  ---------------
+$$ | . . . . . . .
+$$ | . . . . . . .
+$$ | . . . 1 6 . .
+$$ | . . 5 4 . . .
+$$ | . . 3 2 a . .
+$$ | . . . . . . .")
+
+#sgf-diagrams(nadare, goban: (scale: 0.5))
+```
+
+La primera línea es la cabecera: `$$`, `B` o `W` (quién juega la jugada 1; si no está, negras), un tamaño de tablero (`$$B13`; si no está, 19), `m` y el número de la jugada 1 (`$$Wm67`) y el título. La `c` de las coordenadas se acepta pero no se usa: las coordenadas son las de `label`. Cada diagrama se lee así:
+
+- El título es el nombre de la partida (`GN`) y el de su figura (`FG`): `sgf-diagrams` lo pone en el epígrafe.
+- `X` y `O` son piedras iniciales (`AB` y `AW`). `B`, `#`, `Y` y `Z` son piedras negras con círculo, cuadrado, triángulo y cruz; `W`, `@`, `Q` y `P`, blancas. `C`, `S`, `T` y `M` son esas marcas en puntos vacíos, y las minúsculas son letras.
+- Los números (`1` a `9`, y `0` es 10) son jugadas, en orden: las impares son del que juega la 1. Si falta un número («5 en 1»), las jugadas siguientes conservan el suyo (`MN`).
+- Las marcas, las letras y las líneas `{AR C14 C11}` (flecha) y `{LN 5:6 5:9}` (línea) van en la última jugada. Sus puntos son del tablero (`C14`) o del diagrama (`5:6`, columna y fila desde arriba a la izquierda).
+- Los bordes (`---`, `|`, `+`) dicen dónde está el diagrama en el tablero. Sin tamaño, dos bordes opuestos dan ese lado del tablero. Sin bordes, el diagrama va en el medio. Lo dibujado es la vista de la partida (`VW`): `sgf-diagrams` solo muestra esa parte.
+- `.` y `,` son puntos vacíos (las estrellas las pone `hoshi`). `_` no es del tablero: es su `blank` (#pag(<blank>)). Los enlaces (`[a|página]`) no se leen.
+
+Una línea que no se entiende, un diagrama más grande que el tamaño de la cabecera y una flecha o una línea que sale del tablero son errores.
 
 == Una partida en un tablero <sgf-tablero>
 
@@ -298,8 +349,8 @@ Una partida en un tablero dibuja las piedras iniciales (`AB` y `AW`), como con `
 
 #opcion("diagrams.figures", valor: [`true` o `false`], inicial: `true`)[Si el archivo marca figuras (`FG`), cada figura es un diagrama, con su nombre en el epígrafe, en lugar de uno cada `step` jugadas.]
 #opcion("diagrams.view", valor: [`true` o `false`], inicial: `true`)[Si el archivo tiene vista (`VW`), cada diagrama muestra solo la que abarca las vistas de sus jugadas, como `sgf.view`; una variante, la de su línea. Un `partial` en `goban` le gana.]
-#opcion("diagrams.partial", valor: [`none` o `auto`], inicial: `none`)[
-  Con `auto`, donde no hay vista del archivo, todos los diagramas muestran la misma parte del tablero: la que usan las líneas que se dibujan (la de `variation` y las de `variations`), como `partial: auto`.
+#opcion("diagrams.partial", valor: [`none`, `auto` o `"A1:E5"`], inicial: `none`)[
+  Con dos esquinas, como en `partial` (`"K10:T19"`), todos los diagramas muestran esa parte, aunque el archivo tenga vista. Con `auto`, donde no hay vista del archivo, todos los diagramas muestran la misma parte del tablero: la que usan las líneas que se dibujan (la de `variation` y las de `variations`), como `partial: auto`.
 
   ```codigo
   #sgf-diagrams(josekis, partial: auto, variations: true)
@@ -346,11 +397,11 @@ Una partida en un tablero dibuja las piedras iniciales (`AB` y `AW`), como con `
 #opcion("diagrams.chat", valor: [`true` o `false`], inicial: `true`)[Con los comentarios, como `chat` de `sgf-comment`: con `false`, sin el chat de KGS y OGS. Una jugada a la que solo le quedaba chat no aparece.]
 
 #opcion("diagrams.result", valor: [`true`, `false` o un diccionario])[
-  Escribe debajo del último diagrama, si llega al final de la partida, el resultado (`RE`) y, si el archivo marca el territorio (`TB`, `TW`), el puntaje de cada jugador: «Resultado: Ganan Negras por 0.5 puntos (Negras 6, Blancas 5.5)». El puntaje se cuenta como con `goban-score`, con el komi del archivo (`KM`).
+  Escribe debajo del último diagrama, si llega al final de la partida, el resultado (`RE`) y, si el archivo marca el territorio (`TB`, `TW`), el puntaje de cada jugador: «Resultado: Gana Negro por 0.5 puntos (Negro 6, Blanco 5.5)». El puntaje se cuenta como con `goban-score`, con el komi del archivo (`KM`).
 ]
 
 #opcion("diagrams.result.title", valor: [`auto` o un texto], inicial: `auto`)[La palabra que precede al resultado. Con `auto`, la del idioma (`result` en `texts`).]
-#opcion("diagrams.result.format", valor: [`"text"` o `"raw"`], inicial: `"text"`)[Cómo se escribe el resultado: con `"text"`, en palabras, en el idioma del texto («Ganan Negras por abandono»); con `"raw"`, como está en el archivo («B+R»). Con `"text"` se entienden `0` o `Draw` (empate), `Void` (sin resultado), `?` (desconocido) y `B+` o `W+` seguido de nada, de la diferencia, de `R` o `Resign`, de `T` o `Time`, o de `F` o `Forfeit`. Otro resultado se escribe como está.]
+#opcion("diagrams.result.format", valor: [`"text"` o `"raw"`], inicial: `"text"`)[Cómo se escribe el resultado: con `"text"`, en palabras, en el idioma del texto («Gana Negro por abandono»); con `"raw"`, como está en el archivo («B+R»). Con `"text"` se entienden `0` o `Draw` (empate), `Void` (sin resultado), `?` (desconocido) y `B+` o `W+` seguido de nada, de la diferencia, de `R` o `Resign`, de `T` o `Time`, o de `F` o `Forfeit`. Otro resultado se escribe como está.]
 #opcion("diagrams.result.black", valor: [`auto` o un texto], inicial: `auto`)[El nombre de las negras en el puntaje y en el resultado. Con `auto`, el del idioma.]
 #opcion("diagrams.result.white", valor: [`auto` o un texto], inicial: `auto`)[
   El nombre de las blancas en el puntaje y en el resultado.
@@ -393,7 +444,7 @@ Una partida en un tablero dibuja las piedras iniciales (`AB` y `AW`), como con `
   ```
 ]
 
-#opcion("problems.title", valor: [`auto` o un texto], inicial: `auto`)[El comienzo del epígrafe del enunciado: «Problema 1: Juegan Negras». Con varias partidas, va seguido del número de cada una; con `auto`, nada, o con varias partidas, la palabra del idioma (`problem` en `texts`): «Problema 7: Juegan Negras». Las soluciones dicen también de qué problema son: «Problema 7: Variante 1».]
+#opcion("problems.title", valor: [`auto` o un texto], inicial: `auto`)[El comienzo del epígrafe del enunciado: «Problema 1: Juega Negro». Con varias partidas, va seguido del número de cada una; con `auto`, nada, o con varias partidas, la palabra del idioma (`problem` en `texts`): «Problema 7: Juega Negro». Las soluciones dicen también de qué problema son: «Problema 7: Variante 1».]
 #opcion("problems.to-play", valor: [`auto`, `"black"`, `"white"` o `none`], inicial: `auto`)[Quién juega, para el epígrafe del enunciado. Con `auto`, lo que dice `PL` o, si no está, el color de la primera jugada; si no hay ninguna de las dos, no se dice. Muchas colecciones no lo dicen en el archivo: `to-play: "black"`. Con `none`, el epígrafe no lo dice.]
 #opcion("problems.variation-title", valor: [`auto` o una función], inicial: `auto`)[El epígrafe de cada solución: una función de su número, `n => [Solución #n]`. Con `auto`, «Variante 2», con la palabra del idioma (`variation` en `texts`).]
 #opcion("problems.verdict", valor: [`true` o `false`], inicial: `false`)[
@@ -406,9 +457,19 @@ Una partida en un tablero dibuja las piedras iniciales (`AB` y `AW`), como con `
   ```
 ]
 
+#opcion("problems.links", valor: [`true` o `false`], inicial: `false`)[
+  El epígrafe del enunciado es un enlace a su primera solución, y el de cada solución, un enlace al enunciado, también si están en otro `sgf-problem` (con `solutions: false` y `statement: false`). Un enlace cuyo destino no está, o está más de una vez (un problema dibujado dos veces), no se pone.
+
+  ```codigo
+  #sgf-problem(problema, links: true, solutions: false)
+  // …
+  #sgf-problem(problema, links: true, statement: false)
+  ```
+]
+
 #opcion("problems.view", valor: [`true` o `false`], inicial: `true`)[Si el archivo tiene vista (`VW`) al principio, todos los diagramas muestran esa parte.]
-#opcion("problems.partial", valor: [`auto` o `none`], inicial: `auto`)[
-  Con `auto`, si no se usa la vista del archivo, todos los diagramas muestran la parte del tablero donde hay piedras, jugadas, marcas, flechas o líneas en alguna línea del problema, como `partial: auto`. Las líneas que se agregan alrededor se cambian con `goban: (partial-margin: ...)`. Con `none`, se ve todo el tablero.
+#opcion("problems.partial", valor: [`auto`, `none` o `"A1:E5"`], inicial: `auto`)[
+  Con dos esquinas, como en `partial`, todos los diagramas muestran esa parte, aunque el archivo tenga vista. Con `auto`, si no se usa la vista del archivo, todos los diagramas muestran la parte del tablero donde hay piedras, jugadas, marcas, flechas o líneas en alguna línea del problema, como `partial: auto`. Las líneas que se agregan alrededor se cambian con `goban: (partial-margin: ...)`. Con `none`, se ve todo el tablero.
 
   ```ejemplo-abajo
   #sgf-problem(problema, solutions: false,

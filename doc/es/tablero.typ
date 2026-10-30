@@ -40,7 +40,7 @@ El tablero es lo que dibuja `goban`: la cuadrícula, el fondo, las coordenadas y
 ]
 
 #opcion("size", valor: [un número o `(columnas, filas)`], inicial: `9`)[
-  El tamaño del tablero: las líneas verticales y horizontales. Un número es un tablero cuadrado; `(5, 3)`, uno de 5 columnas y 3 filas. Las columnas van de 2 a 25, y las filas, de 2 a 99. Con una partida (`sgf-read`), el tablero toma el tamaño del archivo (`SZ`), y otro `size` es un error.
+  El tamaño del tablero: las líneas verticales y horizontales. Un número es un tablero cuadrado; `(5, 3)`, uno de 5 columnas y 3 filas. Las columnas van de 2 a 52 (después de la Z, con dos letras: `AA`, `AB`…), y las filas, de 2 a 99. Con una partida (`sgf-read`), el tablero toma el tamaño del archivo (`SZ`), y otro `size` es un error.
 
   ```ejemplo
   #goban(size: 5)
@@ -126,6 +126,15 @@ El tablero es lo que dibuja `goban`: la cuadrícula, el fondo, las coordenadas y
   #goban(b, grid: (line: (color: blue)))
   #goban(b, grid: (line: (opacity: 0.2)))
   #goban(b, grid: (line: (width: 1.5pt)))
+  ```
+]
+
+#opcion("grid.edge", valor: [un diccionario], inicial: `(color: auto, width: auto, opacity: auto)`)[
+  Las cuatro líneas de afuera de la cuadrícula, con otro color, grosor u opacidad que las demás. Con `auto`, el de `grid.line`.
+
+  ```ejemplo
+  #goban(size: 5, grid: (edge: (width: 1.2pt)),
+    stones(black: "C2, D3", white: "B4"))
   ```
 ]
 
@@ -468,6 +477,16 @@ Muchas veces no hace falta el tablero completo, sino una parte. `partial` la def
   ```
 ]
 
+#opcion("blank", valor: [`none` o coordenadas], inicial: `none`, etiqueta: <blank>)[
+  Las intersecciones que no son parte del tablero, leídas en el tablero entero (aunque haya `partial`): sin líneas ni puntos de estrella. Una línea une solo dos intersecciones vecinas del tablero: junto a un punto de `blank` termina como en el borde. Las piedras y el fondo no cambian. Con `grid.image`, la imagen va solo en las casillas del tablero.
+
+  ```ejemplo
+  #goban(size: 13, label: (at: (left, bottom)),
+    blank: "A:D 1:4, K:N 1:4, A:D 10:13, K:N 10:13",
+    stones(black: "G7, F9, E6", white: "H6, G4, C7"))
+  ```
+]
+
 == Las coordenadas del borde <etiquetas>
 
 Las etiquetas son las coordenadas que se escriben a los lados del tablero.
@@ -506,11 +525,11 @@ Las etiquetas son las coordenadas que se escriben a los lados del tablero.
   ```
 ]
 
-#opcion("label.columns", valor: [`"A"` o un patrón de `numbering`], inicial: `"A"`)[
-  Cómo se escriben las coordenadas de las columnas (arriba y abajo): con `"A"`, las letras del go (sin la I, salvo con `use-i`); con otro patrón de `numbering` de Typst, como `"1"` o `"一"`, números.
+#opcion("label.columns", valor: [`"A"`, `"a"` o un patrón de `numbering`], inicial: `"A"`)[
+  Cómo se escriben las coordenadas de las columnas (arriba y abajo): con `"A"`, las letras del go (sin la I, salvo con `use-i`); con `"a"`, las mismas en minúsculas; con otro patrón de `numbering` de Typst, como `"1"` o `"一"`, números.
 ]
 
-#opcion("label.rows", valor: [`"A"` o un patrón de `numbering`], inicial: `"1"`)[Lo mismo para las filas (a los costados). Los kanji (`"一"`) de las filas se alinean del lado del tablero, para que los de dos caracteres no lo pisen.]
+#opcion("label.rows", valor: [`"A"`, `"a"` o un patrón de `numbering`], inicial: `"1"`)[Lo mismo para las filas (a los costados). Los kanji (`"一"`) de las filas se alinean del lado del tablero, para que los de dos caracteres no lo pisen.]
 
 #opcion("label.columns-direction", valor: [`ltr` o `rtl`], inicial: `ltr`)[
   En qué sentido se cuentan las columnas: desde la izquierda o desde la derecha.

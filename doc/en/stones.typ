@@ -350,6 +350,19 @@ The style of the stones of the three players is changed with `gobanist-set(stone
   ```
 ]
 
+#opcion("shift", valor: [`(columns, rows)`], inicial: `(0, 0)`)[
+  Moves the coordinates that many columns to the right and that many rows up, whatever the labels of the border. An intersection that ends up off the board is an error. It is an option of `stones`, `prisoners`, `moves` and `marks`.
+
+  ```ejemplo
+  #let tiger = "A2, B1, C2"
+
+  #goban(size: 7, partial: "A1:G5",
+    stones(black: tiger),
+    stones(white: tiger, shift: (4, 2)),
+    marks(triangle: "B2", shift: (4, 2)))
+  ```
+]
+
 == Moves <jugadas>
 
 #funcion("moves(moves, black: ..., white: ..., ..options)")[
@@ -360,7 +373,7 @@ The style of the stones of the three players is changed with `gobanist-set(stone
     moves("B1 -| D3, C:A 4, E5"))
   ```
 
-  The options are those of the style of the stone (`fill`, `line`, `radius`, `shine`, `image`, …), `mark`, `forget` and those of this section: `numbers`, `label` and `from`.
+  The options are those of the style of the stone (`fill`, `line`, `radius`, `shine`, `image`, …), `mark`, `forget`, `shift` and those of this section: `numbers`, `label` and `from`.
 ]
 
 Within the same `goban`, the numbering and the turn carry on from one `moves` to the next. Each `goban` starts at move 1 with Black; to continue a game in another diagram, use `from` and the player, or `resume` (#pag(<memoria>)).

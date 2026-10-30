@@ -64,13 +64,13 @@
 // El resultado en palabras.
 #context {
   let tree = current()
-  let names = (black: "Negras", white: "Blancas")
-  assert.eq(result-text(tree, "B+R", names), "Ganan Negras por abandono")
-  assert.eq(result-text(tree, "w+resign", names), "Ganan Blancas por abandono")
-  assert.eq(result-text(tree, "W+3.5", names), "Ganan Blancas por 3.5 puntos")
-  assert.eq(result-text(tree, "B+", names), "Ganan Negras")
-  assert.eq(result-text(tree, "B+T", names), "Ganan Negras por tiempo")
-  assert.eq(result-text(tree, "W+F", names), "Ganan Blancas por incomparecencia")
+  let names = (black: "Negro", white: "Blanco")
+  assert.eq(result-text(tree, "B+R", names), "Gana Negro por abandono")
+  assert.eq(result-text(tree, "w+resign", names), "Gana Blanco por abandono")
+  assert.eq(result-text(tree, "W+3.5", names), "Gana Blanco por 3.5 puntos")
+  assert.eq(result-text(tree, "B+", names), "Gana Negro")
+  assert.eq(result-text(tree, "B+T", names), "Gana Negro por tiempo")
+  assert.eq(result-text(tree, "W+F", names), "Gana Blanco por incomparecencia")
   assert.eq(result-text(tree, "0", names), "Empate (jigo)")
   assert.eq(result-text(tree, "Void", names), "Sin resultado")
   assert.eq(result-text(tree, "?", names), "Resultado desconocido")
@@ -108,7 +108,7 @@
   let spans(..options) = {
     let d = current().diagrams + options.named()
     d.step = if type(d.step) == int { (d.step,) } else { d.step }
-    diagram-spans(d, r.figures, options.named().at("last", default: r.moves)).map(
+    diagram-spans(d, r.figures, options.named().at("last", default: r.moves), r.moves).map(
       s => (s.n, s.start, s.from, s.to, s.name))
   }
   assert.eq(spans(), ((1, 1, 1, 1, none), (2, 2, 2, 3, "Uno"), (3, 4, 4, 4, none), (4, 5, 5, 7, "Tres")))
@@ -121,7 +121,16 @@
   let root = sgf-read("(;SZ[5]FG[:Todo];B[aa];W[ba])")
   let d = current().diagrams + (step: (50,))
   let r = query(root, (kind: "read", chat: true))
-  assert.eq(diagram-spans(d, r.figures, r.moves).map(s => (s.start, s.to, s.name)), ((1, 2, "Todo"),))
+  assert.eq(diagram-spans(d, r.figures, r.moves, r.moves).map(s => (s.start, s.to, s.name)), ((1, 2, "Todo"),))
+}
+
+// Una partida sin jugadas es un tramo vacío, con el nombre de su figura (FG en la raíz).
+#context {
+  let d = current().diagrams
+  let vacia = sgf-read("(;SZ[5]FG[0:Posición]AB[cc])")
+  let r = query(vacia, (kind: "read", chat: true))
+  assert.eq(diagram-spans(d, r.figures, 0, 0), ((n: 1, start: 1, from: 1, to: 0, name: "Posición"),))
+  assert.eq(diagram-spans(d + (figures: false), r.figures, 0, 0).first().name, none)
 }
 
 // La vista (VW) de cada diagrama: la que abarca las de sus jugadas (views.sgf, 9×9: A5:E9 desde la 1, todo el

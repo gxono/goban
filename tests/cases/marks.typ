@@ -11,3 +11,6 @@
   marks(t-square: "D2", player: "white"), marks(t-circle: "D4", player: "neutral"))
 #goban(size: 5, players: (all: (mark: (line: (color: red)))), stones(black: "B2"), marks(triangle: "B2, C3", scale: 1.5))
 #goban(size: 5, marks(sequence: "A1 -|- E4", from: 3), marks(custom: "C5", content: [abc]))
+
+// Un carácter de sequence es del mismo tamaño que uno de custom.
+#goban(size: 3, label: (at: ()), marks(sequence: "A1, B2"), marks(custom: "C3", content: [3]))

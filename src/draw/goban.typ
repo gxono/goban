@@ -47,10 +47,11 @@
 }
 
 // La etiqueta de la línea n (de 1 a count) con el formato pattern: "A" son las letras del go (sin la I salvo
-// con use-i); lo demás, un patrón de numbering ("1", "一").
+// con use-i) y "a", las mismas en minúsculas; lo demás, un patrón de numbering ("1", "一").
 #let label-name(n, count, pattern, direction, forward, use-i) = {
   let n = if direction == forward { n } else { count - n + 1 }
-  if pattern == "A" { column-letter(n, use-i) } else { numbering(pattern, n) }
+  if pattern == "A" { column-letter(n, use-i) } else if pattern == "a" { lower(column-letter(n, use-i)) }
+  else { numbering(pattern, n) }
 }
 
 // Dibuja un tablero resuelto (resolve, en board.typ): devuelve (body, notes), el tablero y sus notas «N en M»
@@ -84,6 +85,13 @@
       extent: resolved.at("extent", default: none)) }
     else { partial-window(tree.partial, tree, cols, rows) }
   let inside((x, y)) = x >= fx and x <= tx and y >= fy and y <= ty
+  // blank: las intersecciones que no son del tablero, leídas en el tablero entero.
+  if tree.blank != none and type(tree.blank) != str { panic("blank es none o coordenadas: " + repr(tree.blank)) }
+  let blank-points = if tree.blank == none { () } else {
+    parse(tree.blank, use-i: tree.use-i, window: (1, 1, cols, rows)).points.map(((x, y)) => str(x) + "," + str(y))
+  }
+  let blank-set = blank-points.fold((:), (d, k) => { d.insert(k, true); d })
+  let blank(x, y) = str(x) + "," + str(y) in blank-set
 
   // Notas: una jugada numerada en un punto donde ya hubo una jugada numerada de este goban no se dibuja; el
   // punto sigue mostrando la primera, aunque la hayan capturado, y se anota «N en M». Un pase numerado de una
@@ -252,12 +260,55 @@
     } else {
       panic("grid.image.fit es \"stretch\" o \"tile\": " + repr(grid-image.fit))
     }
-    place(top + left, dx: x1, dy: y1, box(width: x2 - x1, height: y2 - y1, clip: true,
-      place(top + left, dx: -x1, dy: -y1, body)))
+    if blank-set.len() == 0 {
+      place(top + left, dx: x1, dy: y1, box(width: x2 - x1, height: y2 - y1, clip: true,
+        place(top + left, dx: -x1, dy: -y1, body)))
+    } else {
+      // Con blank, solo en las casillas del tablero: las que tienen sus cuatro esquinas en él.
+      for x in range(fx, tx) {
+        for y in range(fy, ty) {
+          if (blank(x, y) or blank(x + 1, y) or blank(x, y + 1) or blank(x + 1, y + 1)) { continue }
+          place(top + left, dx: px(x), dy: py(y + 1), box(width: ux, height: uy, clip: true,
+            place(top + left, dx: -px(x), dy: -py(y + 1), body)))
+        }
+      }
+    }
   } else if grid.on and grid.line.on {
     let stroke = line-stroke(grid.line, factor: factor)
-    for x in range(fx, tx + 1) { place(top + left, line(start: (px(x), y1), end: (px(x), y2), stroke: stroke)) }
-    for y in range(fy, ty + 1) { place(top + left, line(start: (x1, py(y)), end: (x2, py(y)), stroke: stroke)) }
+    let edge = grid.line
+    for (key, value) in grid.edge { if value != auto { edge.insert(key, value) } }
+    let edge-stroke = line-stroke(edge, factor: factor)
+    // Cada línea va de una intersección del tablero a otra vecina: sin blank, de un borde al otro; recortada a lo
+    // que se ve, con la media casilla de más. Las de afuera, si edge cambia algo, encima de las demás.
+    let runs(n, on-board) = {
+      let (list, start) = ((), none)
+      for k in range(1, n + 2) {
+        if k <= n and on-board(k) { if start == none { start = k } } else if start != none {
+          if k - 1 > start { list.push((start, k - 1)) }
+          start = none
+        }
+      }
+      list
+    }
+    let segments = ()
+    for x in range(fx, tx + 1) {
+      for (a, b) in runs(rows, y => not blank(x, y)) {
+        let (top-y, bottom-y) = (calc.max(py(b), y1), calc.min(py(a), y2))
+        if bottom-y > top-y { segments.push((x in (1, cols), (px(x), top-y), (px(x), bottom-y))) }
+      }
+    }
+    for y in range(fy, ty + 1) {
+      for (a, b) in runs(cols, x => not blank(x, y)) {
+        let (left-x, right-x) = (calc.max(px(a), x1), calc.min(px(b), x2))
+        if right-x > left-x { segments.push((y in (1, rows), (left-x, py(y)), (right-x, py(y)))) }
+      }
+    }
+    if grid.edge.values().any(v => v != auto) {
+      segments = segments.filter(s => not s.at(0)) + segments.filter(s => s.at(0))
+    }
+    for (outer, start, end) in segments {
+      place(top + left, line(start: start, end: end, stroke: if outer { edge-stroke } else { stroke }))
+    }
   }
 
   let hoshi = tree.hoshi
@@ -272,7 +323,7 @@
       let a = turn(hoshi.image.rotate, x, y)
       place(center + horizon, rotate(-a, picture(pick(hoshi.image.file, x, y), width, opacity: opacity)))
     }
-    for (x, y) in points.filter(inside) { origin(px(x), py(y), star(x, y)) }
+    for (x, y) in points.filter(inside).filter(((x, y)) => not blank(x, y)) { origin(px(x), py(y), star(x, y)) }
   }
 
   let labels = {

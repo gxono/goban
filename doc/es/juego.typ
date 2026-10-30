@@ -80,6 +80,7 @@ En los diagramas numerados, cuando una jugada cae en un punto donde ya se jugó 
 
 #opcion("notes.at", valor: [`auto` o un texto], inicial: `auto`)[El texto entre los dos números. Con `auto`, el del idioma (`at` en `texts`, #pag(<idiomas>)).]
 #opcion("notes.separator", valor: [un texto o un contenido], inicial: `", "`)[El texto entre las notas.]
+#opcion("notes.text", valor: [un diccionario], inicial: `(:)`)[Las opciones de `text` de las notas, en `goban-notes` y debajo de los diagramas de `sgf-diagrams` y `sgf-problem` (encima de las del epígrafe).]
 
 #funcion("goban-notes(at: auto, separator: auto)")[
   Las notas del último `goban`, separadas por `separator`. Sin notas, nada. Con `auto`, `at` y `separator` son los de la rama `notes`.

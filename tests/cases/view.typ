@@ -44,3 +44,56 @@ Sin fondo y más grande: #goban-view(tablero2, "C3").
 // Una etiqueta de una partida bajo el número de una jugada se ve si la vista esconde el número.
 #let etiqueta = sgf-read("(;SZ[5];B[dc];W[cc]LB[cc:A])")
 #goban-view(etiqueta, "B2:D4") #goban-view(etiqueta, "B2:D4", numbers: false)
+
+// El fondo de las vistas va sin borde, aunque el tablero lo tenga (la sombra queda); vuelve con
+// background.line o con un profile.
+#gobanist-set(view: (goban: (background: (on: true, line: false), scale: 0.8)))
+#let liso = board(size: 9, stones(black: "C3", white: "D4"))
+#let madera = board(liso, profile: "wain")
+#let sombra = board(liso, background: (shadow: (on: true, offset: 6pt, opacity: 1), line: (color: red)))
+#goban-view(liso, "B2:E5") #goban-view(liso, "C3")
+#goban-view(madera, "B2:E5") #goban-view(madera, "C3")
+#goban-view(sombra, "B2:E5") #goban-view(sombra, "C3")
+
+#goban-view(sombra, "B2:E5", goban: (background: (line: true)))
+#goban-view(liso, "B2:E5", goban: (profile: "wain"))
+#gobanist-set(view: (goban: (background: (line: true))))
+#goban-view(sombra, "B2:E5")
+
+// Varias partes, separadas por comas: una vista por parte, unidas con separator y, antes de la última, last (con
+// auto, el texto and del idioma). Con dos partes, solo last. Las opciones valen para todas.
+#gobanist-set(view: (goban: (background: (line: false))))
+#let lista = board(size: 9, stones(black: "C3, D4, E5", white: "D3, E4"), marks(cross: "F7, G7, F6, G6, H6"))
+Las piedras #goban-view(lista, "C3, D4") son negras. Las cruces #goban-view(lista, "F7, G7, F6, G6, H6").
+Mezcla: #goban-view(lista, "C3, D3:E4, A8:B9").
+#goban-view(lista, "C3, D4, E5", separator: "; ", last: " o ").
+#text(lang: "en")[#goban-view(lista, "C3, D4, E5").]
+#goban-view(lista, "F7, G7, F6", goban: (background: false), marks: false).
+
+// goban-stone: una piedra en el texto, con marca, número o como prisionera, del tamaño y a la altura de la vista
+// de una intersección.
+Negra #goban-stone("black"), blanca #goban-stone("white"), neutral #goban-stone() y #goban-stone("neutral");
+x#goban-stone("black")x#goban-stone("white")x.
+#goban-stone("black", mark: "triangle") #goban-stone("white", mark: "circle")
+#goban-stone("black", mark: (shape: "custom", content: [A]))
+#goban-stone("black", number: 5) #goban-stone("white", number: 12) #goban-stone("black", number: 123)
+#goban-stone("white", number: 6, mark: "square")
+#goban-stone("black", prisoner: true) #goban-stone("white", prisoner: true, mark: "cross")
+#let junto = board(size: 9, stones(black: "C3"), moves("D4"), marks(triangle: "C3"))
+#goban-view(junto, "C3", goban: (background: false))#goban-stone("black", mark: "triangle")
+#goban-view(junto, "D4", goban: (background: false))#goban-stone("black", number: 1)
+
+// El estilo del lugar y el de las vistas; las opciones globales del tablero (partial, label) no la cambian.
+#gobanist-set(stone: (fill: (pattern: tiling(size: (3pt, 3pt), circle(radius: 0.5pt, fill: red)))))
+#goban-stone("black") #goban-stone("white")
+#gobanist-set(profile: "default", partial: "A1:H8", label: (at: (top, left)), view: (goban: (scale: 1.5)))
+#goban-stone("black", number: 5)
+#gobanist-set(view: (goban: (scale: 0.8), raise: 0pt))
+x#goban-stone("white")x
+#gobanist-set(view: (raise: auto, goban: (profile: "draft")))
+#goban-stone("black") #goban-stone("white", number: 3)
+#gobanist-set(partial: none, label: (at: ()), view: (goban: (profile: "default", background: (line: false))))
+
+// goban-stone no cambia lo que dice el último tablero.
+#goban(size: 5, notes: true, moves("B2, C3, B2"))
+Antes: #goban-notes(). #goban-stone("black", number: 4) Después: #goban-notes().

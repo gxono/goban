@@ -3,7 +3,7 @@
 
 = Sintaxis de coordenadas <coordenadas>
 
-Las intersecciones se escriben como en el go: una letra para la columna, desde la izquierda, y un número para la fila, desde abajo. `"C3"` es la tercera columna y la tercera fila. Las letras van en mayúscula y sin la I, salvo con `use-i` (#pag(<use-i>)).
+Las intersecciones se escriben como en el go: una letra para la columna, desde la izquierda, y un número para la fila, desde abajo. `"C3"` es la tercera columna y la tercera fila. Las letras van en mayúscula y sin la I, salvo con `use-i` (#pag(<use-i>)). Después de la Z, en los tableros de más de 25 columnas, las columnas tienen dos letras, ya con la I: `AA`, `AB`, …, `AI`, …, `AZ`, `BA` (`"AA5"`, `"X2:AB2"`).
 
 `stones`, `prisoners` y `marks` reciben, para cada jugador o cada forma, una cadena con una o muchas intersecciones, escritas con una sintaxis que permite abreviar:
 

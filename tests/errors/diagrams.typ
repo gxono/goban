@@ -21,8 +21,8 @@
 // error: diagrams.notes es true o false
 #sgf-diagrams(sgf-read("(;SZ[5];B[cc])"), notes: "no")
 
-// error: diagrams.partial es none o auto
-#sgf-diagrams(sgf-read("(;SZ[5];B[cc])"), partial: "A1:C3")
+// error: diagrams.partial es none, auto o dos esquinas, "A1:E5"
+#sgf-diagrams(sgf-read("(;SZ[5];B[cc])"), partial: 3)
 
 // error: diagrams.comments.position es bottom, left, right o "after"
 #sgf-diagrams(sgf-read("(;SZ[5];B[cc])"), comments: (position: top))
@@ -69,8 +69,8 @@
 // error: problems.to-play es auto, "black", "white" o none
 #sgf-problem(sgf-read("(;SZ[5]AB[cc];W[dd])"), to-play: "neutral")
 
-// error: problems.partial es none o auto
-#sgf-problem(sgf-read("(;SZ[5]AB[cc];W[dd])"), partial: "A1:C3")
+// error: problems.partial es none, auto o dos esquinas, "A1:E5"
+#sgf-problem(sgf-read("(;SZ[5]AB[cc];W[dd])"), partial: true)
 
 // error: problems.variation-title es auto o una función del número
 #sgf-problem(sgf-read("(;SZ[5]AB[cc];W[dd])"), variation-title: "Variante")
@@ -87,8 +87,17 @@
 // error: layout.fit es true o false
 #sgf-diagrams(sgf-read("(;SZ[5];B[cc])"), layout: (fit: "yes"))
 
-// error: layout.align es left, center o right
-#sgf-diagrams(sgf-read("(;SZ[5];B[cc])"), layout: (align: top))
+// error: layout.halign es left, center o right
+#sgf-diagrams(sgf-read("(;SZ[5];B[cc])"), layout: (halign: top))
+
+// error: layout.valign es top o bottom
+#sgf-diagrams(sgf-read("(;SZ[5];B[cc])"), layout: (valign: center))
+
+// error: layout.align-captions es true o false
+#sgf-diagrams(sgf-read("(;SZ[5];B[cc])"), layout: (align-captions: auto))
+
+// error: opción desconocida: diagrams.layout.align
+#sgf-diagrams(sgf-read("(;SZ[5];B[cc])"), layout: (align: left))
 
 // error: layout.per-page es none o un número desde 1
 #sgf-diagrams(sgf-read("(;SZ[5];B[cc])"), layout: (per-page: 0))

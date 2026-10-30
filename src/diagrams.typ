@@ -49,7 +49,9 @@
   for key in ("figures", "view", "numbers", "marks") {
     if type(d.at(key)) != bool { panic("diagrams." + key + " es true o false: " + repr(d.at(key))) }
   }
-  if d.partial not in (none, auto) { panic("diagrams.partial es none o auto: " + repr(d.partial)) }
+  if d.partial not in (none, auto) and type(d.partial) != str {
+    panic("diagrams.partial es none, auto o dos esquinas, \"A1:E5\": " + repr(d.partial))
+  }
   if d.restart.on not in (true, false, auto) { panic("diagrams.restart es true, false, auto o un diccionario") }
   if type(d.restart.from) != int { panic("diagrams.restart.from es un número: " + repr(d.restart.from)) }
   if type(d.comments.root) != bool { panic("diagrams.comments.root es true o false") }
@@ -105,8 +107,13 @@
 // figuras (FG, las del kernel) y d.figures, un tramo por figura, desde donde empieza hasta antes de la
 // siguiente, y las jugadas antes de la primera son un tramo más; si no, el tramo n tiene tantas jugadas como
 // el elemento n de step (o el último). Con d.from, los mismos tramos (con el mismo número), pero solo los
-// que llegan a from, y el primero empieza ahí.
-#let diagram-spans(d, figures, last) = {
+// que llegan a from, y el primero empieza ahí. Una partida sin jugadas es un tramo vacío (de 1 a 0), con el
+// nombre de su figura.
+#let diagram-spans(d, figures, last, total) = {
+  if total == 0 {
+    let name = if d.figures and figures.len() > 0 { figures.first().title }
+    return ((n: 1, start: 1, from: 1, to: 0, name: name),)
+  }
   let list = ()
   if d.figures and figures.len() > 0 {
     let marks = figures.map(f => (start: f.start, name: f.title))
@@ -167,7 +174,7 @@
   if r.missing { panic("la partida no tiene la variante " + variation-text(d.variation)) }
   let total = r.moves
   let last = if d.to == auto { total } else { calc.min(d.to, total) }
-  let spans = diagram-spans(d, r.figures, last)
+  let spans = diagram-spans(d, r.figures, last, total)
   if spans.len() == 0 { return (style: d, layout: lay, items: ()) }
 
   let title = if d.title == auto { word(tree, "diagram") } else { d.title }
@@ -175,12 +182,14 @@
   // Los diagramas: el de cada tramo (con el nombre de su figura, si lo tiene, en lugar de «Diagrama n») y,
   // después, las variantes que nacen en él («Diagrama 3a», «3b»...), cada una entera, desde su primera
   // jugada propia (la que reemplaza), numerada desde 1.
+  // El rango del epígrafe va con los números de las jugadas, los que siguen a MN (sin restart); sin jugadas, no va.
   let branches = chosen-branches(game, d, tree.use-i)
+  let numbers = shown-numbers(r, (restart: (on: false)))
   let entries = ()
   for span in spans {
     let head = if span.name != none { span.name } else [#title~#str(span.n)]
-    entries.push((main: true, span: span, variation: d.variation, line: r,
-      caption: [#head (#str(span.from)–#str(span.to))]))
+    let numbered = if span.to >= span.from [ (#str(numbers.at(span.from - 1))–#str(numbers.at(span.to - 1)))]
+    entries.push((main: true, span: span, variation: d.variation, line: r, caption: [#head#numbered]))
     for (i, b) in branches.filter(b => span.start <= b.born and b.born <= span.to).enumerate() {
       entries.push((main: false, span: (n: span.n, start: b.start, from: b.start, to: b.last),
         variation: b.path, line: query(game, (kind: "read", path: (numbers: b.path), chat: d.chat)),
@@ -199,12 +208,14 @@
     let g = sgf(game, from: span.from, to: span.to, variation: entry.variation,
       restart: if entry.main and d.restart.on == auto { auto } else { false }, numbers: d.numbers,
       marks: d.marks, last-mark: d.last-mark, view: false) + (keep: true, first: first)
-    let rect = if d.view { view-between(entry.line, span.from, span.to) }
-    let window = if rect == none { if d.partial == auto { (partial: auto) } else { (:) } } else {
+    let rect = if d.view and type(d.partial) != str { view-between(entry.line, span.from, span.to) }
+    let window = if type(d.partial) == str { (partial: d.partial) } else if rect == none {
+      if d.partial == auto { (partial: auto) } else { (:) }
+    } else {
       let (x1, y1, x2, y2) = rect
       (partial: point-name((x1, y1), tree.use-i) + ":" + point-name((x2, y2), tree.use-i))
     }
-    let resolved = resolve(board(captures: "remove", notes: true, ..window, ..d.goban, g), global, replace: true)
+    let resolved = resolve(board(board(captures: "remove", notes: true, ..window), ..d.goban, g), global, replace: true)
     if rect == none and extent != none { resolved.extent = extent }
     entry + (resolved: resolved, numbers: shown-numbers(entry.line, sgf-options(g, resolved.tree), first: first))
   })
@@ -264,7 +275,7 @@
     }
   }
   let options = args.named()
-  [#metadata((kind: "diagrams", game: game, options: options))<goban-cells>#layout(size => {
+  [#metadata((kind: "diagrams", game: game, options: options))<goban-cells>#layout(size => context {
     let group = diagram-group(game, options)
     arrange(group.layout, size.width, (group,))
   })]

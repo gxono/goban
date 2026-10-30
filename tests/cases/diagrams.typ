@@ -100,3 +100,12 @@ Con: #sgf-comment(partida, 7) #h(1em) Sin: #sgf-comment(partida, 7, annotations:
 #let ko = sgf-read("(;SZ[5]AB[bc][cb][cd]AW[cc][db][ec][dd];B[dc];W[cc])")
 #sgf-diagrams(ko, step: 1, layout: (columns: 2))
 #sgf-diagrams(ko, step: 2)
+
+// Una partida sin jugadas: un diagrama de su posición, sin rango (con FG, el nombre de su figura). El rango del
+// epígrafe va con los números que siguen a MN: «Diagrama 1 (10–11)».
+#sgf-diagrams(sgf-read("(;SZ[5]AB[cc]AW[dd])"), layout: (width: auto))
+#sgf-diagrams(sgf-read("(;SZ[5]FG[0:La posición]AB[cc]AW[dd])"), layout: (width: auto))
+#sgf-diagrams(sgf-read("(;SZ[5];B[cc]MN[10];W[dd];B[ee];W[aa])"), step: 2, layout: (width: auto))
+
+// partial con dos esquinas: todos los diagramas muestran esa parte, aunque el archivo tenga vista.
+#sgf-diagrams(vistas, step: 2, partial: "A1:F6", layout: (columns: 3, width: auto))

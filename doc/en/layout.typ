@@ -49,14 +49,37 @@ The diagrams of `sgf-diagrams` and `sgf-problem` are laid out according to the `
 
 #opcion("layout.fit", valor: [`true` or `false`], inicial: `false`)[Scales each board so that it fills the width of its column; it replaces the `scale` of the board. The lines do not change width. In `sgf-diagrams` and `sgf-problem`, every board uses the scale that fills the column with the first one, so the stones have the same size in all of them; if with that scale a board does not fit in the column (a problem wider than the first one, for example), only that board is shrunk to fill it. Only with `columns`, and not with `width: auto`. Without an available width (a layout measured with `measure` without `width`), the grid takes the width of the diagrams, without `fit`.]
 
-#opcion("layout.align", valor: [`left`, `center` or `right`], inicial: `center`)[
-  Where each diagram goes within its column, with its caption and its notes. The comments always go according to `comments.align`.
+#opcion("layout.halign", valor: [`left`, `center` or `right`], inicial: `center`)[
+  Where each diagram goes in its column, with its caption and its notes. The comments always follow `comments.align`.
 
   ```ejemplo-abajo
   #sgf-diagrams(game, step: 2, to: 6,
     layout: (columns: 2, width: 60%,
       column-sep: 3em, row-sep: 2em,
-      align: left))
+      halign: left))
+  ```
+]
+
+#opcion("layout.valign", valor: [`top` or `bottom`], inicial: `top`)[
+  How the diagrams of a row of the grid are aligned when their boards have different heights. With `top`, at the top. With `bottom`, the boards end at the same height, and their captions and notes all start on the same line, below. With `columns: auto`, the diagrams go on the baseline of the paragraph, as with `bottom`.
+
+  ```ejemplo
+  #goban-layout(columns: 3, valign: bottom,
+    board(size: 5, scale: 0.6,
+      stones(black: "C3")),
+    board(size: (5, 3), scale: 0.6,
+      stones(white: "C2")),
+    board(size: 9, scale: 0.6,
+      stones(black: "E5")))
+  ```
+]
+
+#opcion("layout.align-captions", valor: [`true` or `false`], inicial: `false`)[
+  With `valign: top`, the captions, notes and comments of the diagrams of a row start on the same line, below the tallest board; the boards stay at the top. With `valign: bottom` they are already on the same line.
+
+  ```codigo
+  #sgf-problem(..problems, solutions: false,
+    layout: (columns: 3, align-captions: true))
   ```
 ]
 

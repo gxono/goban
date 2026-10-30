@@ -75,7 +75,7 @@ Juega cada tablero en una sola llamada, cuando el tablero tiene capturas o terri
 
 == Idiomas <idiomas>
 
-Algunos textos los escribe el propio paquete: los epígrafes de `sgf-diagrams` y `sgf-problem`, el resultado de la partida, las anotaciones de los comentarios y las palabras de las notas «N en M» y «N: pasa». Están en inglés (`en`), español (`es`), francés (`fr`), alemán (`de`), portugués (`pt`), italiano (`it`), esperanto (`eo`), japonés (`ja`), chino (`zh`) y coreano (`ko`). Para el japonés, el chino y el coreano hace falta una fuente con esos caracteres.
+Algunos textos los escribe el propio paquete: los epígrafes de `sgf-diagrams` y `sgf-problem`, el resultado de la partida, las anotaciones de los comentarios, las palabras de las notas «N en M» y «N: pasa» y la «y» entre varias vistas. Están en inglés (`en`), español (`es`), francés (`fr`), alemán (`de`), portugués (`pt`), italiano (`it`), esperanto (`eo`), japonés (`ja`), chino (`zh`) y coreano (`ko`). Para el japonés, el chino y el coreano hace falta una fuente con esos caracteres.
 
 Los textos están en el idioma del texto, `text.lang`, y lo siguen si cambia dentro del documento: `set text(lang: "fr")`. En un idioma sin traducción, están en inglés.
 

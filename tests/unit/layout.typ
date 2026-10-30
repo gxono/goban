@@ -37,3 +37,11 @@
 // goban-layout con fit, medido sin un ancho disponible (measure sin width): la grilla toma el ancho de los
 // diagramas; antes era el error «cannot create line with infinite length».
 #context measure(goban-layout(columns: 2, fit: true, tablero, tablero))
+
+// Las opciones globales valen en goban-layout y sgf-diagrams (y sgf-problem): antes se leían en el layout sin context,
+// donde un panic con las de la primera vuelta, que todavía no tienen su valor, era un error (S16 fuera del tablero
+// de 9×9, la forma rombo desconocida).
+#gobanist-set(size: 19, shapes: (rombo: [◆]))
+#goban-layout(columns: 2, board(stones(black: "S16")), board(partial: "R15:T19", stones(white: "S16")))
+#let marcada = sgf-read("(;SZ[9];B[cc];W[gg])")
+#sgf-diagrams(marcada, last-mark: "rombo")

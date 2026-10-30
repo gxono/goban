@@ -224,6 +224,64 @@ pub fn coords(v: &str, sy: i32) -> Vec<Point> {
     list
 }
 
+/// La orientación del archivo (origin y transpose de sgf-read): dónde va su punto aa (a la derecha, abajo) y si
+/// la primera letra de cada punto es la fila. Entre las dos, las ocho simetrías del tablero.
+#[derive(Clone, Copy, Default, PartialEq)]
+pub struct Orientation {
+    pub right: bool,
+    pub bottom: bool,
+    pub transpose: bool,
+}
+
+fn letter(n: i32) -> char {
+    if n <= 26 { (b'a' + (n - 1) as u8) as char } else { (b'A' + (n - 27) as u8) as char }
+}
+
+/// Un punto del archivo ("pd"), de un tablero de w×h, en el tablero orientado. Lo que no es un punto del
+/// tablero (un pase "tt" en 19×19) queda igual.
+fn orient_point(v: &str, w: i32, h: i32, o: Orientation) -> String {
+    let b = v.as_bytes();
+    let (Some(first), Some(second)) = (b.first().and_then(|&c| number(c)), b.get(1).and_then(|&c| number(c))) else {
+        return v.to_string();
+    };
+    if b.len() != 2 || first > w || second > h {
+        return v.to_string();
+    }
+    let (mut col, mut row) = if o.transpose { (second, first) } else { (first, second) };
+    let (bw, bh) = if o.transpose { (h, w) } else { (w, h) };
+    if o.right {
+        col = bw - col + 1;
+    }
+    if o.bottom {
+        row = bh - row + 1;
+    }
+    format!("{}{}", letter(col), letter(row))
+}
+
+/// La partida orientada: los puntos de las propiedades que los tienen (en LB, el de antes de «:») y, con
+/// transpose, el tamaño.
+pub fn orient(tree: &mut Tree, (w, h): (i32, i32), o: Orientation) {
+    let both = |v: &str| v.split(':').map(|p| orient_point(p, w, h, o)).collect::<Vec<_>>().join(":");
+    for node in &mut tree.nodes {
+        for (key, values) in node.iter_mut() {
+            match key.as_str() {
+                "B" | "W" | "AB" | "AW" | "AE" | "TR" | "SQ" | "CR" | "MA" | "SL" | "TB" | "TW" | "VW" | "DD" | "AR"
+                | "LN" | sensei::BLANK => values.iter_mut().for_each(|v| *v = both(v)),
+                "LB" => values.iter_mut().for_each(|v| {
+                    if let Some((p, text)) = v.split_once(':') {
+                        *v = format!("{}:{}", orient_point(p, w, h, o), text);
+                    }
+                }),
+                "SZ" if o.transpose && w != h => *values = vec![format!("{h}:{w}")],
+                _ => {}
+            }
+        }
+    }
+    for child in &mut tree.children {
+        orient(child, (w, h), o);
+    }
+}
+
 /// El tamaño de la partida: SZ de la raíz ("19" o "19:13"), 19 si no está.
 pub fn size(root: Option<&Props>) -> (i32, i32) {
     let Some(v) = root.and_then(|r| r.get("SZ")).and_then(|v| v.first()) else { return (19, 19) };
@@ -850,6 +908,15 @@ pub fn numbers(t: &Tree, path: &Path) -> Option<Vec<usize>> {
 pub struct Request {
     #[serde(default)]
     pub charset: Option<String>,
+    /// Dónde va el punto aa: "top-left" (o nada), "top-right", "bottom-left" o "bottom-right".
+    #[serde(default)]
+    pub origin: Option<String>,
+    #[serde(default)]
+    pub transpose: bool,
+    /// La sintaxis del archivo: "sgf", "sensei" (los diagramas de Sensei's Library) o nada, que es sensei si no
+    /// tiene nodos SGF y tiene líneas $$.
+    #[serde(default)]
+    pub syntax: Option<String>,
     #[serde(default = "first")]
     pub game: usize,
     pub query: Query,
@@ -868,6 +935,8 @@ fn yes() -> bool {
 pub enum Query {
     /// El tamaño de cada partida del archivo.
     Games,
+    /// Un hash (FNV-1a de 64 bits, en hexadecimal) de los bytes del archivo: identifica un problema en los enlaces.
+    Hash,
     Read {
         #[serde(default)]
         path: Path,
@@ -891,8 +960,29 @@ pub enum Query {
 }
 
 pub fn answer(data: &[u8], request: &Request) -> Result<serde_json::Value, String> {
+    if let Query::Hash = request.query {
+        let hash = data.iter().fold(0xcbf29ce484222325u64, |h, &b| (h ^ b as u64).wrapping_mul(0x100000001b3));
+        return Ok(serde_json::json!(format!("{hash:016x}")));
+    }
     let text = decode(data, request.charset.as_deref())?;
-    let games = parse(&text);
+    let o = Orientation {
+        right: matches!(request.origin.as_deref(), Some("top-right" | "bottom-right")),
+        bottom: matches!(request.origin.as_deref(), Some("bottom-left" | "bottom-right")),
+        transpose: request.transpose,
+    };
+    let sensei = match request.syntax.as_deref() {
+        None => sensei::is_diagram(&text),
+        Some("sgf") => false,
+        Some("sensei") => true,
+        Some(other) => return Err(format!("sintaxis desconocida: {other} (son \"sgf\" y \"sensei\")")),
+    };
+    let mut games = if sensei { sensei::parse_diagrams(&text)? } else { parse(&text) };
+    if o != Orientation::default() {
+        for t in &mut games {
+            let s = size(t.nodes.first());
+            orient(t, s, o);
+        }
+    }
     if let Query::Games = request.query {
         return Ok(serde_json::json!(games.iter().map(|t| size(t.nodes.first())).collect::<Vec<_>>()));
     }
@@ -904,7 +994,7 @@ pub fn answer(data: &[u8], request: &Request) -> Result<serde_json::Value, Strin
     };
     let json = |v: Result<serde_json::Value, serde_json::Error>| v.map_err(|e| e.to_string());
     match &request.query {
-        Query::Games => unreachable!(),
+        Query::Games | Query::Hash => unreachable!(),
         Query::Read { path, chat } => json(serde_json::to_value(read(t, path, *chat)?)),
         Query::Info { path, r#move, property } => json(serde_json::to_value(info(t, path, *r#move, property))),
         Query::Shape => json(serde_json::to_value(shape(t))),
@@ -918,6 +1008,8 @@ pub fn answer_json(data: &[u8], request: &[u8]) -> Result<Vec<u8>, String> {
     let request: Request = serde_json::from_slice(request).map_err(|e| format!("pedido SGF del kernel: {e}"))?;
     serde_json::to_vec(&answer(data, &request)?).map_err(|e| e.to_string())
 }
+
+mod sensei;
 
 #[cfg(test)]
 mod tests;

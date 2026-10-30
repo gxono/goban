@@ -19,7 +19,9 @@
     if type(lay.at(key)) != length { panic("layout." + key + " es una longitud: " + repr(lay.at(key))) }
   }
   if type(lay.fit) != bool { panic("layout.fit es true o false: " + repr(lay.fit)) }
-  if lay.align not in (left, center, right) { panic("layout.align es left, center o right: " + repr(lay.align)) }
+  if lay.halign not in (left, center, right) { panic("layout.halign es left, center o right: " + repr(lay.halign)) }
+  if lay.valign not in (top, bottom) { panic("layout.valign es top o bottom: " + repr(lay.valign)) }
+  if type(lay.align-captions) != bool { panic("layout.align-captions es true o false: " + repr(lay.align-captions)) }
   if lay.per-page != none and (type(lay.per-page) != int or lay.per-page < 1) {
     panic("layout.per-page es none o un número desde 1: " + repr(lay.per-page))
   }
@@ -152,7 +154,7 @@
   let width = if lay.width == auto { available } else { absolute(lay.width, available) }
   let column-sep = lay.column-sep.to-absolute()
   let cell = if grid-mode { (width - (lay.columns - 1) * column-sep) / lay.columns }
-  let text-align = if grid-mode { lay.align } else { center }
+  let text-align = if grid-mode { lay.halign } else { center }
 
   let after = ()
   let cells = ()
@@ -226,20 +228,34 @@
         }
         if c.position == bottom and body != none { comments-box(body) }
       }
-      let main = block(width: diagram-width, stack(spacing: 0.3em,
-        align(if grid-mode { lay.align } else { center }, drawn.body), below))
-      let content = if side {
+      // En la grilla, el tablero va en el alto tallest (el del más alto de su fila, o none): abajo con valign:
+      // bottom, arriba con align-captions (así, lo de debajo empieza en la misma línea en toda la fila).
+      let board-height = measure(drawn.body).height
+      let board-align = if grid-mode { lay.halign } else { center }
+      let main(tallest) = {
+        let placed = if tallest == none { align(board-align, drawn.body) }
+          else { block(height: tallest, align(board-align + if lay.valign == bottom { bottom } else { top }, drawn.body)) }
+        // El destino de un enlace (sgf-problem con links), al principio del diagrama.
+        let target = item.at("anchor", default: none)
+        block(width: diagram-width, {
+          if target != none [#metadata(none)#target]
+          stack(spacing: 0.3em, placed, below)
+        })
+      }
+      let content(tallest) = if side {
         let rest = if c.width != auto { c.width } else if natural { side-width } else { 1fr }
         let notes = if body != none { comments-box(body) }
         let columns = if c.position == right { (diagram-width, rest) } else { (rest, diagram-width) }
+        let main = main(tallest)
         grid(columns: columns, column-gutter: sep, ..if c.position == right { (main, notes) } else { (notes, main) })
-      } else { main }
+      } else { main(tallest) }
       if grid-mode or side {
-        cells.push((content: content, alone: item.alone, line: side))
+        cells.push((content: content, height: board-height, alone: item.alone, line: side))
       } else {
         // En el párrafo, el tablero queda sobre la línea de base: los de una línea quedan alineados arriba.
         let under = measure(block(width: diagram-width, below)).height + 0.3em.to-absolute()
-        cells.push((content: box(baseline: under, content), alone: item.alone, line: false))
+        cells.push((content: _ => box(baseline: under, content(none)), height: board-height, alone: item.alone,
+          line: false))
       }
       last = (resolved, drawn.notes)
     }
@@ -251,6 +267,26 @@
   // van cada una en su línea. La grilla o el párrafo se centran en la línea.
   let render(chunk) = {
     let body = if grid-mode {
+      // Las filas de la grilla (una celda que va sola es una fila) y, con valign: bottom o align-captions, el alto
+      // del tablero más alto de cada una.
+      let n = lay.columns
+      let (rows, row) = ((), ())
+      for x in chunk {
+        if x.alone {
+          if row.len() > 0 { rows.push(row) }
+          rows.push((x,))
+          row = ()
+        } else {
+          row.push(x)
+          if row.len() == n { rows.push(row); row = () }
+        }
+      }
+      if row.len() > 0 { rows.push(row) }
+      let even = lay.valign == bottom or lay.align-captions
+      let chunk = rows.map(row => {
+        let tallest = if even and not row.first().alone { calc.max(..row.map(x => x.height)) }
+        row.map(x => x + (content: (x.content)(tallest)))
+      }).flatten()
       let (columns, total) = if natural {
         let widths = chunk.filter(x => not x.alone).map(x => measure(x.content).width)
         let n = calc.max(1, calc.min(widths.len(), lay.columns))
@@ -271,12 +307,13 @@
         }
       }
       block(width: total, grid(columns: columns, column-gutter: column-sep, row-gutter: lay.row-sep,
-        align: lay.align + top, ..list))
+        align: lay.halign + top, ..list))
     } else {
+      let chunk = chunk.map(x => x + (content: (x.content)(none)))
       // Uno al lado del otro; los que van solos, en su línea.
       let paragraph(run) = {
         set par(leading: lay.row-sep)
-        set align(lay.align)
+        set align(lay.halign)
         for (i, x) in run.enumerate() {
           if i > 0 { if x.alone or run.at(i - 1).alone { linebreak() } else { h(column-sep) } }
           x.content

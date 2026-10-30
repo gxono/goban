@@ -20,3 +20,11 @@ Notas: #goban-notes(at: "en", separator: "; ").
   moves(white: "C3"), moves("D3"))
 #goban(resume: (board: ko, numbers: true), partial: "A2:E4")
 #goban(resume: ko, partial: "A2:E4", moves(white: "B2"))
+
+// notes.text: las opciones de text de las notas, en goban-notes y debajo de los diagramas. Las notas de
+// diagrams.goban no apagan las de los diagramas (antes, notes: (text: ...) las reemplazaba).
+#gobanist-set(notes: (text: (fill: red, style: "italic")))
+#goban(size: 5, notes: true, moves("B2, C3, B2"))
+Notas: #goban-notes().
+#gobanist-set(notes: (text: (fill: black, style: "normal")))
+#sgf-diagrams(sgf-read("(;SZ[5];B[bd];W[cc];B[bd])"), goban: (notes: (text: (fill: blue))), layout: (width: auto))

@@ -3,8 +3,8 @@
     python bundle.py [destino]
 
 Sin destino, la deja en dist/gobanist/<versión>. Copia el código, las imágenes, el README, la licencia y lo que
-enlaza el README (los manuales en PDF y sus imágenes, excluidos del paquete en typst.toml); no copia los tests,
-el kernel en Rust ni las fuentes del manual.
+enlaza el README (los manuales y las guías de ejemplos en PDF y sus imágenes, excluidos del paquete en typst.toml); no
+copia los tests, el kernel en Rust, las fuentes del manual ni los ejemplos.
 """
 
 import shutil
@@ -14,7 +14,7 @@ from pathlib import Path
 
 ROOT = Path(__file__).resolve().parent
 FILES = ["typst.toml", "lib.typ", "README.md", "LICENSE",
-         "doc/en/manual.pdf", "doc/es/manual.pdf", "doc/readme-1.png", "doc/readme-2.png"]
+         "doc/en/manual.pdf", "doc/es/manual.pdf", "examples/examples.pdf", "examples/ejemplos.pdf"]
 FOLDERS = ["src", "images"]
 
 
@@ -26,6 +26,8 @@ def main():
     for name in FILES:
         (dest / name).parent.mkdir(parents=True, exist_ok=True)
         shutil.copy2(ROOT / name, dest / name)
+    for image in sorted((ROOT / "doc").glob("readme-*.png")):
+        shutil.copy2(image, dest / "doc" / image.name)
     for name in FOLDERS:
         shutil.copytree(ROOT / name, dest / name)
     print(dest)

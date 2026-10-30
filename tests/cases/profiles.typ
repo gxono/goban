@@ -42,3 +42,13 @@
     stones(white: "D8, F8, E7, H7, C6, D6, F6, H6, B5, J5, B4, E4, J4, J3, H2"), marks(triangle: "E5, A1"), moves("A9, B9")))
   h(0.5em)
 }
+
+// Las flechas y las líneas de cada perfil: rojas en pgfgo y pgfgosmooth, del color de la grilla en wain, más
+// finas en simple y draft, sin halo en shell, yunzi y baduktv; otro perfil las vuelve a las iniciales.
+#let trazos = board(size: 5, label: (at: ()), stones(black: "B2, C3", white: "C2"),
+  arrows(("A1", "E3")), lines(("A5", "E4")))
+#for p in ("default", "wain", "pgfgo", "pgfgosmooth", "simple", "draft", "shell", "yunzi", "baduktv") {
+  box(goban(profile: p, trazos))
+  h(0.3em)
+}
+#box(goban(profile: "default", board(trazos, profile: "pgfgo")))

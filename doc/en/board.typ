@@ -40,7 +40,7 @@ The board is what `goban` draws: the grid, the background, the coordinates and e
 ]
 
 #opcion("size", valor: [a number or `(columns, rows)`], inicial: `9`)[
-  The size of the board: the vertical and horizontal lines. A number is a square board; `(5, 3)`, one with 5 columns and 3 rows. Columns go from 2 to 25, and rows, from 2 to 99. With a game (`sgf-read`), the board takes the size of the file (`SZ`), and another `size` is an error.
+  The size of the board: the vertical and horizontal lines. A number is a square board; `(5, 3)`, one with 5 columns and 3 rows. Columns go from 2 to 52 (after Z, with two letters: `AA`, `AB`…), and rows, from 2 to 99. With a game (`sgf-read`), the board takes the size of the file (`SZ`), and another `size` is an error.
 
   ```ejemplo
   #goban(size: 5)
@@ -126,6 +126,15 @@ The board is what `goban` draws: the grid, the background, the coordinates and e
   #goban(b, grid: (line: (color: blue)))
   #goban(b, grid: (line: (opacity: 0.2)))
   #goban(b, grid: (line: (width: 1.5pt)))
+  ```
+]
+
+#opcion("grid.edge", valor: [a dictionary], inicial: `(color: auto, width: auto, opacity: auto)`)[
+  The four outer lines of the grid, with another color, width or opacity than the rest. With `auto`, that of `grid.line`.
+
+  ```ejemplo
+  #goban(size: 5, grid: (edge: (width: 1.2pt)),
+    stones(black: "C2, D3", white: "B4"))
   ```
 ]
 
@@ -469,6 +478,16 @@ Often the whole board is not needed, only part of it. `partial` defines it with 
   ```
 ]
 
+#opcion("blank", valor: [`none` or coordinates], inicial: `none`, etiqueta: <blank>)[
+  The intersections that are not part of the board, read on the whole board (even with `partial`): without lines or star points. A line joins only two neighbouring intersections of the board: next to a `blank` point it ends as at the edge. The stones and the background do not change. With `grid.image`, the image goes only in the cells of the board.
+
+  ```ejemplo
+  #goban(size: 13, label: (at: (left, bottom)),
+    blank: "A:D 1:4, K:N 1:4, A:D 10:13, K:N 10:13",
+    stones(black: "G7, F9, E6", white: "H6, G4, C7"))
+  ```
+]
+
 == The border coordinates <etiquetas>
 
 The labels are the coordinates written on the sides of the board.
@@ -507,11 +526,11 @@ The labels are the coordinates written on the sides of the board.
   ```
 ]
 
-#opcion("label.columns", valor: [`"A"` or a `numbering` pattern], inicial: `"A"`)[
-  How the coordinates of the columns are written (at the top and the bottom): with `"A"`, the letters of Go (without the I, except with `use-i`); with another Typst `numbering` pattern, such as `"1"` or `"一"`, numbers.
+#opcion("label.columns", valor: [`"A"`, `"a"` or a `numbering` pattern], inicial: `"A"`)[
+  How the coordinates of the columns are written (at the top and the bottom): with `"A"`, the letters of Go (without the I, except with `use-i`); with `"a"`, the same in lower case; with another Typst `numbering` pattern, such as `"1"` or `"一"`, numbers.
 ]
 
-#opcion("label.rows", valor: [`"A"` or a `numbering` pattern], inicial: `"1"`)[The same for the rows (on the sides). The kanji (`"一"`) of the rows are aligned on the side of the board, so that those with two characters do not run into it.]
+#opcion("label.rows", valor: [`"A"`, `"a"` or a `numbering` pattern], inicial: `"1"`)[The same for the rows (on the sides). The kanji (`"一"`) of the rows are aligned on the side of the board, so that those with two characters do not run into it.]
 
 #opcion("label.columns-direction", valor: [`ltr` or `rtl`], inicial: `ltr`)[
   In which direction the columns are counted: from the left or from the right.

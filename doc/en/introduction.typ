@@ -82,11 +82,16 @@ The options of gobanist are those of pgf-go, with Typst syntax: a tree of dictio
   [`name = base`, `resume = base`], [`#let base = board(...)`, `goban(base)`, `resume: base`],
   [`\pgfgoview{base}{C3}`], [`goban-view(base, "C3")`],
   [`\pgfgodefinesgf{game}{game.sgf}`], [`#let game = sgf-read(path("game.sgf"))`],
+  [`\pgfgodefinesgf[origin = top right]`], [`sgf-read(..., origin: top + right)`],
+  [`\begin{pgfgosgf}{short} ... \end{pgfgosgf}`], [`#let short = sgf-read("(;SZ[9]...)")`],
   [`\sgf[to = 7]{game}`], [`sgf(game, to: 7)`],
   [`\sgfdiagrams`, `\sgfproblem`], [`sgf-diagrams`, `sgf-problem`],
   [`\pgfgomovenotes`, `\pgfgoscore{b}`], [`goban-notes()`, `goban-score("black")`],
   [`pgfgolayout`], [`goban-layout(...)`],
   [`\pgfgodefinemark`], [the `shapes` option],
+  [`\pgfgostone[b, number = 5]`], [`goban-stone("black", number: 5)`],
+  [`label = {letter case = lower}`], [`label: (columns: "a")`],
+  [`layout = {halign = left}`], [`layout: (halign: left)`],
   [`\pgfgodefineprofile{wood}{...}`], [`#let wood = (...)`, `profile: wood`],
   table.hline(),
 )
@@ -96,7 +101,7 @@ Some things behave differently:
 - A mark without a player on a stone takes the player of the stone (in pgf-go it was neutral).
 - Typst has no warnings: what pgf-go warned about (a coordinate that cannot be understood or that is outside the board, a game of another size) is an error. A move on an occupied point, with captures, is also an error, except in `sgf-diagrams` and `sgf-problem`.
 - The grays are those of xcolor: the gray of gobanist is `luma(50%)`, not Typst's `gray`.
-- The board has at least 2×2 lines and at most 25 columns.
+- The board has at least 2×2 lines.
 - Images are `path` or `bytes`, not file names.
 
 And some are not ported: `\sgfanimation` (Typst does not make animated PDFs; for slides there are Touying and Polylux, #pag(<tut-diapositivas>)), `export` and `\pgfgoimport` (a board is a value: it is saved in a `.typ` module and imported), drawing with TikZ inside the board, the `go cs` coordinate system, `\pgfgodefinegoban`, `\pgfgodefineplayer` and the partial profiles (`goban profile`, `players profile`): a profile is a dictionary, and its branches are taken.

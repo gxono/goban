@@ -216,6 +216,8 @@ El estilo de las marcas es el de su jugador: `gobanist-set(mark: ...)` es `goban
   ```
 ]
 
+#opcion("shift", valor: [`(columnas, filas)`], inicial: `(0, 0)`)[En `marks`: corre las coordenadas, como en las piedras (#pag(<jugadas>)).]
+
 #opcion("forget", valor: [`true` o `false`], inicial: `false`)[En `marks`, `arrows` y `lines`: `resume` no trae estas marcas, flechas o líneas, aunque se pida `marks` (#pag(<memoria>)).]
 
 == Formas propias <formas-propias>

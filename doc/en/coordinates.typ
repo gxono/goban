@@ -3,7 +3,7 @@
 
 = Coordinate syntax <coordenadas>
 
-Intersections are written as in Go: a letter for the column, from the left, and a number for the row, from the bottom. `"C3"` is the third column and the third row. The letters are capitals and skip the I, except with `use-i` (#pag(<use-i>)).
+Intersections are written as in Go: a letter for the column, from the left, and a number for the row, from the bottom. `"C3"` is the third column and the third row. The letters are capitals and skip the I, except with `use-i` (#pag(<use-i>)). After Z, on boards of more than 25 columns, the columns have two letters, now with the I: `AA`, `AB`, …, `AI`, …, `AZ`, `BA` (`"AA5"`, `"X2:AB2"`).
 
 `stones`, `prisoners` and `marks` take, for each player or each shape, a string with one or many intersections, written with a syntax that allows abbreviating:
 

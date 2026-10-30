@@ -7,7 +7,7 @@
 #import "/lib.typ": *
 
 #let v = defaults.view
-#assert.eq(v.goban, (scale: 0.8))
+#assert.eq(v.goban, (scale: 0.8, background: (line: false)))
 // view.goban es abierto: se mezcla rama por rama.
 #let tree = apply(apply(defaults, (view: (goban: (background: false)))), (view: (marks: false, goban: (grid: false))))
 #assert.eq(tree.view.goban, (scale: 0.8, background: false, grid: false))

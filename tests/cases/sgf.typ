@@ -38,3 +38,14 @@ Negras: #goban-score("black"), blancas: #goban-score("white").
 #goban(sgf(vistas, to: 2, view: true))
 #goban(sgf(vistas, view: 5))
 #goban(partial: "E1:J5", sgf(vistas, view: 5))
+
+// origin y transpose: las ocho simetrías. El joseki del archivo está arriba a la derecha (Q16): con origin
+// top + right, arriba a la izquierda; bottom + right y transpose, arriba a la derecha; transpose, abajo a la
+// izquierda; bottom + left, abajo a la derecha. partial: auto y variation (en coordenadas del tablero) los siguen.
+#let jfile = path("/doc/joseki.sgf")
+#goban-layout(columns: 4, fit: true, ..(
+  sgf-read(jfile, origin: top + right), sgf-read(jfile, origin: bottom + right, transpose: true),
+  sgf-read(jfile, transpose: true), sgf(sgf-read(jfile, origin: bottom + left), variation: "Q4, R6, O4"),
+).map(g => board(partial: auto, g)))
+// Con transpose, SZ[9:5] es un tablero de 5×9; la etiqueta (LB) y la flecha (AR) también se giran.
+#goban(sgf-read("(;SZ[9:5]AB[ab];W[ea]LB[ca:X]AR[aa:ie])", transpose: true), label: (at: (bottom, left)))

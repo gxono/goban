@@ -75,7 +75,7 @@ It plays each board in a single call, when the board has captures or territory. 
 
 == Languages <idiomas>
 
-Some texts are written by the package itself: the captions of `sgf-diagrams` and `sgf-problem`, the result of the game, the annotations of the comments and the words of the "N at M" and "N: pass" notes. They are in English (`en`), Spanish (`es`), French (`fr`), German (`de`), Portuguese (`pt`), Italian (`it`), Esperanto (`eo`), Japanese (`ja`), Chinese (`zh`) and Korean (`ko`). Japanese, Chinese and Korean need a font with those characters.
+Some texts are written by the package itself: the captions of `sgf-diagrams` and `sgf-problem`, the result of the game, the annotations of the comments, the words of the "N at M" and "N: pass" notes and the "and" between several views. They are in English (`en`), Spanish (`es`), French (`fr`), German (`de`), Portuguese (`pt`), Italian (`it`), Esperanto (`eo`), Japanese (`ja`), Chinese (`zh`) and Korean (`ko`). Japanese, Chinese and Korean need a font with those characters.
 
 The texts are in the language of the text, `text.lang`, and they follow it if it changes inside the document: `set text(lang: "fr")`. In a language without a translation, they are in English.
 

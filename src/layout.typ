@@ -26,7 +26,9 @@
 #let goban-layout(..args) = {
   let sources = args.pos().map(source)
   let options = args.named()
-  layout(size => {
+  // El context va dentro del layout: un panic con las opciones globales de la primera vuelta, que todavía no
+  // tienen su valor (S16 fuera del tablero de 9×9 con gobanist-set(size: 19)), solo se posterga en un context.
+  layout(size => context {
     let global = current()
     let lay = check-layout(merge(global.layout, options, path: ("layout",)))
     let groups = sources.map(s => {

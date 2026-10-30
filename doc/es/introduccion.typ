@@ -82,11 +82,16 @@ Las opciones de gobanist son las de pgf-go, con la sintaxis de Typst: un árbol 
   [`name = base`, `resume = base`], [`#let base = board(...)`, `goban(base)`, `resume: base`],
   [`\pgfgoview{base}{C3}`], [`goban-view(base, "C3")`],
   [`\pgfgodefinesgf{partida}{partida.sgf}`], [`#let partida = sgf-read(path("partida.sgf"))`],
+  [`\pgfgodefinesgf[origin = top right]`], [`sgf-read(..., origin: top + right)`],
+  [`\begin{pgfgosgf}{corta} ... \end{pgfgosgf}`], [`#let corta = sgf-read("(;SZ[9]...)")`],
   [`\sgf[to = 7]{partida}`], [`sgf(partida, to: 7)`],
   [`\sgfdiagrams`, `\sgfproblem`], [`sgf-diagrams`, `sgf-problem`],
   [`\pgfgomovenotes`, `\pgfgoscore{b}`], [`goban-notes()`, `goban-score("black")`],
   [`pgfgolayout`], [`goban-layout(...)`],
   [`\pgfgodefinemark`], [la opción `shapes`],
+  [`\pgfgostone[b, number = 5]`], [`goban-stone("black", number: 5)`],
+  [`label = {letter case = lower}`], [`label: (columns: "a")`],
+  [`layout = {halign = left}`], [`layout: (halign: left)`],
   [`\pgfgodefineprofile{madera}{...}`], [`#let madera = (...)`, `profile: madera`],
   table.hline(),
 )
@@ -96,7 +101,7 @@ Algunas cosas cambian de comportamiento:
 - Una marca sin jugador sobre una piedra toma el jugador de la piedra (en pgf-go era neutral).
 - Typst no tiene avisos: lo que en pgf-go avisaba (una coordenada que no se entiende o que está fuera del tablero, una partida de otro tamaño) es un error. Una jugada en un punto ocupado, con capturas, también es error, salvo en `sgf-diagrams` y `sgf-problem`.
 - Los grises son los de xcolor: el gris de gobanist es `luma(50%)`, no el `gray` de Typst.
-- El tablero tiene al menos 2×2 líneas y a lo sumo 25 columnas.
+- El tablero tiene al menos 2×2 líneas.
 - Las imágenes son `path` o `bytes`, no nombres de archivo.
 
 Y algunas no se portan: `\sgfanimation` (Typst no hace PDF animados; para diapositivas están Touying y Polylux, #pag(<tut-diapositivas>)), `export` y `\pgfgoimport` (un tablero es un valor: se guarda en un módulo `.typ` y se importa), el dibujo con TikZ dentro del tablero, el sistema de coordenadas `go cs`, `\pgfgodefinegoban`, `\pgfgodefineplayer` y los perfiles parciales (`goban profile`, `players profile`): un perfil es un diccionario, y se toman sus ramas.

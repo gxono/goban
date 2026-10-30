@@ -75,7 +75,7 @@ Como un tablero es un valor, puede guardarse en un módulo e importarse en otro 
 == Vistas en el texto <vistas>
 
 #funcion("goban-view(tablero, parte, ..opciones)")[
-  Dibuja la intersección (`"C3"`) o el rectángulo (`"B2:E4"`, escrito como en `partial`) de un tablero (un `board(...)` o una partida), como quedó al terminar, con las capturas resueltas, en medio del texto. Por defecto se ve todo lo que dibujó el tablero en esa parte (piedras, números de las jugadas, marcas, flechas, líneas y territorio), con su estilo, a la escala de `view.goban` y centrado a la altura de las minúsculas. Las opciones son las de la rama `view`.
+  Dibuja la intersección (`"C3"`) o el rectángulo (`"B2:E4"`, escrito como en `partial`) de un tablero (un `board(...)` o una partida), como quedó al terminar, con las capturas resueltas, en medio del texto. Con varias partes separadas por comas (`"F15, G15, C3:E5"`), una vista por parte, unidas con `view.separator` y `view.last`. Por defecto se ve todo lo que dibujó el tablero en esa parte (piedras, números de las jugadas, marcas, flechas, líneas y territorio), con su estilo, a la escala de `view.goban` y centrado a la altura de las minúsculas. Las opciones son las de la rama `view`.
 
   ```ejemplo-abajo
   #let tablero1 = board(size: 5,
@@ -156,8 +156,24 @@ Como un tablero es un valor, puede guardarse en un módulo e importarse en otro 
   ```
 ]
 
-#opcion("view.goban", valor: [opciones de tablero], inicial: `(scale: 0.8)`)[
-  Las opciones del tablero de la vista, encima de las suyas: el estilo (`profile`, `players`, `stone`, `mark`, `grid`, `background`, `label`, …) y la escala. No pueden ser las que cambian la partida o la parte que se ve: `size`, `use-i`, `partial`, `captures`, `captured-marks`, `territory` ni `sgf`.
+#opcion("view.separator", valor: [un texto o un contenido], inicial: `", "`)[Lo que va entre las vistas de varias partes.]
+
+#opcion("view.last", valor: [`auto`, un texto o un contenido], inicial: `auto`)[
+  Lo que va antes de la última vista, en lugar de `separator`; con dos partes, va solo esto. Con `auto`, el texto `and` del idioma entre espacios: « y ». Los espacios son parte del texto.
+
+  ```ejemplo-abajo
+  #let b = board(size: 5,
+    stones(black: "B3, C2, C4", white: "C3"))
+
+  Las piedras #goban-view(b, "B3, C2, C4")
+  rodean a C3.
+  #goban-view(b, "B3, C2, C4",
+    separator: "; ", last: " o ").
+  ```
+]
+
+#opcion("view.goban", valor: [opciones de tablero], inicial: `(scale: 0.8, background: (line: false))`)[
+  Las opciones del tablero de la vista, encima de las suyas: el estilo (`profile`, `players`, `stone`, `mark`, `grid`, `background`, `label`, …) y la escala. Inicialmente, el fondo va sin borde, aunque el tablero lo tenga; un `profile` vuelve el estilo al de su perfil, con su borde. No pueden ser las que cambian la partida o la parte que se ve: `size`, `use-i`, `partial`, `captures`, `captured-marks`, `territory` ni `sgf`.
 
   ```ejemplo
   #let ko = board(size: 5, captures: "remove",
@@ -170,5 +186,19 @@ Como un tablero es un valor, puede guardarse en un módulo e importarse en otro 
     goban: (profile: "simple"))
   #goban-view(ko, "B2:E4",
     goban: (profile: "wain", scale: 1))
+  ```
+]
+
+== Una piedra en el texto <piedra-texto>
+
+#funcion("goban-stone(jugador, number: none, mark: none, prisoner: false, ..estilo)")[
+  Dibuja una piedra sola en el texto, sin tablero: de `"black"`, `"white"` o, sin jugador (o con `"neutral"`), neutral. `mark` es una marca encima, como en `stones`; con `number`, la piedra es una jugada con ese número; con `prisoner: true`, un prisionero. Las demás opciones son las del estilo de la piedra (`fill`, `line`, `radius`, …). Lleva el estilo del lugar donde está y, encima, el de las vistas (`view.goban`, `view.raise`): queda del tamaño y a la altura de la vista de una intersección, sin grilla ni fondo. No cambia lo que dicen `goban-prisoners`, `goban-score`, `goban-notes` ni `goban-region`.
+
+  ```ejemplo-abajo
+  Negra #goban-stone("black"), blanca
+  #goban-stone("white"), neutral #goban-stone().
+  #goban-stone("black", mark: "triangle")
+  #goban-stone("white", number: 12)
+  #goban-stone("black", prisoner: true)
   ```
 ]

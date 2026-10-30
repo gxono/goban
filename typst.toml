@@ -9,4 +9,4 @@ description = "Draw Go (baduk, weiqi) boards, game diagrams and tsumego problems
 repository = "https://github.com/gxono/gobanist"
 keywords = ["go", "baduk", "weiqi", "igo", "board game", "sgf", "tsumego", "kifu"]
 categories = ["visualization", "fun"]
-exclude = ["/doc/", "/tests/", "/kernel/"]
+exclude = ["/doc/", "/examples/", "/tests/", "/kernel/"]

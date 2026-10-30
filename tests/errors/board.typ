@@ -9,8 +9,8 @@
 // error: tamaño fuera de rango: 1
 #goban(size: 1)
 
-// error: tamaño fuera de rango: (26, 5)
-#goban(size: (26, 5))
+// error: tamaño fuera de rango: (53, 5)
+#goban(size: (53, 5))
 
 // error: partial espera dos esquinas, como "B2:D4": «C3»
 #goban(size: 5, partial: "C3")

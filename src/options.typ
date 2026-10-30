@@ -35,6 +35,8 @@
     return base.keys().fold((:), (d, k) => { d.insert(k, new); d })
   }
   if type(new) != dictionary {
+    // En un subárbol abierto se comprueba al usarlo: un valor (background: false) reemplaza a la rama.
+    if open { return new }
     panic("la opción " + path-text(path) + " no acepta " + repr(new))
   }
   let deep = open or path-text(path) in open-trees
@@ -124,6 +126,8 @@
   use-i: false,
   partial: none,
   partial-margin: 1,
+  // Las intersecciones que no son parte del tablero: sin líneas ni puntos de estrella.
+  blank: none,
   scale: 1,
   scale-line-width: false,
   background: (
@@ -140,6 +144,8 @@
   grid: (
     on: true,
     line: (on: true, color: black, width: 0.55pt, opacity: 1),
+    // Las cuatro líneas de afuera; auto: como line.
+    edge: (color: auto, width: auto, opacity: auto),
     sep: (x: 12.5pt, y: 12.5pt),
     image: (file: none, fit: "stretch", tiles: auto, rotate: 0deg),
   ),
@@ -163,7 +169,7 @@
   // El juego: captures es none, "remove" o "fade"; captured-marks, "keep" o "remove".
   captures: none,
   captured-marks: "keep",
-  notes: (on: false, at: auto, separator: ", "),
+  notes: (on: false, at: auto, separator: ", ", text: (:)),
   territory: (draw: "marks", dame: false),
   score: (komi: 0),
   // El elemento sgf: qué jugadas se juegan y cómo se numeran, las marcas del archivo y las letras de las
@@ -216,6 +222,7 @@
     to-play: auto,
     variation-title: auto,
     verdict: false,
+    links: false,
     view: true,
     partial: auto,
     notes: true,
@@ -229,7 +236,8 @@
   // La disposición de los diagramas: columns: auto los pone en el párrafo, uno al lado del otro; un número,
   // en una grilla. width: auto, columnas del ancho del diagrama más ancho; per-page, cada cuántos diagramas
   // empieza una página.
-  layout: (columns: auto, width: 100%, column-sep: 1em, row-sep: 1em, fit: false, align: center, per-page: none),
+  layout: (columns: auto, width: 100%, column-sep: 1em, row-sep: 1em, fit: false, halign: center, valign: top,
+    align-captions: false, per-page: none),
   // goban-view: lo que se dibuja, a qué altura sobre la línea de base queda el centro y las opciones del tablero,
   // encima de las suyas.
   view: (
@@ -240,7 +248,9 @@
     territory: true,
     forgotten: false,
     raise: auto,                // auto: la mitad del alto de las minúsculas
-    goban: (scale: 0.8),
+    separator: ", ",            // entre las vistas de varias partes
+    last: auto,                 // antes de la última; auto: el texto and del idioma, entre espacios
+    goban: (scale: 0.8, background: (line: false)),
   ),
   texts: texts,
   // Las formas de marca propias, por su nombre: una función, un contenido o (image: ...).
@@ -293,12 +303,14 @@
 #let player-branches = ("stone", "prisoner", "move", "mark")
 
 // Vuelve el estilo del tablero y de los jugadores al inicial. Lo que no es estilo queda: el tamaño, partial,
-// la escala, dónde van las etiquetas y cuáles son, hoshi.at, si se numeran las jugadas, el juego, las flechas
-// y las líneas, y las opciones de las partidas y los diagramas.
+// la escala, dónde van las etiquetas y cuáles son, hoshi.at, si se numeran las jugadas, el juego y las opciones
+// de las partidas y los diagramas. El estilo de las flechas y las líneas es del tablero: vuelve al inicial.
 #let reset-style(tree) = {
   tree.background = defaults.background
   tree.grid = defaults.grid
   tree.hoshi = defaults.hoshi + (at: tree.hoshi.at)
+  tree.arrow = defaults.arrow
+  tree.line = defaults.line
   let label = defaults.label
   for key in ("at", "columns", "rows", "columns-direction", "rows-direction") { label.insert(key, tree.label.at(key)) }
   tree.label = label

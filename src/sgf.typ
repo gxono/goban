@@ -8,7 +8,8 @@
 #import "elements.typ": stone-mark
 #import "texts.typ": word
 
-#let query(game, q) = sgf-query(game.data, (charset: game.charset, game: game.game, query: q))
+#let query(game, q) = sgf-query(game.data, (charset: game.charset, game: game.game, origin: game.origin,
+  transpose: game.transpose, syntax: game.syntax, query: q))
 
 #let check-game(name, game) = {
   if type(game) != dictionary or game.at("kind", default: none) != "sgf" {
@@ -18,8 +19,11 @@
 
 // Lee un archivo SGF: un path es un archivo (path("partida.sgf")), bytes su contenido y una cadena, el texto
 // SGF. game es la partida de una colección; charset, la codificación de un archivo que no es UTF-8 (con auto,
-// la de CA o, sin CA, Latin-1).
-#let sgf-read(source, game: 1, charset: auto) = {
+// la de CA o, sin CA, Latin-1). origin es la esquina donde va el punto aa del archivo y, con transpose, la
+// primera letra de cada punto es la fila: entre las dos, las ocho simetrías del tablero. syntax es "sgf",
+// "sensei" (los diagramas de Sensei's Library, kernel/src/sgf/sensei.rs) o auto. Los puntos _ de un diagrama
+// (blank, como (x, y)) son el blank de su tablero.
+#let sgf-read(source, game: 1, charset: auto, origin: top + left, transpose: false, syntax: auto) = {
   let data = if type(source) == path { read(source, encoding: none) }
     else if type(source) == bytes { source }
     else if type(source) == str { bytes(source) }
@@ -27,11 +31,27 @@
   if type(game) != int or game < 1 { panic("sgf-read: game es un número desde 1: " + repr(game)) }
   if charset != auto and type(charset) != str { panic("sgf-read: charset es auto o un nombre: " + repr(charset)) }
   let charset = if charset == auto { none } else { charset }
-  let sizes = sgf-query(data, (charset: charset, query: (kind: "games")))
+  let corners = ((top + left, "top-left"), (top + right, "top-right"), (bottom + left, "bottom-left"),
+    (bottom + right, "bottom-right"))
+  let corner = corners.find(((a, _)) => a == origin)
+  if corner == none {
+    panic("sgf-read: origin es una esquina, como top + left o bottom + right: " + repr(origin))
+  }
+  let origin = corner.at(1)
+  if type(transpose) != bool { panic("sgf-read: transpose es true o false: " + repr(transpose)) }
+  if syntax not in (auto, "sgf", "sensei") { panic("sgf-read: syntax es auto, \"sgf\" o \"sensei\": " + repr(syntax)) }
+  let syntax = if syntax == auto { none } else { syntax }
+  let request = (charset: charset, origin: origin, transpose: transpose, syntax: syntax)
+  let sizes = sgf-query(data, request + (query: (kind: "games")))
   if game > sizes.len() {
     panic("el archivo SGF tiene " + str(sizes.len()) + " partidas: no tiene la " + str(game))
   }
-  (kind: "sgf", data: data, charset: charset, game: game, size: sizes.at(game - 1), options: ())
+  let (cols, rows) = sizes.at(game - 1)
+  let code(c) = if c >= "a" { c.to-unicode() - "a".to-unicode() + 1 } else { c.to-unicode() - "A".to-unicode() + 27 }
+  let blank = sgf-query(data, request + (game: game, query: (kind: "info", property: "_blank"))).map(p =>
+    (code(p.at(0)), rows - code(p.at(1)) + 1))
+  (kind: "sgf", data: data, charset: charset, origin: origin, transpose: transpose, syntax: syntax, game: game,
+    size: (cols, rows), blank: blank, options: ())
 }
 
 #let sgf-keys = ("from", "to", "variation", "marks", "numbers", "step", "restart", "last-mark", "letters", "view",

@@ -30,8 +30,8 @@
 // error: la partida es de 5×5 y el tablero, de 9
 #goban(size: 9, sgf-read("(;SZ[5];B[cc])"))
 
-// error: tamaño fuera de rango: (52, 52)
-#goban(sgf-read("(;SZ[52];B[aa])"))
+// error: tamaño fuera de rango: (53, 53)
+#goban(sgf-read("(;SZ[53];B[aa])"))
 
 // error: sgf espera una partida leída con sgf-read(...)
 #sgf(board(size: 5), to: 3)
@@ -105,3 +105,21 @@
 // error: opción desconocida: sgf.forget
 #gobanist-set(sgf: (forget: true))
 #goban()
+
+// error: sgf-read: origin es una esquina, como top + left o bottom + right
+#sgf-read("(;SZ[9])", origin: right)
+
+// error: sgf-read: transpose es true o false
+#sgf-read("(;SZ[9])", transpose: 1)
+
+// error: sgf-read: syntax es auto, "sgf" o "sensei"
+#sgf-read("(;SZ[9])", syntax: "l19")
+
+// error: el diagrama 1 de Sensei's Library: no se entiende la línea «. . ? .»
+#sgf-read("$$B\n$$ . . ? .")
+
+// error: el diagrama 2 de Sensei's Library: mide 4×1 y su tablero, 3×3
+#sgf-read("$$B\n$$ . X\n\n$$B3\n$$ . . . .")
+
+// error: el diagrama 1 de Sensei's Library: la línea {AR A1 Z30} sale del tablero
+#sgf-read("$$B9\n$$ . X\n$$ {AR A1 Z30}")

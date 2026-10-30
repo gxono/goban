@@ -350,6 +350,19 @@ El estilo de las piedras de los tres jugadores se cambia con `gobanist-set(stone
   ```
 ]
 
+#opcion("shift", valor: [`(columnas, filas)`], inicial: `(0, 0)`)[
+  Corre las coordenadas esas columnas a la derecha y esas filas hacia arriba, sean cuales sean las etiquetas del borde. Una intersección que queda fuera del tablero es un error. Es una opción de `stones`, `prisoners`, `moves` y `marks`.
+
+  ```ejemplo
+  #let tigre = "A2, B1, C2"
+
+  #goban(size: 7, partial: "A1:G5",
+    stones(black: tigre),
+    stones(white: tigre, shift: (4, 2)),
+    marks(triangle: "B2", shift: (4, 2)))
+  ```
+]
+
 == Jugadas <jugadas>
 
 #funcion("moves(jugadas, black: ..., white: ..., ..opciones)")[
@@ -360,7 +373,7 @@ El estilo de las piedras de los tres jugadores se cambia con `gobanist-set(stone
     moves("B1 -| D3, C:A 4, E5"))
   ```
 
-  Las opciones son las del estilo de la piedra (`fill`, `line`, `radius`, `shine`, `image`…), `mark`, `forget` y las de esta sección: `numbers`, `label` y `from`.
+  Las opciones son las del estilo de la piedra (`fill`, `line`, `radius`, `shine`, `image`…), `mark`, `forget`, `shift` y las de esta sección: `numbers`, `label` y `from`.
 ]
 
 Dentro de un mismo `goban`, la numeración y el turno siguen de un `moves` al siguiente. Cada `goban` empieza en la jugada 1 con negras; para continuar una partida en otro diagrama, se usan `from` y el jugador, o `resume` (#pag(<memoria>)).

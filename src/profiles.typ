@@ -40,6 +40,8 @@
       mark: (line: (color: wain-grid), label: (text: (fill: wain-grid))),
     ),
   ),
+  arrow: (color: wain-grid),
+  line: (color: wain-grid),
 )
 
 #let pgfgo = (
@@ -58,6 +60,8 @@
     white: (stone: (fill: (color: wain-white), shine: (color: white)), move: (label: (text: (fill: black)))),
     black: (stone: (fill: (color: wain-black)), move: (label: (text: (fill: pgfgo-color))), mark: (line: (color: pgfgo-color))),
   ),
+  arrow: (color: xmix(red, 80%, black)),
+  line: (color: xmix(red, 80%, black)),
 )
 
 #let pgfgosmooth = (
@@ -76,6 +80,8 @@
   background: (line: false),
   grid: (line: (width: 0.4pt)),
   players: (all: (stone: (line: (width: 0.5pt)))),
+  arrow: (width: 0.8pt),
+  line: (width: 0.6pt),
 )
 
 // Las líneas paralelas del patrón Lines de TikZ, a 45 o a -45 grados: distance entre una y otra, de grosor
@@ -90,6 +96,8 @@
 
 // En blanco y negro, rayado donde hay relleno.
 #let draft = (
+  arrow: (width: 0.6pt),
+  line: (width: 0.4pt),
   players: (
     all: (mark: (fill: (color: white, pattern: lines(45deg, 1.2pt, 0.3pt, black)))),
     black: (
@@ -111,6 +119,8 @@
 // Madera, pizarra y concha. Cada piedra blanca usa una de cinco imágenes, con un pequeño giro.
 #let shell = (
   background: (line: false, fill: (image: picture("board.jpg"))),
+  arrow: (halo: false),
+  line: (halo: false),
   players: (
     all: soft-shadow,
     black: (stone: (image: picture("shell-black.png"))),
@@ -133,6 +143,8 @@
 // Madera lisa y piedras lisas, una imagen para cada color.
 #let baduktv = (
   background: (line: false, fill: (image: picture("baduktv-goban.png"))),
+  arrow: (halo: false),
+  line: (halo: false),
   players: (
     all: soft-shadow,
     black: (stone: (image: picture("baduktv-black.png"))),

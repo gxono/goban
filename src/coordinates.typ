@@ -1,4 +1,5 @@
-// La sintaxis de coordenadas de pgf-go. L es una letra mayúscula y N un número de una o dos cifras. Los
+// La sintaxis de coordenadas de pgf-go. L es la columna, una o dos letras mayúsculas (después de la Z, AA, AB...),
+// y N un número de una o dos cifras. Los
 // rangos incluyen los dos extremos y se recorren del primero al segundo.
 //
 // Tramos (se encadenan: tienen un primer y un último punto):
@@ -13,16 +14,23 @@
 // Corchetes: L[...], [...]N y [...][...] se reparten en su lugar. Las comas separan elementos que se
 // suman; los ; separan grupos que se suman y se restan alternadamente.
 
-// La columna de la letra. Sin use-i, I y J son la 9.
-#let column(letter, use-i) = {
-  let n = letter.to-unicode() - "A".to-unicode() + 1
-  if not use-i and letter.to-unicode() > "I".to-unicode() { n - 1 } else { n }
+// La columna de las letras. Sin use-i, I y J son la 9. Después de la Z (la 25, o la 26 con use-i), dos letras,
+// todas: AA, AB, ..., AI, ..., AZ, BA.
+#let column(letters, use-i) = {
+  let code(c) = c.to-unicode() - "A".to-unicode()
+  let base = if use-i { 26 } else { 25 }
+  if letters.len() == 2 { return base + code(letters.at(0)) * 26 + code(letters.at(1)) + 1 }
+  let n = code(letters) + 1
+  if not use-i and letters.to-unicode() > "I".to-unicode() { n - 1 } else { n }
 }
 
-// La letra de la columna n.
+// Las letras de la columna n.
 #let column-letter(n, use-i) = {
   let letters = if use-i { "ABCDEFGHIJKLMNOPQRSTUVWXYZ" } else { "ABCDEFGHJKLMNOPQRSTUVWXYZ" }
-  letters.at(n - 1)
+  if n <= letters.len() { return letters.at(n - 1) }
+  let all = "ABCDEFGHIJKLMNOPQRSTUVWXYZ"
+  let k = n - letters.len() - 1
+  all.at(calc.quo(k, 26)) + all.at(calc.rem(k, 26))
 }
 
 // De a hasta b, con los dos extremos.
@@ -112,10 +120,10 @@
 
 // Los tramos: la expresión y en qué grupos están las esquinas (letra, número, letra, número).
 #let pieces = (
-  (regex("^([A-Z])(\d{1,2})$"), (0, 1, 0, 1)),
-  (regex("^([A-Z]):([A-Z])\s*(\d{1,2})$"), (0, 2, 1, 2)),
-  (regex("^([A-Z])\s*(\d{1,2}):(\d{1,2})$"), (0, 1, 0, 2)),
-  (regex("^([A-Z])(\d{1,2}):([A-Z])(\d{1,2})$"), (0, 1, 2, 3)),
+  (regex("^([A-Z]{1,2})(\d{1,2})$"), (0, 1, 0, 1)),
+  (regex("^([A-Z]{1,2}):([A-Z]{1,2})\s*(\d{1,2})$"), (0, 2, 1, 2)),
+  (regex("^([A-Z]{1,2})\s*(\d{1,2}):(\d{1,2})$"), (0, 1, 0, 2)),
+  (regex("^([A-Z]{1,2})(\d{1,2}):([A-Z]{1,2})(\d{1,2})$"), (0, 1, 2, 3)),
 )
 
 // Las esquinas (x1, y1, x2, y2) del tramo, o none si no es un tramo.
@@ -132,20 +140,20 @@
 
 // Una sola intersección (C3), o none.
 #let point(text, use-i) = {
-  let m = text.trim().match(regex("^([A-Z])(\d{1,2})$"))
+  let m = text.trim().match(regex("^([A-Z]{1,2})(\d{1,2})$"))
   if m == none { none } else { (column(m.captures.at(0), use-i), int(m.captures.at(1))) }
 }
 
 // Lo que va solo. window: la parte visible, (x1, y1, x2, y2).
 #let alone(text, use-i, window) = {
   let (fx, fy, tx, ty) = window
-  let m = text.match(regex("^([A-Z]):([A-Z])\s*(\d{1,2}):(\d{1,2})$"))
+  let m = text.match(regex("^([A-Z]{1,2}):([A-Z]{1,2})\s*(\d{1,2}):(\d{1,2})$"))
   if m != none {
     let g = m.captures
     let (x1, y1, x2, y2) = (column(g.at(0), use-i), int(g.at(2)), column(g.at(1), use-i), int(g.at(3)))
     return (points: rectangle(x1, y1, x2, y2), ordered: x1 == x2 or y1 == y2)
   }
-  let m = text.match(regex("^([A-Z])(?::([A-Z]))?$"))
+  let m = text.match(regex("^([A-Z]{1,2})(?::([A-Z]{1,2}))?$"))
   if m != none {
     let a = column(m.captures.at(0), use-i)
     let b = if m.captures.at(1) == none { a } else { column(m.captures.at(1), use-i) }
@@ -191,7 +199,7 @@
   let split(s) = s.split(",").map(str.trim).filter(s => s != "")
   let rules = (
     (regex("\[([^\]]*)\]\[([^\]]*)\]"), (a, b) => split(a).map(l => split(b).map(n => l + n)).flatten()),
-    (regex("([A-Z])\[([^\]]*)\]"), (a, b) => split(b).map(n => a + n)),
+    (regex("([A-Z]{1,2})\[([^\]]*)\]"), (a, b) => split(b).map(n => a + n)),
     (regex("\[([^\]]*)\](\d{1,2})"), (a, b) => split(a).map(l => l + b)),
   )
   for (pattern, expand) in rules {

@@ -49,14 +49,37 @@ Los diagramas de `sgf-diagrams` y `sgf-problem` se disponen según la rama `layo
 
 #opcion("layout.fit", valor: [`true` o `false`], inicial: `false`)[Escala cada tablero para que llene el ancho de su columna; reemplaza el `scale` del tablero. Las líneas no cambian de grosor. En `sgf-diagrams` y `sgf-problem`, todos los tableros usan la escala que llena la columna con el primero, así las piedras tienen el mismo tamaño en todos; si con esa escala un tablero no entra en la columna (un problema más ancho que el primero, por ejemplo), solo ese tablero se achica hasta llenarla. Solo con `columns`, y no con `width: auto`. Sin un ancho disponible (una disposición medida con `measure` sin `width`), la grilla toma el ancho de los diagramas, sin `fit`.]
 
-#opcion("layout.align", valor: [`left`, `center` o `right`], inicial: `center`)[
+#opcion("layout.halign", valor: [`left`, `center` o `right`], inicial: `center`)[
   Dónde va cada diagrama dentro de su columna, con su epígrafe y sus notas. Los comentarios van siempre según `comments.align`.
 
   ```ejemplo-abajo
   #sgf-diagrams(partida, step: 2, to: 6,
     layout: (columns: 2, width: 60%,
       column-sep: 3em, row-sep: 2em,
-      align: left))
+      halign: left))
+  ```
+]
+
+#opcion("layout.valign", valor: [`top` o `bottom`], inicial: `top`)[
+  Cómo se alinean los diagramas de una fila de la grilla cuando sus tableros tienen distinto alto. Con `top`, arriba. Con `bottom`, los tableros terminan a la misma altura, y sus epígrafes y notas empiezan todos en la misma línea, debajo. Con `columns: auto`, los diagramas van en la línea de base del párrafo, como con `bottom`.
+
+  ```ejemplo
+  #goban-layout(columns: 3, valign: bottom,
+    board(size: 5, scale: 0.6,
+      stones(black: "C3")),
+    board(size: (5, 3), scale: 0.6,
+      stones(white: "C2")),
+    board(size: 9, scale: 0.6,
+      stones(black: "E5")))
+  ```
+]
+
+#opcion("layout.align-captions", valor: [`true` o `false`], inicial: `false`)[
+  Con `valign: top`, los epígrafes, las notas y los comentarios de los diagramas de una fila empiezan en la misma línea, debajo del tablero más alto; los tableros siguen alineados arriba. Con `valign: bottom` ya están en la misma línea.
+
+  ```codigo
+  #sgf-problem(..problemas, solutions: false,
+    layout: (columns: 3, align-captions: true))
   ```
 ]
 

@@ -71,3 +71,12 @@
 
 // error: forma de marca desconocida: trinagle
 #goban(size: 5, territory(white: "A1, A3", mark: "trinagle"))
+
+// error: shift espera (columnas, filas), dos números enteros
+#stones(black: "A1", shift: 2)
+
+// error: shift espera (columnas, filas), dos números enteros
+#marks(triangle: "A1", shift: (1, 1.5))
+
+// error: B2 (corrida (4, 0)) no está en el tablero de 5×5
+#goban(size: 5, moves("A2, B2", shift: (4, 0)))

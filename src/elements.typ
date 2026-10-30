@@ -3,7 +3,7 @@
 // visible.
 
 // Las opciones de marks: ninguna forma, ni las del paquete ni las propias (shapes), puede llamarse así.
-#let mark-keys = ("line", "fill", "label", "scale", "player", "from", "content", "forget")
+#let mark-keys = ("line", "fill", "label", "scale", "player", "from", "content", "forget", "shift")
 
 #let stone-keys = ("fill", "line", "radius", "scale", "shadow", "shine", "image")
 
@@ -16,6 +16,14 @@
     panic("mark espera una forma (\"triangle\") o un diccionario con shape")
   }
   mark
+}
+
+// shift: (columnas, filas), lo que se corren las coordenadas, a la derecha y arriba.
+#let shift(value) = {
+  if type(value) != array or value.len() != 2 or value.any(n => type(n) != int) {
+    panic("shift espera (columnas, filas), dos números enteros: " + repr(value))
+  }
+  value
 }
 
 // forget: resume no trae lo que lo tiene (con "number", una jugada viene sin su número).
@@ -46,8 +54,9 @@
 
 // Piedras. Sin jugador, son neutrales: stones("C3"), stones(black: "C2, D3", white: "B4").
 #let stones(..args) = {
-  let (pos, groups, options) = split("stones", args, stone-keys + ("mark", "forget"))
+  let (pos, groups, options) = split("stones", args, stone-keys + ("mark", "forget", "shift"))
   options.mark = stone-mark(options.at("mark", default: none))
+  options.shift = shift(options.at("shift", default: (0, 0)))
   options.forget = forget(options.at("forget", default: false), (true, false))
   (kind: "stones", groups: pos.map(at => (player: "neutral", at: at)) + groups, options: options, prisoner: false)
 }
@@ -63,11 +72,12 @@
 // Jugadas, numeradas, alternando negras y blancas. Sin jugador siguen el turno; con uno, empiezan con él:
 // moves("C3, D4"), moves(white: "D2, B3").
 #let moves(..args) = {
-  let (pos, groups, options) = split("moves", args, stone-keys + ("mark", "numbers", "label", "from", "forget"))
+  let (pos, groups, options) = split("moves", args, stone-keys + ("mark", "numbers", "label", "from", "forget", "shift"))
   if pos.len() + groups.len() != 1 { panic("moves recibe una sola secuencia de jugadas") }
   let first = if groups.len() > 0 { groups.first().player } else { auto }
   if first == "neutral" { panic("las jugadas son de negras o de blancas") }
   options.mark = stone-mark(options.at("mark", default: none))
+  options.shift = shift(options.at("shift", default: (0, 0)))
   options.forget = forget(options.at("forget", default: false), (true, false, "number"))
   (kind: "moves", first: first, at: (pos + groups.map(g => g.at)).first(), options: options)
 }
@@ -97,6 +107,7 @@
   if player != auto and player not in ("neutral", "black", "white") {
     panic("jugador desconocido: " + repr(player))
   }
+  options.shift = shift(options.at("shift", default: (0, 0)))
   options.forget = forget(options.at("forget", default: false), (true, false))
   (kind: "marks", groups: groups, options: options)
 }

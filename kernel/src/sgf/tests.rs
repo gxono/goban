@@ -226,3 +226,73 @@ fn answers_requests() {
     assert_eq!(ask(VARIANTES, r#"{"query": {"kind": "numbers", "path": {"moves": [[3, 5], [3, 3]]}}}"#).unwrap(), "[2]");
     assert!(ask("(;SZ[9])", r#"{"game": 2, "query": {"kind": "shape"}}"#).is_err());
 }
+
+#[test]
+fn hashes_the_bytes() {
+    let hash = |data: &[u8]| answer_json(data, br#"{"query": {"kind": "hash"}}"#).unwrap();
+    // FNV-1a de 64 bits: el de nada es la base, y un byte cambia el resultado.
+    assert_eq!(hash(b""), br#""cbf29ce484222325""#.to_vec());
+    assert_eq!(hash(b"a"), br#""af63dc4c8601ec8c""#.to_vec());
+    assert_ne!(hash(PARTIDA.as_bytes()), hash(PROBLEMA.as_bytes()));
+}
+
+#[test]
+fn orients_the_file() {
+    let read = |origin: &str, transpose: bool| {
+        let request = format!(r#"{{"origin": "{origin}", "transpose": {transpose}, "query": {{"kind": "games"}}}}"#);
+        String::from_utf8(answer_json(b"(;SZ[19:13])", request.as_bytes()).unwrap()).unwrap()
+    };
+    // Con transpose, el tamaño se gira.
+    assert_eq!(read("top-left", false), "[[19,13]]");
+    assert_eq!(read("top-left", true), "[[13,19]]");
+    let o = |right, bottom, transpose| Orientation { right, bottom, transpose };
+    // aa va a la esquina de origin; con transpose, la primera letra es la fila.
+    assert_eq!(orient_point("aa", 19, 19, o(true, false, false)), "sa");
+    assert_eq!(orient_point("aa", 19, 19, o(false, true, false)), "as");
+    assert_eq!(orient_point("pd", 19, 19, o(true, true, false)), "dp");
+    assert_eq!(orient_point("pd", 19, 19, o(false, false, true)), "dp");
+    assert_eq!(orient_point("ab", 19, 13, o(false, false, true)), "ba");
+    // Un pase (tt en 19×19) queda igual.
+    assert_eq!(orient_point("tt", 19, 19, o(true, true, true)), "tt");
+    let mut t = game("(;SZ[9]AB[aa:bb]LB[cc:X]AR[aa:ii];B[ab])");
+    orient(&mut t, (9, 9), o(true, false, false));
+    assert_eq!(t.nodes[0]["AB"], vec!["ia:hb"]);
+    assert_eq!(t.nodes[0]["LB"], vec!["gc:X"]);
+    assert_eq!(t.nodes[0]["AR"], vec!["ia:ai"]);
+    assert_eq!(t.nodes[1]["B"], vec!["ib"]);
+}
+
+#[test]
+fn reads_sensei_diagrams() {
+    use super::sensei::{is_diagram, parse_diagrams, BLANK};
+    let text = "Some text.\n[go]$$Wc Ko\n$$ +-------+\n$$ |. 3 4 .|\n$$ |O 2 1 X|\n$$ |. a _ .|\n$$ +-------+\n[/go]\nMore text.\n\
+                $$B9m5\n$$ . . 1 .\n$$ {AR 1:1 C5}\n";
+    assert!(is_diagram(text));
+    assert!(!is_diagram("(;SZ[9]C[$$ not a diagram])"));
+    let games = parse_diagrams(text).unwrap();
+    assert_eq!(games.len(), 2);
+    // Cuatro bordes: un tablero de 4×3, sin vista; W juega la 1 (PL), la 3 y la 4 siguen (sin MN), GN y FG.
+    let root = &games[0].nodes[0];
+    assert_eq!(root["SZ"], vec!["4:3"]);
+    assert_eq!(root["PL"], vec!["W"]);
+    assert_eq!(root["GN"], vec!["Ko"]);
+    assert_eq!(root["FG"], vec!["0:Ko"]);
+    assert!(!root.contains_key("VW"));
+    assert_eq!(root["AW"], vec!["ab"]);
+    assert_eq!(root[BLANK], vec!["cc"]);
+    let moves: Vec<_> = games[0].nodes[1..].iter().map(|n| n.get("W").or(n.get("B")).unwrap()[0].clone()).collect();
+    assert_eq!(moves, vec!["cb", "bb", "ba", "ca"]);
+    assert!(games[0].nodes[1].contains_key("W") && !games[0].nodes[3].contains_key("MN"));
+    // La letra va en la última jugada.
+    assert_eq!(games[0].nodes[4]["LB"], vec!["bc:a"]);
+    // Sin bordes, en el medio de 9×9; la 1 con MN 5; la vista es lo dibujado; AR con un punto del diagrama y uno
+    // del tablero.
+    let g = &games[1];
+    assert_eq!(g.nodes[0]["VW"], vec!["ce:fe"]);
+    assert_eq!(g.nodes[1]["B"], vec!["ee"]);
+    assert_eq!(g.nodes[1]["MN"], vec!["5"]);
+    assert_eq!(g.nodes[1]["AR"], vec!["ce:ce"]);
+    // Una línea que no se entiende y un diagrama más grande que su tablero son errores.
+    assert!(parse_diagrams("$$B\n$$ . . ? .\n").unwrap_err().contains("no se entiende"));
+    assert!(parse_diagrams("$$B3\n$$ . . . .\n").unwrap_err().contains("mide 4×1"));
+}

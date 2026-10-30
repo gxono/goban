@@ -216,6 +216,8 @@ The style of the marks is that of their player: `gobanist-set(mark: ...)` is `go
   ```
 ]
 
+#opcion("shift", valor: [`(columns, rows)`], inicial: `(0, 0)`)[In `marks`: moves the coordinates, as for the stones (#pag(<jugadas>)).]
+
 #opcion("forget", valor: [`true` or `false`], inicial: `false`)[In `marks`, `arrows` and `lines`: `resume` does not bring these marks, arrows or lines, even if `marks` is asked for (#pag(<memoria>)).]
 
 == Shapes of your own <formas-propias>

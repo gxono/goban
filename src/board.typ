@@ -74,7 +74,7 @@
   } else {
     panic("size espera un número o (columnas, filas)")
   }
-  if cols < 2 or rows < 2 or cols > 25 or rows > 99 { panic("tamaño fuera de rango: " + repr(size)) }
+  if cols < 2 or rows < 2 or cols > 52 or rows > 99 { panic("tamaño fuera de rango: " + repr(size)) }
   (cols, rows)
 }
 
@@ -93,16 +93,19 @@
   (calc.min(x1, x2), calc.min(y1, y2), calc.max(x1, x2), calc.max(y1, y2))
 }
 
-// Las intersecciones de las coordenadas; todas tienen que estar en el tablero.
-#let points(at, tree, window, cols, rows, moves: false) = {
+// Las intersecciones de las coordenadas, corridas shift (columnas, filas); todas tienen que estar en el tablero.
+#let points(at, tree, window, cols, rows, moves: false, shift: (0, 0)) = {
   if type(at) != str { panic("las coordenadas son texto: " + repr(at)) }
   let result = parse(at, use-i: tree.use-i, window: window, moves: moves)
-  for p in result.points {
-    if p.at(0) < 1 or p.at(1) < 1 or p.at(0) > cols or p.at(1) > rows {
-      panic(point-name(p, tree.use-i) + " no está en el tablero de " + str(cols) + "×" + str(rows))
+  let (dx, dy) = shift
+  result.points.map(p => {
+    let (x, y) = (p.at(0) + dx, p.at(1) + dy)
+    if x < 1 or y < 1 or x > cols or y > rows {
+      let name = point-name(p, tree.use-i) + if shift != (0, 0) { " (corrida " + repr(shift) + ")" }
+      panic(name + " no está en el tablero de " + str(cols) + "×" + str(rows))
     }
-  }
-  result.points
+    (x, y)
+  })
 }
 
 #let other(player) = if player == "black" { "white" } else { "black" }
@@ -152,6 +155,10 @@
   if rect != none {
     let (x1, y1, x2, y2) = rect
     tree.partial = point-name((x1, y1), tree.use-i) + ":" + point-name((x2, y2), tree.use-i)
+  }
+  // Los puntos _ de un diagrama de Sensei's Library son su blank, salvo que el tablero dé el suyo.
+  if game != none and game.blank.len() > 0 and "blank" not in options {
+    tree.blank = game.blank.map(p => point-name(p, tree.use-i)).join(", ")
   }
   let window = if type(tree.partial) == str { partial-window(tree.partial, tree, cols, rows) } else {
     (1, 1, cols, rows)
@@ -204,8 +211,9 @@
       let style = e.options
       let mark = style.remove("mark")
       let forget = style.remove("forget")
+      let shift = style.remove("shift")
       for g in e.groups {
-        for (x, y) in points(g.at, tree, window, cols, rows) {
+        for (x, y) in points(g.at, tree, window, cols, rows, shift: shift) {
           items.push((kind: "stone", x: x, y: y, player: g.player, options: style, mark: mark,
             prisoner: e.prisoner, number: none, numbered: false, move: false, resumed: false,
             move-options: (:), forget: forget, captured: none))
@@ -215,13 +223,14 @@
       let style = e.options
       let mark = style.remove("mark")
       let forget = style.remove("forget")
+      let shift = style.remove("shift")
       let move-options = (:)
       for key in ("numbers", "label") {
         if key in style { move-options.insert(key, style.remove(key)) }
       }
       if "from" in style { number = style.remove("from") }
       if e.first != auto { turn = e.first }
-      for (x, y) in points(e.at, tree, window, cols, rows, moves: true) {
+      for (x, y) in points(e.at, tree, window, cols, rows, moves: true, shift: shift) {
         items.push((kind: "stone", x: x, y: y, player: turn, options: style, mark: mark,
           prisoner: false, number: number, numbered: true, move: true, resumed: false,
           move-options: move-options, forget: forget, captured: none))
@@ -233,8 +242,9 @@
       let player = style.remove("player", default: auto)
       let sequence = style.remove("from", default: 1)
       let forget = style.remove("forget")
+      let shift = style.remove("shift")
       for g in e.groups {
-        for (x, y) in points(g.at, tree, window, cols, rows) {
+        for (x, y) in points(g.at, tree, window, cols, rows, shift: shift) {
           items.push((kind: "mark", x: x, y: y, shape: g.shape, player: player, options: style,
             number: if g.shape == "sequence" { sequence } else { none }, forget: forget, captured: none))
           if g.shape == "sequence" { sequence += 1 }

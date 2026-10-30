@@ -15,7 +15,7 @@ and `variations` is `variations.sgf`, a 7×7 game with two branchings, marks and
 
 == Reading a game <sgf-leer>
 
-#funcion("sgf-read(source, game: 1, charset: auto)")[
+#funcion("sgf-read(source, game: 1, charset: auto, origin: top + left, transpose: false, syntax: auto)")[
   Reads an SGF game. `source` is a file (`path("game.sgf")`, relative to the document that names it), its content (`bytes`) or the SGF text (a string). It returns the game as a value, which is saved with `let` and used everywhere: on a board, in `sgf-info`, `sgf-comment`, `sgf-diagrams`, `sgf-problem`, `goban-layout` and `goban-view`.
 
   On a board, the game is an element, like `stones` or `moves`: it draws the main line, and the board takes the size of its `SZ` (another `size` is an error).
@@ -40,6 +40,57 @@ and `variations` is `variations.sgf`, a 7×7 game with two branchings, marks and
 
   Many files from Asian servers do not state their encoding: `sgf-read(path("qipu.sgf"), charset: "GBK")`. To write their comments, a font with those characters is needed.
 ]
+
+#opcion("origin", valor: [a corner], inicial: `top + left`)[
+  In `sgf-read`: the corner of the board where the point `aa` of the file goes (`top + left`, `top + right`, `bottom + left` or `bottom + right`). Everything read from the file follows it, also `partial: auto`; the coordinates written in the options (`variation: "Q4, R6"`) are those of the board.
+]
+
+#opcion("transpose", valor: [`true` or `false`], inicial: `false`)[
+  In `sgf-read`: the first letter of each point of the file is the row, and the size is turned. With `origin`, the eight symmetries of the board.
+
+  ```ejemplo
+  #let file = path("joseki.sgf")
+  #gobanist-set(partial: auto)
+  #goban-layout(columns: 4, fit: true,
+    sgf-read(file, origin: top + right),
+    sgf-read(file, origin: bottom + right,
+      transpose: true),
+    sgf-read(file, transpose: true),
+    sgf-read(file, origin: bottom + left))
+  ```
+]
+
+#opcion("syntax", valor: [`auto`, `"sgf"` or `"sensei"`], inicial: `auto`)[
+  In `sgf-read`: the syntax of the file. `"sensei"` are the diagrams of Sensei's Library (#pag(<sgf-sensei>)); with `auto`, those read that way are the files without SGF nodes (`(;`) that have lines starting with `$$`. Every syntax is read as an SGF game: every function works the same with any of them.
+]
+
+== Sensei's Library diagrams <sgf-sensei>
+
+Sensei's Library and forums such as L19 write diagrams as text, with lines starting with `$$`. Such a file is read as a collection: each block of consecutive `$$` lines is a game (`game: 2` is the second diagram), and what is between the blocks is not read. The `[go]` and `[/go]` tags of L19 can stay.
+
+```ejemplo
+#let nadare = sgf-read("$$Bc Nadare
+$$  ---------------
+$$ | . . . . . . .
+$$ | . . . . . . .
+$$ | . . . 1 6 . .
+$$ | . . 5 4 . . .
+$$ | . . 3 2 a . .
+$$ | . . . . . . .")
+
+#sgf-diagrams(nadare, goban: (scale: 0.5))
+```
+
+The first line is the header: `$$`, `B` or `W` (who plays move 1; if missing, Black), a board size (`$$B13`; if missing, 19), `m` and the number of move 1 (`$$Wm67`) and the title. The `c` of the coordinates is accepted but not used: the coordinates are those of `label`. Each diagram is read like this:
+
+- The title is the name of the game (`GN`) and that of its figure (`FG`): `sgf-diagrams` puts it in the caption.
+- `X` and `O` are initial stones (`AB` and `AW`). `B`, `#`, `Y` and `Z` are black stones with a circle, square, triangle and cross; `W`, `@`, `Q` and `P`, white ones. `C`, `S`, `T` and `M` are those marks on empty points, and the lowercase letters are letters.
+- The numbers (`1` to `9`, and `0` is 10) are moves, in order: the odd ones are of whoever plays move 1. If a number is missing ("5 at 1"), the following moves keep theirs (`MN`).
+- The marks, the letters and the lines `{AR C14 C11}` (arrow) and `{LN 5:6 5:9}` (line) go on the last move. Their points are of the board (`C14`) or of the diagram (`5:6`, column and row from the top left).
+- The edges (`---`, `|`, `+`) say where the diagram is on the board. Without a size, two opposite edges give that side of the board. Without edges, the diagram goes in the middle. What is drawn is the view of the game (`VW`): `sgf-diagrams` only shows that part.
+- `.` and `,` are empty points (the star points are put by `hoshi`). `_` is not part of the board: it is its `blank` (#pag(<blank>)). Links (`[a|page]`) are not read.
+
+A line that is not understood, a diagram bigger than the size of the header and an arrow or line that goes off the board are errors.
 
 == A game on a board <sgf-tablero>
 
@@ -298,8 +349,8 @@ A game on a board draws the initial stones (`AB` and `AW`), as with `stones`, an
 
 #opcion("diagrams.figures", valor: [`true` or `false`], inicial: `true`)[If the file marks figures (`FG`), each figure is a diagram, with its name in the caption, instead of one every `step` moves.]
 #opcion("diagrams.view", valor: [`true` or `false`], inicial: `true`)[If the file has a view (`VW`), each diagram shows only the one that covers the views of its moves, like `sgf.view`; a variation, that of its line. A `partial` in `goban` wins over it.]
-#opcion("diagrams.partial", valor: [`none` or `auto`], inicial: `none`)[
-  With `auto`, where there is no view in the file, every diagram shows the same part of the board: the one used by the lines drawn (that of `variation` and those of `variations`), like `partial: auto`.
+#opcion("diagrams.partial", valor: [`none`, `auto` or `"A1:E5"`], inicial: `none`)[
+  With two corners, as in `partial` (`"K10:T19"`), every diagram shows that part, even if the file has a view. With `auto`, where there is no view in the file, every diagram shows the same part of the board: the one used by the lines drawn (that of `variation` and those of `variations`), like `partial: auto`.
 
   ```codigo
   #sgf-diagrams(josekis, partial: auto, variations: true)
@@ -406,9 +457,19 @@ A game on a board draws the initial stones (`AB` and `AW`), as with `stones`, an
   ```
 ]
 
+#opcion("problems.links", valor: [`true` or `false`], inicial: `false`)[
+  The caption of the statement is a link to its first solution, and the caption of each solution, a link to the statement, also if they are in another `sgf-problem` (with `solutions: false` and `statement: false`). A link whose target is missing, or is there more than once (a problem drawn twice), is not set.
+
+  ```codigo
+  #sgf-problem(problem, links: true, solutions: false)
+  // …
+  #sgf-problem(problem, links: true, statement: false)
+  ```
+]
+
 #opcion("problems.view", valor: [`true` or `false`], inicial: `true`)[If the file has a view (`VW`) at the start, every diagram shows that part.]
-#opcion("problems.partial", valor: [`auto` or `none`], inicial: `auto`)[
-  With `auto`, if the view of the file is not used, every diagram shows the part of the board where there are stones, moves, marks, arrows or lines in some line of the problem, like `partial: auto`. The lines added around are changed with `goban: (partial-margin: ...)`. With `none`, the whole board is seen.
+#opcion("problems.partial", valor: [`auto`, `none` or `"A1:E5"`], inicial: `auto`)[
+  With two corners, as in `partial`, every diagram shows that part, even if the file has a view. With `auto`, if the view of the file is not used, every diagram shows the part of the board where there are stones, moves, marks, arrows or lines in some line of the problem, like `partial: auto`. The lines added around are changed with `goban: (partial-margin: ...)`. With `none`, the whole board is seen.
 
   ```ejemplo-abajo
   #sgf-problem(problem, solutions: false,

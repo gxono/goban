@@ -41,9 +41,9 @@
 // grilla.
 #sgf-diagrams(partida, step: 4, to: 8, goban: (scale: 0.6), layout: (columns: 3, width: auto))
 
-// Una grilla más angosta que la línea se centra; align: left pone cada diagrama a la izquierda de su columna.
+// Una grilla más angosta que la línea se centra; halign: left pone cada diagrama a la izquierda de su columna.
 #sgf-diagrams(partida, step: 2, to: 6, layout: (columns: 2, width: 60%, column-sep: 3em, row-sep: 2em,
-  align: left))
+  halign: left))
 
 // Las notas del último tablero quedan para goban-notes.
 #goban-layout(columns: 2, board(size: 5, notes: true, moves("C3, D3, C4, D4")),
@@ -54,3 +54,15 @@ Notas: #goban-notes()
 #goban-layout(columns: 2, per-page: 3,
   ..range(1, 6).map(n => board(size: 5, scale: 0.5, stones(black: "C" + str(n)))))
 #sgf-diagrams(partida, step: 5, to: 10, goban: (scale: 0.5), layout: (per-page: 1))
+
+// valign: bottom, los tableros de una fila terminan a la misma altura; align-captions, los epígrafes empiezan en
+// la misma línea con los tableros arriba. Con comentarios al costado y con una celda que va sola.
+#let altos = (board(size: 5, scale: 0.6, stones(black: "C3")), board(size: (5, 3), scale: 0.6, stones(white: "C2")),
+  board(size: 9, scale: 0.6, stones(black: "E5")))
+#goban-layout(columns: 3, valign: bottom, ..altos)
+#let tres = sgf-read("(;SZ[9];B[ee];W[cc];B[gg];W[gc];B[cg])")
+#sgf-diagrams(tres, step: (1, 4), goban: (partial: auto), layout: (columns: 2, width: 9cm))
+#sgf-diagrams(tres, step: (1, 4), goban: (partial: auto), layout: (columns: 2, width: 9cm, valign: bottom))
+#sgf-diagrams(tres, step: (1, 4), goban: (partial: auto), layout: (columns: 2, width: 9cm, align-captions: true))
+#sgf-diagrams(tres, step: (1, 4), goban: (partial: auto), comments: (position: right),
+  layout: (columns: 2, width: 12cm, valign: bottom))

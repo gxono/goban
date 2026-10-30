@@ -18,7 +18,7 @@
 #gobanist-set(texts: (es: (black-to-play: "Juegan negras")))
 #sgf-problem(problema, title: [Problema 1], variation-title: n => [Variante #n],
   caption: (text: (style: "italic")), comments: false, notes: false)
-#gobanist-set(texts: (es: (black-to-play: "Juegan Negras")))
+#gobanist-set(texts: (es: (black-to-play: "Juega Negro")))
 
 // Solo el enunciado, todo el tablero; las opciones de goban.
 #sgf-problem(problema, solutions: false, partial: none, goban: (scale: 0.4))
@@ -30,8 +30,8 @@
 #sgf-problem(views, solutions: false)
 #sgf-problem(views, solutions: false, view: false)
 
-// Varias partidas: los enunciados «Problema 1» (sin quién juega), «Problema 2: Juegan Blancas», «Problema 3:
-// Juegan Negras» y después «Problema 3: Variante 1» y «2».
+// Varias partidas: los enunciados «Problema 1» (sin quién juega), «Problema 2: Juega Blanco», «Problema 3:
+// Juega Negro» y después «Problema 3: Variante 1» y «2».
 #sgf-problem(..problemas, goban: (scale: 0.5), layout: (columns: 4))
 
 // Las partidas 1 y 3, to-play, title, sin comentarios ni soluciones.
@@ -57,3 +57,7 @@
   #gobanist-set(sgf: (view: 5))
   #sgf-problem(views, solutions: false, view: false)
 ]
+
+// partial con dos esquinas: el enunciado y las soluciones muestran esa parte, aunque el archivo tenga vista.
+#sgf-problem(views, solutions: false, partial: "D3:J9")
+#sgf-problem(problema, partial: "A12:H19", goban: (scale: 0.5), layout: (columns: 5))

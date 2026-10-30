@@ -8,5 +8,5 @@
 #import "src/sgf.typ": sgf-read, sgf, sgf-info, sgf-comment
 #import "src/diagrams.typ": sgf-diagrams
 #import "src/problems.typ": sgf-problem
-#import "src/view.typ": goban-view
+#import "src/view.typ": goban-view, goban-stone
 #import "src/layout.typ": goban-layout

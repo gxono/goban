@@ -35,15 +35,16 @@
   str(points)
 }
 
-// Las notas (n, m) de un tablero, «N en M» y, de los pases (m: none), «N: pasa», separadas por separator.
-// Los textos son at y pass del idioma. Necesita context.
+// Las notas (n, m) de un tablero, «N en M» y, de los pases (m: none), «N: pasa», separadas por separator, con
+// las opciones de text de notes.text. Los textos son at y pass del idioma. Necesita context.
 #let notes-text(tree, notes, at: auto, separator: auto) = {
   let options = tree.notes
   let at = if at != auto { at } else if options.at != auto { options.at } else { word(tree, "at") }
   let separator = if separator == auto { options.separator } else { separator }
-  notes.map(((n, m)) => {
+  let body = notes.map(((n, m)) => {
     if m == none { str(n) + ": " + word(tree, "pass") } else { str(n) + " " + at + " " + str(m) }
   }).join(separator)
+  if body == none or options.text.len() == 0 { body } else { text(..options.text, body) }
 }
 
 // Las notas del último goban.

@@ -58,3 +58,14 @@
 // use-i.
 #assert.eq(parse("I2, J2", use-i: true).points, ((9, 2), (10, 2)))
 #assert.eq(parse("I2, J2").points, ((9, 2),))
+
+// Después de la Z, dos letras, ya con la I: AA es la 26 (la 27 con use-i), AI la 34, AZ la 51 y BA la 52.
+#import "/src/coordinates.typ": column
+#for (n, name) in ((25, "Z"), (26, "AA"), (34, "AI"), (51, "AZ"), (52, "BA")) {
+  assert.eq(column-letter(n, false), name)
+  assert.eq(column(name, false), n)
+}
+#assert.eq(column-letter(27, true), "AA")
+#assert.eq(column("AA", true), 27)
+#assert.eq(names("AA5, AA:AC 3, X2:AB2", window: (1, 1, 30, 5)), "AA5 AA3 AB3 AC3 X2 Y2 Z2 AA2 AB2")
+#assert.eq(names("AB[1, 2]", window: (1, 1, 30, 5)), "AB1 AB2")

@@ -74,7 +74,7 @@
   }
   else if name == "sequence" {
     let body = numbering(style.label.format, context-info.number)
-    label(body, number-length(body), 7pt, style, context-info.scale)
+    label(body, number-length(body), 10pt, style, context-info.scale)
   }
   else if name == "custom" {
     let body = context-info.content
