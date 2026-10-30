@@ -96,10 +96,15 @@
 
 // En blanco y negro, rayado donde hay relleno.
 #let draft = (
+  background: (line: false),
+  grid: (line: (width: 0.4pt)),
   arrow: (width: 0.6pt),
   line: (width: 0.4pt),
   players: (
-    all: (mark: (fill: (color: white, pattern: lines(45deg, 1.2pt, 0.3pt, black)))),
+    all: (
+      stone: (line: (width: 0.4pt)),
+      mark: (line: (width: 0.6pt), fill: (color: white, pattern: lines(45deg, 1.2pt, 0.3pt, black))),
+    ),
     black: (
       stone: (fill: (color: white, pattern: lines(45deg, 1.5pt, 0.4pt, pgf-gray))),
       move: (label: (text: (fill: black))),

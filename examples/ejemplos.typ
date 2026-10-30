@@ -7,7 +7,7 @@
   intro: [
     Cada ejemplo es un documento entero: el código que va debajo del dibujo compila solo con `typst compile`.
     Los ejemplos, en inglés, y los archivos SGF que leen están en la carpeta `examples` del
-    #link("https://github.com/gxono/gobanist/tree/v0.1.0/examples")[repositorio]. Son los de pgf-go, el paquete de
+    #link("https://github.com/gxono/gobanist/tree/v0.2.0/examples")[repositorio]. Son los de pgf-go, el paquete de
     LaTeX del mismo autor. La referencia de cada función y cada opción está en el manual.
   ],
   (

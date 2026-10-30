@@ -696,7 +696,7 @@ Kāru también da clases con diapositivas. Typst no hace PDF animados, pero un `
 ```codigo
 #import "@preview/touying:0.6.1": *
 #import themes.simple: *
-#import "@preview/gobanist:0.1.0": *
+#import "@preview/gobanist:0.2.0": *
 
 #show: simple-theme
 #let partida = sgf-read(path("partida.sgf"))
@@ -719,7 +719,7 @@ Las diapositivas son otro documento, pero Kāru no quiere copiar los tableros de
 
 ```codigo
 // tableros.typ
-#import "@preview/gobanist:0.1.0": *
+#import "@preview/gobanist:0.2.0": *
 #let pelea = board(stones(black: "C3, D3, E4, C5", white: "D4, D5, E5, F3"),
   marks(triangle: "D5"), marks(custom: "E3", content: [A]))
 

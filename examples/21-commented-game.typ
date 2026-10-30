@@ -1,4 +1,4 @@
-#import "@preview/gobanist:0.1.0": *
+#import "@preview/gobanist:0.2.0": *
 #set page(width: 13cm, height: auto, margin: 0.5cm)
 
 #gobanist-set(background: (fill: (color: rgb(220, 179, 92))), label: (at: (bottom, left)))

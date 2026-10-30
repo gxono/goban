@@ -1,4 +1,4 @@
-#import "@preview/gobanist:0.1.0": *
+#import "@preview/gobanist:0.2.0": *
 #set page(width: auto, height: auto, margin: 0.5cm)
 
 // The kanji need a font that has them: MS Gothic comes with Windows; Noto Sans CJK JP is another one.

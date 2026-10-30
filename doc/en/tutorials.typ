@@ -696,7 +696,7 @@ Kāru also teaches with slides. Typst does not make animated PDFs, but a `goban`
 ```codigo
 #import "@preview/touying:0.6.1": *
 #import themes.simple: *
-#import "@preview/gobanist:0.1.0": *
+#import "@preview/gobanist:0.2.0": *
 
 #show: simple-theme
 #let game = sgf-read(path("game.sgf"))
@@ -719,7 +719,7 @@ The slides are another document, but Kāru does not want to copy the boards of t
 
 ```codigo
 // boards.typ
-#import "@preview/gobanist:0.1.0": *
+#import "@preview/gobanist:0.2.0": *
 #let fight = board(stones(black: "C3, D3, E4, C5", white: "D4, D5, E5, F3"),
   marks(triangle: "D5"), marks(custom: "E3", content: [A]))
 

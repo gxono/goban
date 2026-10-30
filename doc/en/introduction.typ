@@ -23,7 +23,7 @@ The drawing, the coordinates and the options are written in Typst. What playing 
 gobanist is imported like any other package. It needs Typst 0.15 or later.
 
 ```codigo
-#import "@preview/gobanist:0.1.0": *
+#import "@preview/gobanist:0.2.0": *
 
 #goban(stones(black: "C3, D4", white: "E5"))
 ```

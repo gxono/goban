@@ -1,4 +1,4 @@
-#import "@preview/gobanist:0.1.0": *
+#import "@preview/gobanist:0.2.0": *
 #set page(width: auto, height: auto, margin: 0.5cm)
 
 // A profile of your own: a dictionary of options, like those of gobanist-set. Before setting its own,

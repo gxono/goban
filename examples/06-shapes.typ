@@ -1,4 +1,4 @@
-#import "@preview/gobanist:0.1.0": *
+#import "@preview/gobanist:0.2.0": *
 #set page(width: 12cm, height: auto, margin: 0.5cm)
 
 // Each shape is written once, from A1; shift: (columns, rows) draws it anywhere else.

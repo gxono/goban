@@ -1,4 +1,4 @@
-#import "@preview/gobanist:0.1.0": *
+#import "@preview/gobanist:0.2.0": *
 #set page(width: 13cm, height: auto, margin: 0.5cm)
 
 // The texts of gobanist follow the language of the text. The Japanese ones need a font that has them:

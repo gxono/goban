@@ -23,7 +23,7 @@ El dibujo, las coordenadas y las opciones están escritos en Typst. Lo que neces
 gobanist se importa como cualquier paquete. Necesita Typst 0.15 o posterior.
 
 ```codigo
-#import "@preview/gobanist:0.1.0": *
+#import "@preview/gobanist:0.2.0": *
 
 #goban(stones(black: "C3, D4", white: "E5"))
 ```

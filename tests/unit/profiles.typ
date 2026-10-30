@@ -35,3 +35,13 @@
 #let mine = apply(defaults, (stone: (radius: 9pt), profile: (players: (white: (stone: (fill: (color: red)))))))
 #assert.eq(mine.players.white.stone.fill.color, red)
 #assert.eq(mine.players.white.stone.radius, defaults.players.white.stone.radius)
+
+// draft es para borradores, como en pgf-go: sin el borde del fondo y con las líneas finas (la grilla y el borde de
+// las piedras, 0.4pt; las marcas, 0.6pt). Antes tenía el borde y las líneas del estilo inicial.
+#let draft = apply(defaults, (profile: "draft"))
+#assert.eq(draft.background.line.on, false)
+#assert.eq(draft.grid.line.width, 0.4pt)
+#for p in ("black", "white", "neutral") {
+  assert.eq(draft.players.at(p).stone.line.width, 0.4pt)
+  assert.eq(draft.players.at(p).mark.line.width, 0.6pt)
+}

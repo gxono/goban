@@ -17,7 +17,7 @@ It needs Typst 0.15 or later.
 Stones go by player, marks by shape, and the coordinates are those of Go (no I).
 
 ```typ
-#import "@preview/gobanist:0.1.0": *
+#import "@preview/gobanist:0.2.0": *
 
 #goban(size: 19, partial: "K1:T9", label: (at: (bottom, right)),
   stones(black: "L8, S8, R5, S5, P4, R4, M3, P3, N2, O2",
@@ -168,9 +168,9 @@ diagram, and `partial: auto` shows the part of the board that all of them use.
 ## Kernel and tests
 
 Captures, territory, score, reading SGF and the opacity of images are done by a WebAssembly plugin,
-`src/kernel.wasm`, compiled from the Rust code in [`kernel/`](https://github.com/gxono/gobanist/tree/v0.1.0/kernel)
+`src/kernel.wasm`, compiled from the Rust code in [`kernel/`](https://github.com/gxono/gobanist/tree/v0.2.0/kernel)
 (`python kernel/build.py`, with the `wasm32-unknown-unknown` target). The tests are in
-[`tests/`](https://github.com/gxono/gobanist/tree/v0.1.0/tests) (`python tests/run.py`).
+[`tests/`](https://github.com/gxono/gobanist/tree/v0.2.0/tests) (`python tests/run.py`).
 
 ## License
 

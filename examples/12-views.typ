@@ -1,4 +1,4 @@
-#import "@preview/gobanist:0.1.0": *
+#import "@preview/gobanist:0.2.0": *
 #set page(width: 10cm, height: auto, margin: 0.5cm)
 
 #gobanist-set(profile: "pgfgo", view: (goban: (scale: 0.45)))

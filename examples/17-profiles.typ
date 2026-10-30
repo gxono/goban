@@ -1,4 +1,4 @@
-#import "@preview/gobanist:0.1.0": *
+#import "@preview/gobanist:0.2.0": *
 #set page(width: 17.4cm, height: auto, margin: 0.5cm)
 
 // The same board with every profile: board(position, profile: p) is that board, with another profile.
